@@ -1,7 +1,8 @@
+ad: will make anything for you at 30$/h or fixed price quotes
+
 first open source project give feedback and no bully
 
 WTFPL license
-
 
 wip bot might clean it and dockerize it later
 
