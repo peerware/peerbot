@@ -1,3 +1,6 @@
+WTFPL license
+
+
 wip bot might clean it and dockerize it later
 
 
