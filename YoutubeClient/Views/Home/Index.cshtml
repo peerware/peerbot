@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#youtubePlayer').trigger('click');
+
+            $('#youtubePlayer').click(function () {
+                alert("click event triggered");
+                $('#youtubePlayer').click();
+            });
+        });
+
+    function OpenMedia() {
+
+           // window.open(
+                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
+        } 
+</script>
+
+<div class="text-center">
+    <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="OpenMedia()">hi</a>
+</div>

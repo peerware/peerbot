@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "9ca45864-944f-4a9d-a617-08a74db3d3c9": {
+      "ProjectGuid": "9ca45864-944f-4a9d-a617-08a74db3d3c9",
+      "DisplayName": "ChatBot",
+      "ColorIndex": 0
+    },
+    "4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c": {
+      "ProjectGuid": "4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c",
+      "DisplayName": "YoutubeClient",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 2
+}
