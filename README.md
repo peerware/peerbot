@@ -27,7 +27,7 @@ ChatBot/Properties/launchSettings:
     "ChatBot": {
       "commandName": "Project",
       "environmentVariables": {
-        "GOOGLE_APPLICATION_CREDENTIALS ": "PUT UR GOOGLE API CREDENTIAL FILE HERE, GOOGLE HOW TO AUTH GOOGLE VOICE"
+        "GOOGLE_APPLICATION_CREDENTIALS ": "google how to use google voice authentication"
       }
     }
   }
