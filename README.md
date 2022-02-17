@@ -6,10 +6,10 @@ WTFPL license
 wip bot might clean it and dockerize it later
 
 
+will make a ui to change configs if literally anyone asks for it
 
 Documentation
 
-will make a ui to change configs if literally anyone asks for it
 
 ChatBot/HivescoreFetcher -> change to ur steam id
 
