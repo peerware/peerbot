@@ -1,3 +1,5 @@
+first open source project give feedback and no bully
+
 WTFPL license
 
 
