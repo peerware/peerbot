@@ -106,7 +106,7 @@ namespace ChatBot
             switch (randomNumber)
             {
                 case 1:
-                    return "hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway ";
+                    return "hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway hoSway";
                 case 2:
                     return "lickL";
                 case 3:
