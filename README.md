@@ -2,11 +2,10 @@ first open source project give feedback and no bully
 
 WTFPL license
 
-
 wip bot might clean it and dockerize it later
 
 
-will make a ui to change configs if literally anyone asks for it
+might make ui for changing configs later
 
 Documentation
 
@@ -27,7 +26,7 @@ ChatBot/Properties/launchSettings:
     "ChatBot": {
       "commandName": "Project",
       "environmentVariables": {
-        "GOOGLE_APPLICATION_CREDENTIALS ": "PUT UR GOOGLE API CREDENTIAL FILE HERE, GOOGLE HOW TO AUTH GOOGLE VOICE"
+        "GOOGLE_APPLICATION_CREDENTIALS ": "google how to use google voice authentication"
       }
     }
   }
