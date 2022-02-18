@@ -46,7 +46,6 @@ namespace ChatBot
         /// <returns></returns>
         public static int GetHivescoreChange(DateTime minimumDate)
         {
-
             List<string> allLoggedScores = new List<string>();
 
             if (File.Exists(filePath))

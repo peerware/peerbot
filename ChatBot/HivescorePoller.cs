@@ -63,21 +63,9 @@ namespace ChatBot
             int HivescoreDifference = CurrentHivescore - PreviousHivescore;
 
             if (HivescoreDifference < 0)
-            {
-                output += string.Format(" -{0}", Math.Abs(HivescoreDifference));
-
-                if (HivescoreDifference <= -15)
-                    output += " TrollDespair ";
-            }
+                output += string.Format(" -{0}", Math.Abs(HivescoreDifference)) + " " + GetWinnerEmote() + " ";
             else
-            {
-                output += string.Format(" +{0}", HivescoreDifference);
-
-                if (HivescoreDifference <= 5)
-                    output += " AlienPls ";
-                else if (HivescoreDifference > 19)
-                    output += " pepeRun ";
-            }
+                output += string.Format(" +{0}", HivescoreDifference) + " " + GetLoserEmote() + " ";
 
             return output;
         }
@@ -107,6 +95,72 @@ namespace ChatBot
                     OutputString = "no elo change in " + 0 + " games";
 
                 return OutputString;
+            }
+        }
+        public string GetWinnerEmote()
+        {
+
+            Random rnd = new Random();
+            int randomNumber = rnd.Next(1, 15); // creates a number between the left value and (right value + 1)
+
+            switch (randomNumber)
+            {
+                case 1:
+                    return "pepeMeltdown";
+                case 2:
+                    return "lickL";
+                case 3:
+                    return "AlienPls";
+                case 4:
+                    return "BoneZone";
+                case 5:
+                    return "VeryPog";
+                case 6:
+                    return "AlienPls";
+                default:
+                    return "";
+            }
+        }
+
+        public string GetLoserEmote()
+        {
+            Random rnd = new Random();
+            int randomNumber = rnd.Next(1, 20); // creates a number between the left value and (right value + 1)
+
+            switch (randomNumber)
+            {
+                case 1:
+                    return "pepeMeltdown";
+                case 2:
+                    return "ThisIsFine";
+                case 3:
+                    return "confusedCat";
+                case 4:
+                    return "mericCat";
+                case 5:
+                    return "VeryPog";
+                case 6:
+                    return "TrollDespair";
+                case 7:
+                    return "AlienPls";
+                case 8:
+                    return "Sadge";
+                case 9:
+                    return "pepeSadJam";
+                case 10:
+                    return "peepoSad";
+                case 11:
+                    return "Hmm";
+                case 12:
+                    return "FeelsDankMan";
+                case 13:
+                    return "Flushed";
+                case 14:
+                    return "widepeepoSad";
+                case 15:
+                    return "KEKW";
+                default:
+                    return "";
             }
         }
     }
