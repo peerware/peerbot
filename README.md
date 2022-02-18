@@ -1,3 +1,5 @@
+taking all suggestions for new features :) 
+
 first open source project give feedback and no bully
 
 WTFPL license
