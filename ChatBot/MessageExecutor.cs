@@ -129,7 +129,7 @@ namespace ChatBot
                 SendMessage("no data Sadge");
             else if (hivescoreDifference > 0)
                 SendMessage("+" + hivescoreDifference + " since yesterday ");
-            else if (hivescoreDifference > 0)
+            else if (hivescoreDifference < 0)
                 SendMessage("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
         }
 
