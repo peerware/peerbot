@@ -67,7 +67,7 @@ namespace ChatBot
                 output += string.Format(" -{0}", Math.Abs(HivescoreDifference));
 
                 if (HivescoreDifference <= -15)
-                    output += " pepeLaugh :point_right: :chart_with_downwards_trend: ";
+                    output += " TrollDespair ";
             }
             else
             {

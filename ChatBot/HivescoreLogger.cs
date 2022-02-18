@@ -46,7 +46,6 @@ namespace ChatBot
         /// <returns></returns>
         public static int GetHivescoreChange(DateTime minimumDate)
         {
-            long minimumDateTicks = minimumDate.Ticks;
 
             List<string> allLoggedScores = new List<string>();
 
@@ -54,7 +53,7 @@ namespace ChatBot
                 allLoggedScores = File.ReadAllLines(filePath).ToList();
 
             // Get the hivescore values as a list
-            List<int> minDateHivescores = allLoggedScores.Where(o => long.Parse(o.Substring(0, o.IndexOf(":") - 1)) >= minimumDate.Ticks).Select(o => int.Parse(o.Substring(o.IndexOf(":") + 1))).ToList();
+            List<int> minDateHivescores = allLoggedScores.Where(o => long.Parse(o.Substring(0, o.IndexOf(":"))) >= minimumDate.Ticks).Select(o => int.Parse(o.Substring(o.IndexOf(":") + 1))).ToList();
 
             if (minDateHivescores.Count == 0)
                 return 0;

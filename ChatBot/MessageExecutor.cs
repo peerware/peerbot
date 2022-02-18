@@ -130,7 +130,7 @@ namespace ChatBot
             else if (hivescoreDifference > 0)
                 SendMessage("+" + hivescoreDifference + " since yesterday ");
             else if (hivescoreDifference > 0)
-                SendMessage("-" + hivescoreDifference + " since yesterday ");
+                SendMessage("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
         }
 
         private async void ExecuteFollowage(ChatMessage message)

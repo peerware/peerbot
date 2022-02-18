@@ -9,23 +9,30 @@ i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\.e
 i:{00000000-0000-0000-0000-000000000000}:ChatBot
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\chatbot\bin\debug\netcoreapp3.1\chatbot.dll
 ++Dependencies
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>649
-i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>964
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>652
+i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>968
 ++Properties
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\properties\
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\youtubeclient\properties\
 ++MessageSpeaker
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\
+++MessageSpeaker.cs
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeaker.cs
+++MessageSpeakerSettings.cs
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeakersettings.cs
+++MessageSpeakerSettingsManager.cs
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeakersettingsmanager.cs
+++VoicePresets.cs
 ++Config.cs
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\config.cs
 ++ConfigFetcher.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\configfetcher.cs
 ++HivescoreFetcher.cs
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\hivescorefetcher.cs
+++HivescoreLogger.cs
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\hivescorelogger.cs
 ++HivescorePoller.cs
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\hivescorepoller.cs
 ++HiveStats.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\hivestats.cs
 ++MessageExecutor.cs
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messageexecutor.cs
 ++MessageFilter.cs
@@ -50,36 +57,28 @@ i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:packages
 ++launchSettings.json
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\properties\launchsettings.json
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\youtubeclient\properties\launchsettings.json
-++MessageSpeaker.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeaker.cs
-++MessageSpeakerSettings.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeakersettings.cs
-++MessageSpeakerSettingsManager.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\messagespeakersettingsmanager.cs
-++VoicePresets.cs
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\messagespeaker\voicepresets.cs
 ++Microsoft.NETCore.App
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:c:\users\peer\source\repos\twitchbot\chatbot\microsoft.netcore.app
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\youtubeclient\microsoft.netcore.app
 ++Google.Cloud.TextToSpeech.V1 (2.4.0)
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>985
-++Microsoft.Extensions.Hosting (5.0.0)
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>978
-++NAudio (2.0.1)
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>977
-++Newtonsoft.Json (13.0.1)
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>979
-++System.Windows.Extensions (6.0.0)
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>984
+++Microsoft.Extensions.Hosting (5.0.0)
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>979
+++NAudio (2.0.1)
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>978
+++Newtonsoft.Json (13.0.1)
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>980
+++System.Windows.Extensions (6.0.0)
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>983
 ++TwitchLib (3.2.0)
 i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>982
 ++Xamarin.Essentials (1.7.0)
-i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>980
-i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>983
+i:{9ca45864-944f-4a9d-a617-08a74db3d3c9}:>981
+i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>989
 ++YoutubeClient
 i:{00000000-0000-0000-0000-000000000000}:YoutubeClient
 ++Connected Services 
-i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>965
+i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>969
 ++wwwroot
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\youtubeclient\wwwroot\
 ++Controllers
@@ -95,7 +94,7 @@ i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\yo
 ++Startup.cs
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:c:\users\peer\source\repos\twitchbot\youtubeclient\startup.cs
 ++No service dependencies discovered
-i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>966
+i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:>970
 ++Analyzers
 i:{4fe6d755-3e1e-41c6-82a5-4ca0ebe67c9c}:analyzers
 ++Projects
