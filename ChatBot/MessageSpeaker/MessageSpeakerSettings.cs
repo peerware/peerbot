@@ -13,7 +13,7 @@ namespace ChatBot.MessageSpeaker
         public double pitch = 0;
         public string languageCode = "en-GB";
         public SsmlVoiceGender gender = SsmlVoiceGender.Female;
-        public bool isSpeechEnabled = false;
+        public bool isSpeechEnabled = true;
 
         public enum eDialects
         {
