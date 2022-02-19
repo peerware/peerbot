@@ -63,9 +63,9 @@ namespace ChatBot
             int HivescoreDifference = CurrentHivescore - PreviousHivescore;
 
             if (HivescoreDifference < 0)
-                output += string.Format(" -{0}", Math.Abs(HivescoreDifference)) + " " + GetWinnerEmote() + " ";
+                output += string.Format(" -{0}", Math.Abs(HivescoreDifference)) + " " + GetLoserEmote() + " ";
             else
-                output += string.Format(" +{0}", HivescoreDifference) + " " + GetLoserEmote() + " ";
+                output += string.Format(" +{0}", HivescoreDifference) + " " + GetWinnerEmote() + " ";
 
             return output;
         }
