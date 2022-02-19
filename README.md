@@ -9,6 +9,27 @@ wip bot might clean it and dockerize it later
 
 might make ui for changing configs later
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Documentation
 
 
@@ -32,24 +53,6 @@ ChatBot/Properties/launchSettings:
       }
     }
   }
-
-
-note to self: this is probably useless but it might not be
-{
-    "Logging": {
-        "LogLevel": {
-            "Default": "Information",
-            "Microsoft": "Warning",
-            "Microsoft.Hosting.Lifetime": "Information"
-        }
-    },
-    "TwitchDetails": {
-        "BotUsername": "ai_under_the_stars",
-        "ChannelUsername": "peerless_under_the_stars",
-        "ClientID": 
-        "Secret": 
-    }
-}
 
 YoutubeClient/Program.cs -> get ur own auth
 
