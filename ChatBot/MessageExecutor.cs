@@ -162,7 +162,12 @@ namespace ChatBot
 
         private void ExecuteRank()
         {
-            SendMessage(HivescoreFetcher.FetchHivescore().Result + " hivescore " + HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1)) + " since yesterday");
+            int hivescoreChange = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1));
+
+            if (hivescoreChange >= 0)
+                SendMessage(HivescoreFetcher.FetchHivescore().Result + " hivescore +" + hivescoreChange + " since yesterday");
+            else if (hivescoreChange < 0)
+                SendMessage(HivescoreFetcher.FetchHivescore().Result + " hivescore -" + hivescoreChange + " since yesterday");
         }
 
         private void ExecuteUptime()
