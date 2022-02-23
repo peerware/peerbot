@@ -98,6 +98,9 @@ namespace ChatBot
                 case "!yesterday":
                     ExecuteYesterday();
                     break;
+                case "!emotes":
+                    ExecuteEmotes();
+                    break;
             }
         }
 
@@ -153,6 +156,13 @@ namespace ChatBot
         private void ExecuteASMR()
         {
             SendMessage("asmrs so he still \"comms\"");
+        }
+
+        private void ExecuteEmotes()
+        {
+            SendMessage("5Head AYAYA EZY FeelsBadMan FeelsDankMan Flushed Hmm KEKW LULW mericCat monkaS OMEGALUL PauseChamp peepoSad pepeGun PepeHands");
+            SendMessage("PepeLaugh PepoG Pog POGGERS Prayge Stuckge Sweating widepeepoHappy widepeepoSad pepeRun BoneZone Bedge SUSSY AlienPls Sadge");
+            SendMessage("VeryPog TrollDespair pepeMeltdown lickL pepeSadJam hoSway PensiveWobble pepeDS RareMonkey");
         }
 
         private void ExecuteBot()
