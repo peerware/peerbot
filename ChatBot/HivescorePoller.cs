@@ -101,7 +101,7 @@ namespace ChatBot
         {
 
             Random rnd = new Random();
-            int randomNumber = rnd.Next(1, 5); // creates a number between the left value and (right value + 1)
+            int randomNumber = rnd.Next(1, 2); // creates a number between the left value and (right value - 1)
 
             switch (randomNumber)
             {
@@ -132,9 +132,9 @@ namespace ChatBot
                 case 1:
                     return "pepeMeltdown";
                 case 2:
-                    return "ThisIsFine";
+                    return "PensiveWobble";
                 case 3:
-                    return "confusedCat";
+                    return "Sadge";
                 case 4:
                     return "mericCat";
                 case 5:
