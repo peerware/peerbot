@@ -57,6 +57,15 @@ namespace ChatBot
                 case "!uptime":
                     ExecuteUptime();
                     break;
+                case "!giveaway":
+                    ExecuteGiveaway(message.Username);
+                    break;
+                case "!todo":
+                    ExecuteGiveaway(message.Username);
+                    break;
+                case "!enter":
+                    ExecuteEnter(message.Username);
+                    break;
                 case "!downtime":
                     ExecuteDowntime();
                     break;
@@ -134,6 +143,21 @@ namespace ChatBot
                 SendMessage("+" + hivescoreDifference + " since yesterday ");
             else if (hivescoreDifference < 0)
                 SendMessage("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
+        }
+
+        private void ExecuteGiveaway(string username)
+        {
+            SendMessage("@" + username + " use !enter");
+        }
+
+        private void ExecuteEnter(string username)
+        {
+            SendMessage("@" + username + " use !giveaway");
+        }
+
+        private void ExecuteTodo(string username)
+        {
+            SendMessage("@" + username + " :pencil2:");
         }
 
         private async void ExecuteFollowage(ChatMessage message)
