@@ -10,7 +10,7 @@ namespace ChatBot
     {
         public static bool FilterSpam(string username, string message, TwitchClient client)
         {
-            bool isMessageBanned = IsMessageSpam(message) || IsMessageNegative(username, message);
+            bool isMessageBanned = IsMessageSpam(username, message) || IsMessageNegative(username, message);
 
             if (isMessageBanned)
                 DeleteMessage(username, client);
@@ -18,11 +18,11 @@ namespace ChatBot
             return isMessageBanned;
         }
 
-        private static bool IsMessageSpam(string message)
+        private static bool IsMessageSpam(string username, string message)
         {
             message = message.ToLower();
 
-            if (message.Contains("bigfollows") || message.Contains("t to become famous") || message.Contains("primes and") || message.Contains("buy followers") || message.Contains("racis"))
+            if (message.Contains("bigfollows") || message.Contains("t to become famous") || username == "moobot" || message.Contains("primes and") || message.Contains("buy followers") || message.Contains("racis"))
                 return true;
             else
                 return false;
@@ -35,7 +35,7 @@ namespace ChatBot
 
         private static void DeleteMessage(string Username, TwitchClient client)
         {
-            client.SendMessage(Config.channelUsername, "/ban " + Username);
+            client.SendMessage(Config.channelUsername, "/timeout " + Username + " 1");
         }
     }
 }
