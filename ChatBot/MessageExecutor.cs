@@ -60,11 +60,14 @@ namespace ChatBot
                 case "!giveaway":
                     ExecuteGiveaway(message.Username);
                     break;
-                case "!todo":
-                    ExecuteGiveaway(message.Username);
-                    break;
                 case "!enter":
                     ExecuteEnter(message.Username);
+                    break;
+                case "!claim":
+                    ExecuteClaim(message.Username);
+                    break;
+                case "!todo":
+                    ExecuteTodo(message.Username);
                     break;
                 case "!downtime":
                     ExecuteDowntime();
@@ -146,6 +149,11 @@ namespace ChatBot
         }
 
         private void ExecuteGiveaway(string username)
+        {
+            SendMessage("@" + username + " use !claim");
+        }
+
+        private void ExecuteClaim(string username)
         {
             SendMessage("@" + username + " use !enter");
         }
