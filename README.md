@@ -1,11 +1,6 @@
 taking all suggestions for new features :) 
 
-first open source project give feedback and no bully
-
-WTFPL license
-
 wip bot might clean it and dockerize it later
-
 
 might make ui for changing configs later
 
