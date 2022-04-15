@@ -82,3 +82,7 @@ ChatBot/names.txt
 ChatBot/Properties/launchSettings.json
 
 YoutubeClient/appsettings.json
+
+.vs/TwitchBot/DesignTimeBuild/.dtbcache.v2
+
+.vs/TwitchBot/v17/.futdcache.v1
