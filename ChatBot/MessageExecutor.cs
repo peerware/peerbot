@@ -56,6 +56,7 @@ namespace ChatBot
             {
                 case "!commands":
                     ExecuteCommands();
+                    break;
                 case "!uptime":
                     ExecuteUptime();
                     break;
