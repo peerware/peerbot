@@ -10,7 +10,7 @@ namespace ChatBot
     public class MessageLogger
     {
         static object locker = new object();
-        static string filePath = @"C:\Users\Peer\Desktop\logs.txt";
+        static string filePath = @"C:\Users\Peer\desktop\\Desktop\logs.txt";
 
         public static void LogMessage(ChatMessage message)
         {

@@ -153,7 +153,7 @@ namespace ChatBot
             else if (hivescoreDifference > 0)
                 Say("+" + hivescoreDifference + " since yesterday ");
             else if (hivescoreDifference < 0)
-                Say("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
+                Say(Math.Abs(hivescoreDifference) + " since yesterday ");
         }
 
         private void ExecuteGiveaway(string username)
@@ -215,9 +215,9 @@ namespace ChatBot
             int hivescoreChange = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1));
 
             if (hivescoreChange >= 0)
-                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore +" + hivescoreChange + " since yesterday");
+                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore +" + Math.Abs(hivescoreChange) + " since yesterday");
             else if (hivescoreChange < 0)
-                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore -" + hivescoreChange + " since yesterday");
+                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore -" + Math.Abs(hivescoreChange) + " since yesterday");
         }
 
         private void ExecuteUptime()

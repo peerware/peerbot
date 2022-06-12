@@ -13,7 +13,7 @@ namespace ChatBot.MessageSpeaker
     class MessageSpeakerSettingsManager
     {
         static object locker = new object();
-        static string filePath = @"C:\Users\Peer\Desktop\speechsettings.txt";
+        static string filePath = @"C:\Users\Peer\desktop\Desktop\speechsettings.txt";
 
         public enum voicePresets
         {

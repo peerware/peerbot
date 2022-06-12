@@ -9,7 +9,7 @@ namespace ChatBot
     public class HivescoreLogger
     {
         static object locker = new object();
-        static string filePath = @"C:\Users\Peer\Desktop\hivescoredata.txt";
+        static string filePath = @"C:\Users\Peer\desktop\Desktop\hivescoredata.txt";
 
         public static void LogHivescore(int hivescore)
         {
