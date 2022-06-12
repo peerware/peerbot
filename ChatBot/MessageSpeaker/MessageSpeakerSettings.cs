@@ -20,6 +20,8 @@ namespace ChatBot.MessageSpeaker
             australian,
             irish,
             southAfrican,
+            italian,
+            german,
             british,
             american,
             french,
@@ -90,6 +92,14 @@ namespace ChatBot.MessageSpeaker
                     languageCode = "en-GB";
                     return true;
                     break;
+                case eDialects.italian:
+                    languageCode = "it-IT";
+                    return true;
+                    break;
+                case eDialects.german:
+                    languageCode = "de-DE";
+                    return true;
+                    break;
                 case eDialects.american:
                     languageCode = "en-US";
                     return true;
@@ -125,6 +135,12 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.british:
                         voiceParams.Name = "en-GB-Wavenet-D";
                         break;
+                    case eDialects.italian:
+                        voiceParams.Name = "it-IT-Wavenet-D";
+                        break;
+                    case eDialects.german:
+                        voiceParams.Name = "de-DE-Standard-D";
+                        break;
                     case eDialects.american:
                         voiceParams.Name = "en-US-Wavenet-B";
                         break;
@@ -149,6 +165,12 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.british:
                         voiceParams.Name = "en-GB-Wavenet-F";
                         break;
+                    case eDialects.italian:
+                        voiceParams.Name = "it-IT-Wavenet-A";
+                        break;
+                    case eDialects.german:
+                        voiceParams.Name = "de-DE-Wavenet-A";
+                        break;
                     case eDialects.american:
                         voiceParams.Name = "en-US-Standard-F";
                         break;
@@ -169,22 +191,24 @@ namespace ChatBot.MessageSpeaker
             switch (dialect)
             {
                 case "australian":
+                case "australia":
                     return eDialects.australian;
                 case "irish":
+                case "ireland":
                     return eDialects.irish;
                 case "south african":
                     return eDialects.southAfrican;
                 case "british":
                     return eDialects.british;
                 case "american":
+                case "america":
                     return eDialects.american;
                 case "french":
-                case "fr-FR":
                     return eDialects.french;
                 case "japanese":
+                case "japan":
                     return eDialects.japanese;
                 case "canadian french":
-                case "fr-CA":
                     return eDialects.canadianFrench;
                 default:
                     return eDialects.none;
