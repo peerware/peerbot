@@ -339,7 +339,7 @@ namespace ChatBot
                         if (IsSaved)
                             Say("dialect saved");
                         else
-                            Say("@" + Username + "Choose between australian, irish, south african, british, american, french, japanese");
+                            Say("@" + Username + " Choose between australian, irish, german, italian, south african, british, american, french, japanese");
                         MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                         break;
                     }

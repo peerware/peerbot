@@ -196,6 +196,12 @@ namespace ChatBot.MessageSpeaker
                 case "irish":
                 case "ireland":
                     return eDialects.irish;
+                case "italian":
+                case "italy":
+                    return eDialects.italian;
+                case "german":
+                case "germany":
+                    return eDialects.german;
                 case "south african":
                     return eDialects.southAfrican;
                 case "british":
