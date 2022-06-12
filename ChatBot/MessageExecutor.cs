@@ -368,7 +368,7 @@ namespace ChatBot
                         if (IsSaved)
                             Say("gender saved");
                         else
-                            Say("@" + Username + "Choose between man, woman, neutral, and unspecified");
+                            Say("@" + Username + " Choose between man, woman, neutral, and unspecified");
                         MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                         break;
                     }
