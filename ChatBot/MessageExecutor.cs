@@ -271,31 +271,31 @@ namespace ChatBot
             Say("misc -> viewmodel" );
         }
 
-        private void ExecuteSaveTTSSettings(string Username, string Arguments)
+        private void ExecuteSaveTTSSettings(string username, string arguments)
         {
             // TTS arguments come in the form of <Type> <Value>
-            string TTSCommand = GetMessageCommand(Arguments);
-            string TTSArguments = GetMessageArgument(Arguments);
+            string ttsCommand = GetMessageCommand(arguments);
+            string ttsArguments = GetMessageArgument(arguments);
 
             // Special case for user friendly commands that dont have an argument
-            if (Arguments.StartsWith("enable") ||Arguments.StartsWith("on"))
-                TTSCommand = "enable";
-            else if (Arguments.StartsWith("disable") || Arguments.StartsWith("off"))
-                TTSCommand = "disable";
+            if (arguments.StartsWith("enable") ||arguments.StartsWith("on"))
+                ttsCommand = "enable";
+            else if (arguments.StartsWith("disable") || arguments.StartsWith("off"))
+                ttsCommand = "disable";
 
             // If theres no command assume they want help
-            if (TTSCommand == "" || TTSCommand == "help")
-                TTSCommand = "help";
+            if (ttsCommand == "" || ttsCommand == "help")
+                ttsCommand = "help";
 
             // Get existing settings - constructor will provide defaults otherwise
-            MessageSpeakerSettings settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(Username);
-            settings.twitchUsername = Username;
+            MessageSpeakerSettings settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(username);
+            settings.twitchUsername = username;
 
             // Overwrite settings if we get a valid command
-            switch (TTSCommand)
+            switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: on/off, man, woman, speed (0.55-2), pitch (-20 to 20), dialect (aus, ireland, south africa, uk, america, french, japanese, bog)");
+                    Say("!tts <setting> <value>. Settings: on/off, man, woman, aus, ireland, south africa, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "enable":
@@ -309,10 +309,10 @@ namespace ChatBot
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "speed":
-                    double speed = double.TryParse(TTSArguments, out _) ? double.Parse(TTSArguments) : 0;
+                    double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
                     if (speed < 0.5 || speed > 2)
-                        Say("@" + Username + " enter a number from 0.5-2");
+                        Say("@" + username + " enter a number from 0.5-2");
                     else
                     {
                         settings.SetSpeed(speed);
@@ -321,10 +321,10 @@ namespace ChatBot
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "pitch":
-                    double pitch = double.TryParse(TTSArguments, out _) ? double.Parse(TTSArguments) : 0;
+                    double pitch = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
                     if (pitch < -20 || pitch > 20)
-                        Say("@" + Username + " enter a number from -20 to 20");
+                        Say("@" + username + " enter a number from -20 to 20");
                     else
                     {
                         settings.SetPitch(pitch);
@@ -332,32 +332,40 @@ namespace ChatBot
                     }
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
+                case "australian":
+                case "australia":
+                case "irish":
+                case "ireland":
+                case "german":
+                case "germany":
+                case "italian":
+                case "italy":
+                case "south african":
+                case "british":
+                case "american":
+                case "french":
+                case "japanese":
+                case "french canadian":
                 case "dialect":
                     {
-                        bool IsSaved = settings.SetLanguage(TTSArguments);
-
-                        if (IsSaved)
-                            Say("dialect saved");
-                        else
-                            Say("@" + Username + " Choose between australian, irish, german, italian, south african, british, american, french, japanese");
-                        MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                        SaveDialectSayResult(settings, ttsCommand, username);
                         break;
                     }
                 case "frenchwoman":
                     {
-                        MessageSpeakerSettingsManager.SetPresetVoice(Username, MessageSpeakerSettingsManager.voicePresets.frenchWoman);
-                        Say("dialect saved");
-                        break;
-                    }
-                case "bog":
-                    {
-                        MessageSpeakerSettingsManager.SetPresetVoice(Username, MessageSpeakerSettingsManager.voicePresets.bog);
+                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.frenchWoman);
                         Say("dialect saved");
                         break;
                     }
                 case "frenchman":
                     {
-                        MessageSpeakerSettingsManager.SetPresetVoice(Username, MessageSpeakerSettingsManager.voicePresets.frenchMan);
+                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.frenchMan);
+                        Say("dialect saved");
+                        break;
+                    }
+                case "bog":
+                    {
+                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.bog);
                         Say("dialect saved");
                         break;
                     }
@@ -367,7 +375,7 @@ namespace ChatBot
                 case "female":
                 case "unspecified":
                 case "neutral":
-                    SaveGenderSayResult(settings, TTSCommand, Username);
+                    SaveGenderSayResult(settings, ttsCommand, username);
                     break;
                 case "silence":
                     {
@@ -384,9 +392,20 @@ namespace ChatBot
             }
         }
 
-        private void SaveGenderSayResult(MessageSpeakerSettings settings, string TTSArguments, string Username)
+        private void SaveDialectSayResult(MessageSpeakerSettings settings, string dialect, string username)
         {
-            bool IsSaved = settings.SetGender(TTSArguments);
+            bool IsSaved = settings.SetLanguage(dialect);
+
+            if (IsSaved)
+                Say("dialect saved");
+            else
+                Say("@" + username + " Choose between australian, irish, german, italian, south african, british, american, french, japanese");
+            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+        }
+
+        private void SaveGenderSayResult(MessageSpeakerSettings settings, string gender, string Username)
+        {
+            bool IsSaved = settings.SetGender(gender);
 
             if (IsSaved)
                 Say("gender saved");

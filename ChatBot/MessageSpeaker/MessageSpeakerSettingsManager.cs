@@ -35,22 +35,22 @@ namespace ChatBot.MessageSpeaker
             switch (voicePresets)
             {
                 case voicePresets.frenchWoman:
-                    preset.speakingRate = 0.75;
+                    preset.speakingRate = 1.16;
                     preset.pitch = -1.3;
                     preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Female;
                     preset.isSpeechEnabled = true;
                     preset.languageCode = "fr-FR";
                     break;
                 case voicePresets.bog:
-                    preset.speakingRate = 0.5647;
+                    preset.speakingRate = 0.764;
                     preset.pitch = -2.5;
                     preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Male;
                     preset.isSpeechEnabled = true;
                     preset.languageCode = "fr-CA";
                     break;
                 case voicePresets.frenchMan:
-                    preset.speakingRate = 0.564;
-                    preset.pitch = -2.7;
+                    preset.speakingRate = 1.17;
+                    preset.pitch = -2;
                     preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Male;
                     preset.isSpeechEnabled = true;
                     preset.languageCode = "fr-FR";
