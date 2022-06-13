@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,7 +52,12 @@ namespace ChatBot
                 channelStream = (await streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
             }
 
-            switch (GetMessageCommand(message.Message.ToLower().Trim()))
+            // Make it so double exlamation mark commands entered accidentally work (!!tts speed 1)
+            string cleanedMessage = message.Message;
+            if (cleanedMessage.Length > 1 && cleanedMessage[0] == '!' && cleanedMessage[1] == '!')
+                cleanedMessage = cleanedMessage.Substring(1, cleanedMessage.Length - 1);
+
+            switch (GetMessageCommand(cleanedMessage.ToLower().Trim()))
             {
                 case "!commands":
                     ExecuteCommands();
