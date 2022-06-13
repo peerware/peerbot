@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -311,8 +311,8 @@ namespace ChatBot
                 case "speed":
                     double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
-                    if (speed < 0.5 || speed > 2)
-                        Say("@" + username + " enter a number from 0.5-2");
+                    if (speed < 0.75 || speed > 2)
+                        Say("@" + username + " enter a number from 0.75-2");
                     else
                     {
                         settings.SetSpeed(speed);
@@ -323,8 +323,8 @@ namespace ChatBot
                 case "pitch":
                     double pitch = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
-                    if (pitch < -20 || pitch > 20)
-                        Say("@" + username + " enter a number from -20 to 20");
+                    if (pitch < -10 || pitch > 10)
+                        Say("@" + username + " enter a number from -10 to 10");
                     else
                     {
                         settings.SetPitch(pitch);
@@ -346,6 +346,7 @@ namespace ChatBot
                 case "french":
                 case "japanese":
                 case "french canadian":
+                case "uk":
                 case "dialect":
                     {
                         SaveDialectSayResult(settings, ttsCommand, username);
