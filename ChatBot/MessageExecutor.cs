@@ -121,6 +121,9 @@ namespace ChatBot
                 case "!emotes":
                     ExecuteEmotes();
                     break;
+                case "!week":
+                    ExecuteWeek();
+                    break;
             }
         }
 
@@ -158,12 +161,17 @@ namespace ChatBot
             else if (hivescoreDifference > 0)
                 Say("+" + hivescoreDifference + " since yesterday ");
             else if (hivescoreDifference < 0)
-                Say(Math.Abs(hivescoreDifference) + " since yesterday ");
+                Say("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
         }
 
         private void ExecuteGiveaway(string username)
         {
             Say("@" + username + " use !claim");
+        }
+
+        private void ExecuteWeek()
+        {
+            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-7)).ToString() + " hivescore since last week");
         }
 
         private void ExecuteClaim(string username)
