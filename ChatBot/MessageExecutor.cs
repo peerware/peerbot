@@ -295,7 +295,7 @@ namespace ChatBot
             switch (TTSCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: on/off, speed (0.55-2), pitch (-20 to 20), gender (man, woman, neutral, unspecified), dialect (aus, ireland, south africa, uk, america, french, japanese, bog)");
+                    Say("!tts <setting> <value>. Settings: on/off, speed (0.55-2), pitch (-20 to 20), man, woman, dialect (aus, ireland, south africa, uk, america, french, japanese, bog)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "enable":
@@ -361,17 +361,14 @@ namespace ChatBot
                         Say("dialect saved");
                         break;
                     }
-                case "gender":
-                    {
-                        bool IsSaved = settings.SetGender(TTSArguments);
-
-                        if (IsSaved)
-                            Say("gender saved");
-                        else
-                            Say("@" + Username + " Choose between man, woman, neutral, and unspecified");
-                        MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
-                        break;
-                    }
+                case "man":
+                case "woman":
+                case "male":
+                case "female":
+                case "unspecified":
+                case "neutral":
+                    SaveGenderSayResult(settings, TTSCommand, Username);
+                    break;
                 case "silence":
                     {
                         Config.IsTextToSpeechEnabled = false;
@@ -385,6 +382,17 @@ namespace ChatBot
                         break;
                     }
             }
+        }
+
+        private void SaveGenderSayResult(MessageSpeakerSettings settings, string TTSArguments, string Username)
+        {
+            bool IsSaved = settings.SetGender(TTSArguments);
+
+            if (IsSaved)
+                Say("gender saved");
+            else
+                Say("@" + Username + " Choose between man, woman, neutral, and unspecified");
+            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
         }
 
         private void Say(string Message)

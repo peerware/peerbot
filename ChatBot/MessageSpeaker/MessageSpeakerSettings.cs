@@ -38,23 +38,24 @@ namespace ChatBot.MessageSpeaker
                 isSpeechEnabled = false;
         }
 
-        public bool SetGender(string argument)
-        {            switch (argument)
+        public bool SetGender(string gender)
+        {   
+            switch (gender)
             {
                 case "man":
-                    gender = SsmlVoiceGender.Male;
+                    this.gender = SsmlVoiceGender.Male;
                     return true;
                     break;
                 case "woman":
-                    gender = SsmlVoiceGender.Female;
+                    this.gender = SsmlVoiceGender.Female;
                     return true;
                     break;
                 case "unspecified":
-                    gender = SsmlVoiceGender.Unspecified;
+                    this.gender = SsmlVoiceGender.Unspecified;
                     return true;
                     break;
                 case "neutral":
-                    gender = SsmlVoiceGender.Neutral;
+                    this.gender = SsmlVoiceGender.Neutral;
                     return true;
                     break;
                 default:
