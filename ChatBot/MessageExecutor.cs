@@ -295,7 +295,7 @@ namespace ChatBot
             switch (TTSCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: on/off, speed (0.55-2), pitch (-20 to 20), man, woman, dialect (aus, ireland, south africa, uk, america, french, japanese, bog)");
+                    Say("!tts <setting> <value>. Settings: on/off, man, woman, speed (0.55-2), pitch (-20 to 20), dialect (aus, ireland, south africa, uk, america, french, japanese, bog)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "enable":
