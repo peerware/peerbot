@@ -59,7 +59,7 @@ namespace ChatBot
 
             switch (GetMessageCommand(cleanedMessage.ToLower().Trim()))
             {
-                case "!commands":
+                case "!help":
                     ExecuteCommands();
                     break;
                 case "!uptime":
@@ -103,7 +103,6 @@ namespace ChatBot
                     break;
                 case "!today":
                 case "!daily":
-                case "!stats":
                     ExecuteDailyStats();
                     break;
                 case "!vm":
@@ -123,6 +122,12 @@ namespace ChatBot
                     break;
                 case "!week":
                     ExecuteWeek();
+                    break;
+                case "!month":
+                    ExecuteMonth();
+                    break;
+                case "!stats":
+                    ExecuteStats();
                     break;
             }
         }
@@ -149,7 +154,7 @@ namespace ChatBot
 
         private void ExecuteCommands()
         {
-            Say("!uptime !giveaway !downtime !av !sens !xhair !tts !followage !yesterday !elo !emotes");
+            Say("!uptime !giveaway !downtime !av !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
         }
 
         private void ExecuteYesterday()
@@ -172,6 +177,19 @@ namespace ChatBot
         private void ExecuteWeek()
         {
             Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-7)).ToString() + " hivescore since last week");
+        }
+
+        private void ExecuteMonth()
+        {
+            Say("this is broken and idk why");
+            //Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31)).ToString() + " hivescore since last month");
+        }
+
+        private void ExecuteStats()
+        {
+            ExecuteYesterday();
+            ExecuteWeek();
+            ExecuteMonth();
         }
 
         private void ExecuteClaim(string username)
