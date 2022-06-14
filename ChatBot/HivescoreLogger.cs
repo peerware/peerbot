@@ -51,8 +51,14 @@ namespace ChatBot
             if (File.Exists(filePath))
                 allLoggedScores = File.ReadAllLines(filePath).ToList();
 
-            // Get the hivescore values as a list
-            List<int> minDateHivescores = allLoggedScores.Where(o => long.Parse(o.Substring(0, o.IndexOf(":"))) >= minimumDate.Ticks).Select(o => int.Parse(o.Substring(o.IndexOf(":") + 1))).ToList();
+            // Get the hivescores that come after the min date as a list
+            List<int> minDateHivescores = new List<int>();
+            foreach (var datedHivescore in allLoggedScores)
+            {
+                long hivescoreDate = long.Parse(datedHivescore.Substring(0, datedHivescore.IndexOf(':')));
+                if (hivescoreDate >= minimumDate.Ticks)
+                    minDateHivescores.Add(int.Parse(datedHivescore.Substring(datedHivescore.IndexOf(':') + 1)));
+            }
 
             if (minDateHivescores.Count == 0)
                 return 0;

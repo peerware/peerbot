@@ -181,8 +181,7 @@ namespace ChatBot
 
         private void ExecuteMonth()
         {
-            Say("!month is broken and idk why (will figure it out later)");
-            //Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31)).ToString() + " hivescore since last month");
+            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31)).ToString() + " hivescore since last month");
         }
 
         private void ExecuteStats()
