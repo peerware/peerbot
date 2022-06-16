@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,7 +60,7 @@ namespace ChatBot
             switch (GetMessageCommand(cleanedMessage.ToLower().Trim()))
             {
                 case "!help":
-                    ExecuteCommands();
+                    ExecuteHelp();
                     break;
                 case "!uptime":
                     ExecuteUptime();
@@ -152,7 +152,7 @@ namespace ChatBot
                 return "";
         }
 
-        private void ExecuteCommands()
+        private void ExecuteHelp()
         {
             Say("!uptime !giveaway !downtime !av !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
         }
