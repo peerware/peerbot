@@ -113,8 +113,6 @@ namespace ChatBot
                     return "AlienPls";
                 case 4:
                     return "BoneZone";
-                case 5:
-                    return "VeryPog";
                 case 6:
                     return "AlienPls";
                 default:
