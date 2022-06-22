@@ -193,6 +193,7 @@ namespace ChatBot.MessageSpeaker
             {
                 case "australian":
                 case "australia":
+                case "aus":
                     return eDialects.australian;
                 case "irish":
                 case "ireland":
@@ -212,6 +213,7 @@ namespace ChatBot.MessageSpeaker
                 case "america":
                     return eDialects.american;
                 case "french":
+                case "france":
                     return eDialects.french;
                 case "japanese":
                 case "japan":

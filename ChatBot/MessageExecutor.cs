@@ -232,12 +232,12 @@ namespace ChatBot
         {
             Say("5Head AYAYA EZY FeelsBadMan FeelsDankMan Flushed Hmm KEKW LULW mericCat monkaS OMEGALUL PauseChamp peepoSad pepeGun PepeHands");
             Say("PepeLaugh PepoG Pog POGGERS Prayge Stuckge Sweating widepeepoHappy widepeepoSad pepeRun BoneZone Bedge SUSSY AlienPls Sadge");
-            Say("VeryPog TrollDespair pepeMeltdown lickL pepeSadJam hoSway PensiveWobble pepeDS RareMonkey");
+            Say("TrollDespair pepeMeltdown lickL pepeSadJam hoSway PensiveWobble pepeDS RareMonkey");
         }
 
         private void ExecuteBot()
         {
-            Say("this handmade bot runs on .net core" );
+            Say("this handmade bot runs on .net 6" );
         }
 
         private void ExecuteRank()
@@ -364,6 +364,7 @@ namespace ChatBot
                     break;
                 case "australian":
                 case "australia":
+                case "aus":
                 case "irish":
                 case "ireland":
                 case "german":
