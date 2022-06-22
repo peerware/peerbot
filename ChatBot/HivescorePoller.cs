@@ -135,8 +135,6 @@ namespace ChatBot
                     return "Sadge";
                 case 4:
                     return "mericCat";
-                case 5:
-                    return "VeryPog";
                 case 6:
                     return "TrollDespair";
                 case 7:
