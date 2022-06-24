@@ -9,10 +9,18 @@ namespace ChatBot
     public class HivescoreLogger
     {
         static object locker = new object();
-        static string filePath = @"C:\Users\Peer\desktop\Desktop\hivescoredata.txt";
+        static string hivescorePath = @"C:\Users\Peer\desktop\Desktop\hivescoredata.txt";
+        static string tdPath = @"C:\Users\Peer\desktop\Desktop\tddata.txt";
 
-        public static void LogHivescore(int hivescore)
+        public static void LogHivescore(int hivescore, HivescorePoller.ePollingType pollingType)
         {
+            string filePath = "";
+
+            if (pollingType == HivescorePoller.ePollingType.hivescore)
+                filePath = hivescorePath;
+            else if (pollingType == HivescorePoller.ePollingType.td)
+                filePath = tdPath;
+
             while (true)
             {
                 lock (locker)
@@ -44,9 +52,16 @@ namespace ChatBot
         /// </summary>
         /// <param name="minimumDate"></param>
         /// <returns></returns>
-        public static int GetHivescoreChange(DateTime minimumDate)
+        public static int GetHivescoreChange(DateTime minimumDate, HivescorePoller.ePollingType pollingType)
         {
             List<string> allLoggedScores = new List<string>();
+
+            string filePath = "";
+
+            if (pollingType == HivescorePoller.ePollingType.hivescore)
+                filePath = hivescorePath;
+            else if (pollingType == HivescorePoller.ePollingType.td)
+                filePath = tdPath;
 
             if (File.Exists(filePath))
                 allLoggedScores = File.ReadAllLines(filePath).ToList();

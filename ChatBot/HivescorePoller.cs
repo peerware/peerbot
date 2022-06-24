@@ -14,10 +14,19 @@ namespace ChatBot
         private Task PollingTask;
         private List<int> PreviousHivescores = new List<int>();
         private TwitchClient client;
+        private ePollingType pollingType;
 
-        public HivescorePoller(TwitchClient client)
+
+        public enum ePollingType
+        {
+            hivescore,
+            td
+        }
+
+        public HivescorePoller(TwitchClient client, ePollingType pollingType)
         {
             this.client = client;
+            this.pollingType = pollingType;
         }
 
         /// <summary>
@@ -32,12 +41,17 @@ namespace ChatBot
                 {
                     Thread.Sleep(1000 * 30); // 30 seconds                                                                      
 
-                    int freshHivescore = int.Parse(HivescoreFetcher.FetchHivescore().Result);
+                    int freshHivescore = 0;
+                    
+                    if (pollingType == ePollingType.hivescore)
+                        freshHivescore = int.Parse(HivescoreFetcher.FetchHivescore().Result);
+                    else if (pollingType == ePollingType.td)
+                        freshHivescore = int.Parse(HivescoreFetcher.FetchTDELO().Result);
 
                     // If we got a new hivescore send a message
                     if (PreviousHivescores.Count > 0 && !PreviousHivescores.Last().Equals(freshHivescore))
                     {
-                        HivescoreLogger.LogHivescore(freshHivescore);
+                        HivescoreLogger.LogHivescore(freshHivescore, pollingType);
                         client.SendMessage(Config.channelUsername, GetDisplayMessage(PreviousHivescores.Last(), freshHivescore));
                         PreviousHivescores.Add(freshHivescore);
                     }

@@ -19,6 +19,7 @@ namespace ChatBot
         TwitchLib.Api.Helix.Models.Streams.GetStreams.Stream channelStream = null;
         TwitchClient client = null;
         HivescorePoller hivescorePoller;
+        HivescorePoller tdPoller;
         DateTime InitializationTime;
 
         // Don't allow instantiation from outside this class (forces factory-ish instantiaiton)
@@ -34,9 +35,12 @@ namespace ChatBot
             messageExecutor.channelStream = (await messageExecutor.streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
             messageExecutor.client = client;
 
-            // Poll for hivescore
-            messageExecutor.hivescorePoller = new HivescorePoller(client);
+            // Poll for regular hivescore and td hivescore
+            messageExecutor.hivescorePoller = new HivescorePoller(client, HivescorePoller.ePollingType.hivescore);
             messageExecutor.hivescorePoller.BeginPolling();
+
+            messageExecutor.tdPoller = new HivescorePoller(client, HivescorePoller.ePollingType.td);
+            messageExecutor.tdPoller.BeginPolling();
 
             // Get the latest message in the logs (assume this is when the last stream happened, this might change in the future but its fine for now)
             messageExecutor.InitializationTime = MessageLogger.GetTimeOfLatestMessage();
@@ -159,7 +163,7 @@ namespace ChatBot
 
         private void ExecuteYesterday()
         {
-            int hivescoreDifference = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1));
+            int hivescoreDifference = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
 
             if (hivescoreDifference == 0)
                 Say("no data Sadge");
@@ -176,12 +180,12 @@ namespace ChatBot
 
         private void ExecuteWeek()
         {
-            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-7)).ToString() + " hivescore since last week");
+            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-7), HivescorePoller.ePollingType.hivescore).ToString() + " hivescore since last week");
         }
 
         private void ExecuteMonth()
         {
-            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31)).ToString() + " hivescore since last month");
+            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31), HivescorePoller.ePollingType.hivescore).ToString() + " hivescore since last month");
         }
 
         private void ExecuteStats()
@@ -242,7 +246,7 @@ namespace ChatBot
 
         private void ExecuteRank()
         {
-            int hivescoreChange = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1));
+            int hivescoreChange = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
 
             if (hivescoreChange >= 0)
                 Say(HivescoreFetcher.FetchHivescore().Result + " hivescore +" + Math.Abs(hivescoreChange) + " since yesterday");
