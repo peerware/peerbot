@@ -9,8 +9,8 @@ namespace ChatBot
     public class HivescoreLogger
     {
         static object locker = new object();
-        static string hivescorePath = @"C:\Users\Peer\desktop\Desktop\hivescoredata.txt";
-        static string tdPath = @"C:\Users\Peer\desktop\Desktop\tddata.txt";
+        static string hivescorePath = Config.fileSavePath + "hivescoredata.txt";
+        static string tdPath = Config.fileSavePath + "tddata.txt";
 
         public static void LogHivescore(int hivescore, HivescorePoller.ePollingType pollingType)
         {

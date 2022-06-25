@@ -13,7 +13,7 @@ namespace ChatBot.MessageSpeaker
         TextToSpeechClient client = TextToSpeechClient.Create();
         Mp3FileReader reader = null;
         WaveOut waveOut = null;
-        string settingsFilePath = @"C:\Users\Peer\Desktop\desktop\output.mp3";
+        string settingsFilePath = Config.fileSavePath + "output.mp3";
 
         // Speaks a message using the user's saved settings (otherwise use custom defaults)
         public void SpeakMessage(ChatMessage message)

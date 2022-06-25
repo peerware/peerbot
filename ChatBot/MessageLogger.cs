@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -10,8 +10,8 @@ namespace ChatBot
     public class MessageLogger
     {
         static object locker = new object();
-        static string filePath = @"C:\Users\Peer\desktop\\Desktop\logs.txt";
-
+        static string filePath = Config.fileSavePath + "logs.txt";
+        
         public static void LogMessage(ChatMessage message)
         {
             while (true)
