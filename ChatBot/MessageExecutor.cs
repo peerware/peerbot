@@ -87,9 +87,6 @@ namespace ChatBot
                 case "!av":
                     ExecuteAV();
                     break;
-                case "!asmr":
-                    ExecuteASMR();
-                    break;
                 case "!dpi":
                 case "!sens":
                     ExecuteDPI();
@@ -120,9 +117,6 @@ namespace ChatBot
                     break;
                 case "!yesterday":
                     ExecuteYesterday();
-                    break;
-                case "!emotes":
-                    ExecuteEmotes();
                     break;
                 case "!week":
                     ExecuteWeek();
@@ -225,18 +219,6 @@ namespace ChatBot
             {
                 Say("not following ;^(");
             }
-        }
-
-        private void ExecuteASMR()
-        {
-            Say("asmrs so he still \"comms\"");
-        }
-
-        private void ExecuteEmotes()
-        {
-            Say("5Head AYAYA EZY FeelsBadMan FeelsDankMan Flushed Hmm KEKW LULW mericCat monkaS OMEGALUL PauseChamp peepoSad pepeGun PepeHands");
-            Say("PepeLaugh PepoG Pog POGGERS Prayge Stuckge Sweating widepeepoHappy widepeepoSad pepeRun BoneZone Bedge SUSSY AlienPls Sadge");
-            Say("TrollDespair pepeMeltdown lickL pepeSadJam hoSway PensiveWobble pepeDS RareMonkey");
         }
 
         private void ExecuteBot()
