@@ -42,7 +42,7 @@ namespace ChatBot.MessageSpeaker
                     preset.languageCode = "fr-FR";
                     break;
                 case voicePresets.bog:
-                    preset.speakingRate = 0.764;
+                    preset.speakingRate = 0.57;
                     preset.pitch = -2.5;
                     preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Male;
                     preset.isSpeechEnabled = true;

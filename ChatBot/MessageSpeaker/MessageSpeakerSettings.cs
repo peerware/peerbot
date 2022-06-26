@@ -189,7 +189,7 @@ namespace ChatBot.MessageSpeaker
 
         public static eDialects GetDialectFromString(string dialect)
         {
-            switch (dialect)
+            switch (dialect.ToLower)
             {
                 case "australian":
                 case "australia":
@@ -219,6 +219,7 @@ namespace ChatBot.MessageSpeaker
                 case "japan":
                     return eDialects.japanese;
                 case "canadian french":
+                case "fr-ca":
                     return eDialects.canadianFrench;
                 default:
                     return eDialects.none;
