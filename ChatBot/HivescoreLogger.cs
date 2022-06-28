@@ -25,7 +25,7 @@ namespace ChatBot
             {
                 lock (locker)
                 {
-                    // Milliseconds:hivescore
+                    // ticks:hivescore
                     string formattedHivescore = DateTime.Now.Ticks + ":" + hivescore;
 
                     // Log to computer 
