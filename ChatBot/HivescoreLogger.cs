@@ -35,7 +35,7 @@ namespace ChatBot
                         if (!File.Exists(filePath))
                             File.Create(filePath);
 
-                        // Append remaining text
+                        // Append ticks:hivescore to end of file
                         File.AppendAllText(filePath, formattedHivescore + "\n");
                         return;
                     }
