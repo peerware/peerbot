@@ -189,7 +189,7 @@ namespace ChatBot.MessageSpeaker
 
         public static eDialects GetDialectFromString(string dialect)
         {
-            switch (dialect.ToLower)
+            switch (dialect.ToLower())
             {
                 case "australian":
                 case "australia":
