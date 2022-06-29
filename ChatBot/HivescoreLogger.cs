@@ -41,7 +41,7 @@ namespace ChatBot
                     }
                     catch (Exception e)
                     {
-                        Console.Write("Hivescore logging failed.");
+                        Console.WriteLine("Hivescore logging failed. " + e.Message.Substring(0, 50));
                     }
                 }
             }
