@@ -106,6 +106,9 @@ namespace ChatBot
                 case "!daily":
                     ExecuteDailyStats();
                     break;
+                case "!tomorrow":
+                    ExecuteTomorrow();
+                    break;
                 case "!vm":
                     ExecuteViewModel();
                     break;
@@ -435,6 +438,23 @@ namespace ChatBot
         private void Say(string Message)
         {
             client.SendMessage(Config.channelUsername, Message);
+        }
+
+        private void ExecuteTomorrow()
+        {
+            var quotes = new string[]
+            {
+                "\"The best way to predict the future is to create it.\" -Abraham Lincoln",
+                "\"Education is the passport to the future, for tomorrow belongs to those who prepare for it today.\" -Malcolm X",
+                "\"The past cannot be changed. The future is yet in your power.\" -Mary Pickford",
+                "\"What is coming is better than what is gone.\" -Arabic Proverb",
+                "\"The future depends on what we do in the present.\" -Mahatma Gandi",
+                "\"Just because the past didn't turn out like you wanted it to, doesn't mean your future can't be better than you imagined.\" -Anonymous",
+                "\"The future starts today, not tomorrow.\" -Pope John Paul II",
+                "\"The past is your lesson. The present is your gift. The future is your motivation.\" -Anonymous",
+                "\"A person can change his future by merely changing his attitude.\" -Earl Nightingale"
+            };
+            Say(quotes.ElementAt(new Random().Next(0, quotes.Length)));
         }
     }
 }
