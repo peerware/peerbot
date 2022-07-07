@@ -22,7 +22,7 @@ namespace ChatBot
         {
             message = message.ToLower();
 
-            if (message.Contains("bigfollows") || message.Contains("t to become famous") || username == "moobot" || message.Contains("primes and") || message.Contains("buy followers") || message.Contains("racis"))
+            if (message.Contains("bigfollows") || message.Contains("t to become famous") || username == "moobot" || message.Contains("primes and") || message.Contains("buy followers") || message.Contains("racis") || message.Contains("qualitу sеrvice") || message.Contains("rеal frее") || message.Contains("Тор streаmers"))
                 return true;
             else
                 return false;
