@@ -130,6 +130,9 @@ namespace ChatBot
                 case "!stats":
                     ExecuteStats();
                     break;
+                case "!quote":
+                    ExecuteQuote(message.Message);
+                    break;
             }
         }
 
@@ -151,6 +154,16 @@ namespace ChatBot
                 return message.Substring(IndexOfSpace).ToLower();
             else
                 return "";
+        }
+
+        private void ExecuteQuote(string message)
+        {
+            string arguments = GetMessageArgument(message);
+
+            if (message == "!quote")
+                Say(QuoteManager.GetRandomQuote());
+            else if (arguments.StartsWith("add"))
+                QuoteManager.AddQuote(GetMessageArgument(arguments));
         }
 
         private void ExecuteHelp()
