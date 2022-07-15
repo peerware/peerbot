@@ -168,7 +168,7 @@ namespace ChatBot
 
         private void ExecuteHelp()
         {
-            Say("!uptime !giveaway !downtime !av !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
+            Say("!uptime !giveaway !downtime !av !quote !quote add <quote> !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
         }
 
         private void ExecuteYesterday()
