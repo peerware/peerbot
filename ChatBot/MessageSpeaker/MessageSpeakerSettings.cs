@@ -138,7 +138,7 @@ namespace ChatBot.MessageSpeaker
                         voiceParams.Name = "de-DE-Standard-D";
                         break;
                     case eDialects.american:
-                        voiceParams.Name = "en-US-Wavenet-B";
+                        voiceParams.Name = "en-US-Standard-D";
                         break;
                     case eDialects.french:
                         voiceParams.Name = "fr-FR-Wavenet-B";
