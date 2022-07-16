@@ -62,40 +62,37 @@ namespace ChatBot.MessageSpeaker
 
         public static void SaveSettingsToStorage(MessageSpeakerSettings messageSpeakerSettings)
         {
-            while (true)
+            lock (locker)
             {
-                lock (locker)
+                // First get the existing settings from storage to see if we are saving new vs overwriting
+                MessageSpeakerSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
+
+                // If the setting already exists delete it then save the new settings
+                if (settings.twitchUsername.Length > 0)
                 {
-                    // First get the existing settings from storage to see if we are saving new vs overwriting
-                    MessageSpeakerSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
+                    List<string> allSettings = File.ReadAllLines(filePath).ToList();
+                    string existingSettingsLine = "";
 
-                    // If the setting already exists delete it then save the new settings
-                    if (settings.twitchUsername.Length > 0)
+                    foreach (var setting in allSettings)
                     {
-                        List<string> allSettings = File.ReadAllLines(filePath).ToList();
-                        string existingSettingsLine = "";
-
-                        foreach (var setting in allSettings)
-                        {
-                            if (setting.Contains(settings.twitchUsername))
-                                existingSettingsLine = setting;
-                        }
-                        allSettings.Remove(existingSettingsLine);
-
-                        File.Delete(filePath);
-                        File.WriteAllLines(filePath, allSettings);
+                        if (setting.Contains(settings.twitchUsername))
+                            existingSettingsLine = setting;
                     }
+                    allSettings.Remove(existingSettingsLine);
 
-                    // Save the new settings
-                    try
-                    {
-                        File.AppendAllText(filePath, messageSpeakerSettings.twitchUsername + ":" + JsonConvert.SerializeObject(messageSpeakerSettings) + "\n");
-                        return;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.Write("Message logging failed.");
-                    }
+                    File.Delete(filePath);
+                    File.WriteAllLines(filePath, allSettings);
+                }
+
+                // Save the new settings
+                try
+                {
+                    File.AppendAllText(filePath, messageSpeakerSettings.twitchUsername + ":" + JsonConvert.SerializeObject(messageSpeakerSettings) + "\n");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Message logging failed.");
                 }
             }
         }
