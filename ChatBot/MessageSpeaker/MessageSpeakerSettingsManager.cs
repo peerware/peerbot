@@ -111,13 +111,6 @@ namespace ChatBot.MessageSpeaker
                 }
             }
 
-            // If the user didn't have any settings set the default to be a preconfigurated voice and call this method again
-            if (Username == "")
-            {
-                SetPresetVoice(Username, voicePresets.frenchWoman);
-                return GetSettingsFromStorage(Username);
-            }
-
             return Output;
         }
     }
