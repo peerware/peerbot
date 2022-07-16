@@ -204,7 +204,7 @@ namespace ChatBot.MessageSpeaker
                 case "german":
                 case "germany":
                     return eDialects.german;
-                case "south african":
+                case "south":
                     return eDialects.southAfrican;
                 case "british":
                 case "uk":

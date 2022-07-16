@@ -373,7 +373,7 @@ namespace ChatBot
                 case "germany":
                 case "italian":
                 case "italy":
-                case "south african":
+                case "south":
                 case "british":
                 case "american":
                 case "french":
