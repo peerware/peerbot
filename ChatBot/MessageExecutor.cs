@@ -343,8 +343,8 @@ namespace ChatBot
                 case "speed":
                     double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
-                    if (speed < 0.75 || speed > 2)
-                        Say("@" + username + " enter a number from 0.75-2");
+                    if (speed < 0.65 || speed > 2)
+                        Say("@" + username + " enter a number from 0.65-2");
                     else
                     {
                         settings.SetSpeed(speed);
