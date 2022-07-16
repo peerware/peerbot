@@ -343,8 +343,8 @@ namespace ChatBot
                 case "speed":
                     double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
 
-                    if (speed < 0.65 || speed > 2)
-                        Say("@" + username + " enter a number from 0.65-2");
+                    if (speed < 0.5 || speed > 2)
+                        Say("@" + username + " enter a number from 0.5-2");
                     else
                     {
                         settings.SetSpeed(speed);
@@ -374,11 +374,12 @@ namespace ChatBot
                 case "italian":
                 case "italy":
                 case "british":
+                case "uk":
                 case "american":
+                case "america":
                 case "french":
                 case "japanese":
                 case "french canadian":
-                case "uk":
                 case "dialect":
                     {
                         SaveDialectSayResult(settings, ttsCommand, username);
