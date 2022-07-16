@@ -156,7 +156,7 @@ namespace ChatBot.MessageSpeaker
                 switch (GetDialectFromString(languageCode))
                 {
                     case eDialects.australian:
-                        voiceParams.Name = "en-AU-Wavenet-C";
+                        voiceParams.Name = "en-AU-Neural2-A";
                         break;
                     case eDialects.british:
                         voiceParams.Name = "en-GB-Wavenet-F";
@@ -168,7 +168,7 @@ namespace ChatBot.MessageSpeaker
                         voiceParams.Name = "de-DE-Wavenet-A";
                         break;
                     case eDialects.american:
-                        voiceParams.Name = "en-US-Standard-F";
+                        voiceParams.Name = "en-US-Wavenet-F";
                         break;
                     case eDialects.french:
                         voiceParams.Name = "fr-FR-Wavenet-A";
@@ -189,6 +189,7 @@ namespace ChatBot.MessageSpeaker
                 case "australian":
                 case "australia":
                 case "aus":
+                case "en-au":
                     return eDialects.australian;
                 case "irish":
                 case "ireland":
@@ -204,6 +205,7 @@ namespace ChatBot.MessageSpeaker
                     return eDialects.british;
                 case "american":
                 case "america":
+                case "en-us":
                     return eDialects.american;
                 case "french":
                 case "france":
