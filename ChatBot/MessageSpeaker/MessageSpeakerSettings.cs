@@ -119,67 +119,86 @@ namespace ChatBot.MessageSpeaker
             VoiceSelectionParams voiceParams = new VoiceSelectionParams();
             voiceParams.LanguageCode = languageCode;
             voiceParams.SsmlGender = gender;
+            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode);
 
+            return voiceParams;
+        }
+
+        public string GetVoiceNameFromLanguageCode(string languageCode)
+        {
             // Hand picked voice sounds by region - if the enum isnt covered in this list just use the default voice name
             if (gender == SsmlVoiceGender.Male)
             {
-                switch (GetDialectFromString(languageCode))
+                switch (GetDialectFromLanguageCode(languageCode))
                 {
                     case eDialects.australian:
-                        voiceParams.Name = "en-AU-Wavenet-D";
-                        break;
+                        return "en-AU-Wavenet-D";
                     case eDialects.british:
-                        voiceParams.Name = "en-GB-Wavenet-D";
-                        break;
+                        return "en-GB-Wavenet-D";
                     case eDialects.italian:
-                        voiceParams.Name = "it-IT-Wavenet-D";
-                        break;
+                        return "it-IT-Wavenet-D";
                     case eDialects.german:
-                        voiceParams.Name = "de-DE-Standard-D";
-                        break;
+                        return "de-DE-Standard-D";
                     case eDialects.american:
-                        voiceParams.Name = "en-US-Standard-D";
-                        break;
+                        return "en-US-Standard-D";
                     case eDialects.french:
-                        voiceParams.Name = "fr-FR-Wavenet-B";
-                        break;
+                        return "fr-FR-Wavenet-B";
                     case eDialects.japanese:
-                        voiceParams.Name = "ja-JP-Wavenet-D";
-                        break;
+                        return "ja-JP-Wavenet-D";
                     case eDialects.canadianFrench:
-                        voiceParams.Name = "fr-CA-Standard-D";
-                        break;
+                        return "fr-CA-Standard-D";
+                    default:
+                        return "fr-FR-Wavenet-B";
                 }
             }
             else if (gender == SsmlVoiceGender.Female)
             {
-                switch (GetDialectFromString(languageCode))
+                switch (GetDialectFromLanguageCode(languageCode))
                 {
                     case eDialects.australian:
-                        voiceParams.Name = "en-AU-Neural2-A";
-                        break;
+                        return "en-AU-Wavenet-C";
                     case eDialects.british:
-                        voiceParams.Name = "en-GB-Wavenet-F";
-                        break;
+                        return "en-GB-Wavenet-F";
                     case eDialects.italian:
-                        voiceParams.Name = "it-IT-Wavenet-A";
-                        break;
+                        return "it-IT-Wavenet-A";
                     case eDialects.german:
-                        voiceParams.Name = "de-DE-Wavenet-A";
-                        break;
+                        return "de-DE-Wavenet-A";
                     case eDialects.american:
-                        voiceParams.Name = "en-US-Wavenet-F";
-                        break;
+                        return "en-US-Standard-F";
                     case eDialects.french:
-                        voiceParams.Name = "fr-FR-Wavenet-A";
-                        break;
+                        return "fr-FR-Wavenet-A";
                     case eDialects.japanese:
-                        voiceParams.Name = "ja-JP-Wavenet-C";
-                        break;
+                        return "ja-JP-Wavenet-C";
+                    default:
+                        return "fr-FR-Wavenet-A";
                 }
             }
+            else return "fr-FR-Wavenet-A";
+        }
 
-            return voiceParams;
+        public eDialects GetDialectFromLanguageCode(string languageCode)
+        {
+            switch (languageCode)
+            {
+                case "en-GB":
+                    return eDialects.british;
+                case "it-IT":
+                    return eDialects.italian;
+                case "de-DE":
+                    return eDialects.german;
+                case "en-AU":
+                    return eDialects.australian;
+                case "en-US":
+                    return eDialects.american;
+                case "fr-FR":
+                    return eDialects.french;
+                case "ja-JP":
+                    return eDialects.japanese;
+                case "fr-CA":
+                    return eDialects.canadianFrench;
+                default:
+                    return eDialects.french;
+            }
         }
 
         public static eDialects GetDialectFromString(string dialect)
@@ -189,7 +208,6 @@ namespace ChatBot.MessageSpeaker
                 case "australian":
                 case "australia":
                 case "aus":
-                case "en-au":
                     return eDialects.australian;
                 case "irish":
                 case "ireland":
@@ -205,7 +223,6 @@ namespace ChatBot.MessageSpeaker
                     return eDialects.british;
                 case "american":
                 case "america":
-                case "en-us":
                     return eDialects.american;
                 case "french":
                 case "france":
@@ -214,7 +231,6 @@ namespace ChatBot.MessageSpeaker
                 case "japan":
                     return eDialects.japanese;
                 case "canadian french":
-                case "fr-ca":
                     return eDialects.canadianFrench;
                 default:
                     return eDialects.none;
