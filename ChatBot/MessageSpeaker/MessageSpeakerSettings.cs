@@ -19,7 +19,6 @@ namespace ChatBot.MessageSpeaker
         {
             australian,
             irish,
-            southAfrican,
             italian,
             german,
             british,
@@ -83,10 +82,6 @@ namespace ChatBot.MessageSpeaker
                     break;
                 case eDialects.irish:
                     languageCode = "en-IE";
-                    return true;
-                    break;
-                case eDialects.southAfrican:
-                    languageCode = "en-ZA";
                     return true;
                     break;
                 case eDialects.british:
@@ -204,8 +199,6 @@ namespace ChatBot.MessageSpeaker
                 case "german":
                 case "germany":
                     return eDialects.german;
-                case "south":
-                    return eDialects.southAfrican;
                 case "british":
                 case "uk":
                     return eDialects.british;

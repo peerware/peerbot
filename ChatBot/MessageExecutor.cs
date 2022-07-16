@@ -327,7 +327,7 @@ namespace ChatBot
             switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: on/off, man, woman, aus, south africa, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
+                    Say("!tts <setting> <value>. Settings: on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "enable":
@@ -373,7 +373,6 @@ namespace ChatBot
                 case "germany":
                 case "italian":
                 case "italy":
-                case "south":
                 case "british":
                 case "american":
                 case "french":
@@ -433,7 +432,7 @@ namespace ChatBot
             if (IsSaved)
                 Say("dialect saved");
             else
-                Say("@" + username + " Choose between australian, irish, german, italian, south african, british, american, french, japanese");
+                Say("@" + username + " Choose between australian, irish, german, italian, british, american, french, japanese");
             MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
         }
 
