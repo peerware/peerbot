@@ -9,10 +9,10 @@ namespace ChatBot.MessageSpeaker
     public class MessageSpeakerSettings
     {
         public string twitchUsername = "";
-        public double speakingRate = 0.8;
-        public double pitch = 0;
-        public string languageCode = "en-GB";
-        public SsmlVoiceGender gender = SsmlVoiceGender.Female;
+        public double speakingRate = 1.12;
+        public double pitch = -1.3;
+        public string languageCode = "fr-FR";
+        public SsmlVoiceGender gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Female;
         public bool isSpeechEnabled = true;
 
         public enum eDialects
