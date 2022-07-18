@@ -133,7 +133,7 @@ namespace ChatBot
                     ExecuteStats();
                     break;
                 case "!quote":
-                    ExecuteQuote(message.Message);
+                    ExecuteQuote(message.Username, message.Message);
                     break;
             }
         }
@@ -158,14 +158,20 @@ namespace ChatBot
                 return "";
         }
 
-        private void ExecuteQuote(string message)
+        private void ExecuteQuote(string username, string message)
         {
             string arguments = GetMessageArgument(message);
 
             if (message == "!quote")
+            {
                 Say(QuoteManager.GetRandomQuote());
+
+            }
             else if (arguments.StartsWith("add"))
+            {
                 QuoteManager.AddQuote(GetMessageArgument(arguments));
+                Say("it worked @" + username);
+            }
         }
 
         private void ExecuteHelp()
