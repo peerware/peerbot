@@ -164,7 +164,7 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.german:
                         return "de-DE-Wavenet-A";
                     case eDialects.american:
-                        return "en-US-Standard-F";
+                        return "en-US-Wavenet-F";
                     case eDialects.french:
                         return "fr-FR-Wavenet-A";
                     case eDialects.japanese:
