@@ -9,6 +9,8 @@ using TwitchLib.Api.Helix;
 using System.Threading.Tasks;
 using ChatBot.MessageSpeaker;
 using TwitchLib.Client.Events;
+using Newtonsoft;
+using Newtonsoft.Json;
 
 namespace ChatBot
 {
@@ -327,8 +329,11 @@ namespace ChatBot
             switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
+                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    break;
+                case "settings":
+                    Say("@" + username + " " + JsonConvert.SerializeObject(settings));
                     break;
                 case "enable":
                     settings.SetIsSpeechEnabled("enable");
