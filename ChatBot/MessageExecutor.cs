@@ -81,7 +81,9 @@ namespace ChatBot
                     ExecuteClaim(message.Username);
                     break;
                 case "!todo":
-                    ExecuteTodo(message.Username);
+                case "!idea":
+                case "!suggestion":
+                    ExecuteTodo(message.Username, message.Message);
                     break;
                 case "!downtime":
                     ExecuteDowntime();
@@ -223,8 +225,9 @@ namespace ChatBot
             Say("@" + username + " use !giveaway");
         }
 
-        private void ExecuteTodo(string username)
+        private void ExecuteTodo(string username, string message)
         {
+            IdeaLogger.LogIdea(username, message);
             Say("@" + username + " :pencil2:");
         }
 
