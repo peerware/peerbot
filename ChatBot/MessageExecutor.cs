@@ -174,6 +174,10 @@ namespace ChatBot
                 QuoteManager.AddQuote(GetMessageArgument(arguments));
                 Say("it worked @" + username);
             }
+            else if (Int32.TryParse(arguments, out _))
+            {
+                Say(QuoteManager.GetNumberedQuote(int.Parse(arguments)));
+            }
         }
 
         private void ExecuteHelp()

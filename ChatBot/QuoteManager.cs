@@ -28,6 +28,7 @@ namespace ChatBot
             }
             
         }
+
         public static string GetRandomQuote()
         {
             lock (locker)
@@ -47,7 +48,37 @@ namespace ChatBot
                     return "no quotes";
                 }
             }
-            
+        }
+
+        public static string GetNumberedQuote(int quoteNumber)
+        {
+            lock (locker)
+            {
+                try
+                {
+                    List<string> quotes = File.ReadAllLines(filePath).ToList();
+
+                    if (quotes.Count == 0)
+                        return "no quotes";
+                    else
+                    {
+                        try
+                        {
+                            string quote = quotes[quoteNumber - 1];
+                            return "\"" + quote + "\"";
+                        }
+                        catch (Exception e)
+                        {
+                            return "quote doesnt exist";
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Numbered quote fetching failed.");
+                    return "no quotes";
+                }
+            }
         }
     }
 }
