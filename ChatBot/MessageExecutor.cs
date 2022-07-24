@@ -359,7 +359,13 @@ namespace ChatBot
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "speed":
-                    double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
+                    double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : -200;
+
+                    if (speed == -200)
+                    {
+                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).speakingRate.ToString());
+                        return;
+                    }
 
                     if (speed < 0.5 || speed > 2)
                         Say("@" + username + " enter a number from 0.5-2");
@@ -371,7 +377,14 @@ namespace ChatBot
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "pitch":
-                    double pitch = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : 0;
+                    // If the user didn't specify a pitch then display their current pitch
+                    double pitch = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : -200;
+
+                    if (pitch == -200)
+                    {
+                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).pitch.ToString());
+                        return;
+                    }
 
                     if (pitch < -10 || pitch > 10)
                         Say("@" + username + " enter a number from -10 to 10");
@@ -380,6 +393,7 @@ namespace ChatBot
                         settings.SetPitch(pitch);
                         Say("pitch set");
                     }
+
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "australian":
