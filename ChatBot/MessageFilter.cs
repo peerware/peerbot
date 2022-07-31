@@ -35,6 +35,8 @@ namespace ChatBot
                 message.Contains("sorry for interrupting") ||
                 message.Contains("for your channel") ||
                 message.Contains("you my portfolio") ||
+                message.Contains("server crasher") ||
+                message.Contains("m189") ||
                 message.Contains("your graphics/branding"))
                 return true;
             else
