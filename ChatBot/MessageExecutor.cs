@@ -342,7 +342,7 @@ namespace ChatBot
             switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-20 to 20)");
+                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-10 to 10)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":
