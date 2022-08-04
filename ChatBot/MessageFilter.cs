@@ -37,6 +37,11 @@ namespace ChatBot
                 message.Contains("you my portfolio") ||
                 message.Contains("server crasher") ||
                 message.Contains("m189") ||
+                message.Contains("Hello!") ||
+                message.Contains("if you need real") ||
+                message.Contains("free and high quality") ||
+                message.Contains("top streamer") ||
+                message.Contains("your viewers") ||
                 message.Contains("your graphics/branding"))
                 return true;
             else
