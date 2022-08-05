@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -342,7 +342,7 @@ namespace ChatBot
             switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.55-2), pitch (-10 to 10)");
+                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.3-2), pitch (-10 to 10)");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":
@@ -367,8 +367,8 @@ namespace ChatBot
                         return;
                     }
 
-                    if (speed < 0.5 || speed > 2)
-                        Say("@" + username + " enter a number from 0.5-2");
+                    if (speed < 0.3 || speed > 2)
+                        Say("@" + username + " enter a number from 0.3-2");
                     else
                     {
                         settings.SetSpeed(speed);
