@@ -36,11 +36,12 @@ namespace ChatBot
                 try
                 {
                     List<string> quotes = File.ReadAllLines(filePath).ToList();
+                    int quoteNumber = new Random().Next(0, quotes.Count);
 
                     if (quotes.Count == 0)
                         return "no quotes";
                     else
-                        return "\"" + quotes.ElementAt(new Random().Next(0, quotes.Count)) + "\"";
+                        return "\"" + quotes.ElementAt(quoteNumber) + "\"" + " " + quoteNumber;
                 }
                 catch (Exception e)
                 {
