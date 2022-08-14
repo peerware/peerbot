@@ -15,9 +15,9 @@ namespace ChatBot.MessageSpeaker
         public SsmlVoiceGender gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Female;
         public bool isSpeechEnabled = true;
 
-        public const double minPitch = -10;
-        public const double maxPitch = 10;
-        public const double minSpeed = 0.3;
+        public const double minPitch = -5;
+        public const double maxPitch = 5;
+        public const double minSpeed = 0.45;
         public const double maxSpeed = 2;
 
         public enum eDialects
