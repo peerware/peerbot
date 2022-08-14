@@ -1,4 +1,4 @@
-using Google.Cloud.TextToSpeech.V1;
+﻿using Google.Cloud.TextToSpeech.V1;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -173,7 +173,7 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.french:
                         return "fr-FR-Wavenet-A";
                     case eDialects.japanese:
-                        return "ja-JP-Wavenet-C";
+                        return "ja-JP-Wavenet-B";
                     default:
                         return "fr-FR-Wavenet-A";
                 }
