@@ -342,7 +342,10 @@ namespace ChatBot
             switch (ttsCommand)
             {
                 case "help":
-                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, italy, uk, america, french, japanese, bog, speed (0.3-2), pitch (-10 to 10)");
+                    Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, " +
+                        "italy, uk, america, french, japanese, bog, " +
+                        "speed (" + MessageSpeakerSettings.minSpeed + "-" + MessageSpeakerSettings.maxSpeed +
+                        "), pitch (" + MessageSpeakerSettings.minPitch + "-" + MessageSpeakerSettings.maxPitch +")");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":
@@ -363,12 +366,14 @@ namespace ChatBot
 
                     if (speed == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).speakingRate.ToString());
+                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).speakingRate.ToString() +
+                            " (" + MessageSpeakerSettings.minSpeed + "-" + MessageSpeakerSettings.maxSpeed + ")");
                         return;
                     }
 
-                    if (speed < 0.3 || speed > 2)
-                        Say("@" + username + " enter a number from 0.3-2");
+                    if (speed < MessageSpeakerSettings.minSpeed || speed > MessageSpeakerSettings.maxSpeed)
+                        Say("@" + username + " enter a number from" + MessageSpeakerSettings.minSpeed + "-"
+                            + MessageSpeakerSettings.maxSpeed);
                     else
                     {
                         settings.SetSpeed(speed);
@@ -382,12 +387,14 @@ namespace ChatBot
 
                     if (pitch == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).pitch.ToString());
+                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).pitch.ToString() + 
+                            " (" + MessageSpeakerSettings.minPitch + "-" + MessageSpeakerSettings.maxPitch + ")");
                         return;
                     }
 
-                    if (pitch < -10 || pitch > 10)
-                        Say("@" + username + " enter a number from -10 to 10");
+                    if (pitch < MessageSpeakerSettings.minPitch || pitch > MessageSpeakerSettings.maxPitch)
+                        Say("@" + username + " enter a number from " + MessageSpeakerSettings.minPitch + 
+                            "-" + MessageSpeakerSettings.maxPitch);
                     else
                     {
                         settings.SetPitch(pitch);
