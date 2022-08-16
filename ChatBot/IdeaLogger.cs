@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ChatBot
@@ -26,6 +27,24 @@ namespace ChatBot
                 catch (Exception e)
                 {
                     Console.Write("Idea logging failed.");
+                }
+            }
+        }
+
+        public static string GetFormattedSuccessMessage(string username)
+        {
+            lock (locker)
+            {
+                try
+                {
+                    // Get the number of lines in the ideas.txt file
+                    string[] quotes = File.ReadAllLines(filePath);
+                    return "@" + username + " thank you for the idea yours is position " + quotes.Length + " in the queue";
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Ideas are broken :(");
+                    return "Ideas are broken :(";
                 }
             }
         }

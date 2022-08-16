@@ -245,7 +245,7 @@ namespace ChatBot
         private void ExecuteTodo(string username, string message)
         {
             IdeaLogger.LogIdea(username, message);
-            Say("@" + username + " :pencil2:");
+            Say(IdeaLogger.GetFormattedSuccessMessage(username));
         }
 
         private async void ExecuteFollowage(ChatMessage message)
