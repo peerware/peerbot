@@ -213,8 +213,8 @@ namespace ChatBot
 
         private void ExecuteMonth()
         {
-            DateTime lastWeek = DateTime.Today.AddDays(-31);
-            int hivescore = HivescoreLogger.GetHivescoreChange(lastWeek, HivescorePoller.ePollingType.hivescore);
+            DateTime lastMonth = DateTime.Today.AddDays(-31);
+            int hivescore = HivescoreLogger.GetHivescoreChange(lastMonth, HivescorePoller.ePollingType.hivescore);
             string hivescoreString = hivescore > 0 ? "+" + hivescore.ToString() : hivescore.ToString(); // Adds a plus sign for display
 
             Say(hivescoreString + " hivescore since last month");
