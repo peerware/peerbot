@@ -163,6 +163,7 @@ namespace ChatBot
                 return "";
         }
 
+        // !quote
         private void ExecuteQuote(string username, string message)
         {
             string arguments = GetMessageArgument(message);
@@ -183,6 +184,7 @@ namespace ChatBot
             }
         }
 
+        // !help
         private void ExecuteHelp()
         {
             Say("!uptime !giveaway !downtime !av !quote !quote add <quote> !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
@@ -193,17 +195,20 @@ namespace ChatBot
             Say(HivescoreFetcher.GetOldHivescoreMessage(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore));
         }
 
+        // !giveaway
         private void ExecuteGiveaway(string username)
         {
             Say("@" + username + " use !claim");
         }
 
+        // !week
         private void ExecuteWeek()
         {
             DateTime lastMonth = DateTime.Today.AddDays(-7);
             Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
         }
 
+        // !month
         private void ExecuteMonth()
         {
             DateTime lastMonth = DateTime.Today.AddDays(-31);
@@ -217,23 +222,27 @@ namespace ChatBot
             Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
         }
 
+        // !stats
         private void ExecuteStats()
         {
             ExecuteYesterday();
             ExecuteWeek();
             ExecuteMonth();
         }
-
+        
+        // !claim
         private void ExecuteClaim(string username)
         {
             Say("@" + username + " use !enter");
         }
 
+        // !enter
         private void ExecuteEnter(string username)
         {
             Say("@" + username + " use !giveaway");
         }
 
+        // !todo, !idea, !suggestion
         private void ExecuteTodo(string username, string message)
         {
             IdeaLogger.LogIdea(username, message);
@@ -268,6 +277,7 @@ namespace ChatBot
             Say(HivescoreFetcher.FetchHivescore().Result + " hivescore (" + hivescoreChange + ") since yesterday");
         }
 
+        // !uptime
         private void ExecuteUptime()
         {
             if (channelStream != null)
@@ -282,6 +292,7 @@ namespace ChatBot
             }
         }
 
+        // !downtime
         private void ExecuteDowntime()
         {
             DateTime downtime = new DateTime((DateTime.Now.ToUniversalTime() - InitializationTime.ToUniversalTime()).Ticks);
@@ -317,11 +328,13 @@ namespace ChatBot
             Say(hivescorePoller.GetDailyStatsMessage());
         }
 
+        // !vm
         private void ExecuteViewModel()
         {
             Say("settings -> misc -> viewmodel" );
         }
 
+        // !tts
         private void ExecuteSaveTTSSettings(string username, string arguments)
         {
             // TTS arguments come in the form of <Type> <Value>
