@@ -292,7 +292,7 @@ namespace ChatBot
         // !av
         private void ExecuteAV()
         {
-            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=SCHNIGHTSY");
+            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2330479589");
         }
 
         // !xhair
