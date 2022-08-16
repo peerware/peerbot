@@ -131,6 +131,9 @@ namespace ChatBot
                 case "!month":
                     ExecuteMonth();
                     break;
+                case "!year":
+                    ExecuteYear();
+                    break;
                 case "!stats":
                     ExecuteStats();
                     break;
@@ -204,6 +207,13 @@ namespace ChatBot
         private void ExecuteMonth()
         {
             DateTime lastMonth = DateTime.Today.AddDays(-31);
+            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
+        }
+
+        // !year
+        private void ExecuteYear()
+        {
+            DateTime lastMonth = DateTime.Today.AddDays(-365);
             Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
         }
 
