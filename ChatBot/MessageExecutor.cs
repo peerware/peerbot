@@ -171,7 +171,6 @@ namespace ChatBot
             if (message == "!quote")
             {
                 Say(QuoteManager.GetRandomQuote());
-
             }
             else if (arguments.StartsWith("add"))
             {
