@@ -265,6 +265,7 @@ namespace ChatBot
             }
         }
 
+        // !bot
         private void ExecuteBot()
         {
             Say("this handmade bot runs on .net 6" );
