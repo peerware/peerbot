@@ -282,14 +282,16 @@ namespace ChatBot
             Say("ResidentSleeper for " + downtime.Hour.ToString() + " hours " + downtime.Minute.ToString() + " minutes and " + downtime.Second.ToString() + " seconds");
         }
 
+        // !av
         private void ExecuteAV()
         {
-                Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=SCHNIGHTSY");
+            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=SCHNIGHTSY");
         }
 
+        // !xhair
         private void ExecuteCrosshair()
         {
-                Say("11 length 3 width yellow cross with 2 pixel black border");
+            Say("11 length 3 width yellow cross with 2 pixel black border");
         }
 
         private void ExecuteDPI()
@@ -302,6 +304,7 @@ namespace ChatBot
             Say("/timeout " + Username + " 1");
         }
 
+        // !today !daily
         private void ExecuteDailyStats()
         {
             Say(hivescorePoller.GetDailyStatsMessage());
@@ -309,7 +312,7 @@ namespace ChatBot
 
         private void ExecuteViewModel()
         {
-            Say("misc -> viewmodel" );
+            Say("settings -> misc -> viewmodel" );
         }
 
         private void ExecuteSaveTTSSettings(string username, string arguments)
