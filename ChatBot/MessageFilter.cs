@@ -37,6 +37,7 @@ namespace ChatBot
                 message.Contains("you my portfolio") ||
                 message.Contains("server crasher") ||
                 message.Contains("if you need real") ||
+                message.Contains("i found a cheat that won't get you banned") ||
                 message.Contains("free and high quality") ||
                 message.Contains("top streamer") ||
                 message.Contains("your viewers") ||
