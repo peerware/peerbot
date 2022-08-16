@@ -204,12 +204,20 @@ namespace ChatBot
 
         private void ExecuteWeek()
         {
-            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-7), HivescorePoller.ePollingType.hivescore).ToString() + " hivescore since last week");
+            DateTime lastWeek = DateTime.Today.AddDays(-7);
+            int hivescore = HivescoreLogger.GetHivescoreChange(lastWeek, HivescorePoller.ePollingType.hivescore);
+            string hivescoreString = hivescore > 0 ? "+" + hivescore.ToString() : hivescore.ToString(); // Adds a plus sign for display
+
+            Say(hivescoreString + " hivescore since last week");
         }
 
         private void ExecuteMonth()
         {
-            Say(HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-31), HivescorePoller.ePollingType.hivescore).ToString() + " hivescore since last month");
+            DateTime lastWeek = DateTime.Today.AddDays(-31);
+            int hivescore = HivescoreLogger.GetHivescoreChange(lastWeek, HivescorePoller.ePollingType.hivescore);
+            string hivescoreString = hivescore > 0 ? "+" + hivescore.ToString() : hivescore.ToString(); // Adds a plus sign for display
+
+            Say(hivescoreString + " hivescore since last month");
         }
 
         private void ExecuteStats()
