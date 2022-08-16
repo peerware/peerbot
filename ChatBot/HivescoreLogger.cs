@@ -46,41 +46,5 @@ namespace ChatBot
                 }
             }
         }
-
-        /// <summary>
-        /// Gets a list of hivescores that come after the provided date
-        /// </summary>
-        /// <param name="minimumDate"></param>
-        /// <returns></returns>
-        public static int GetHivescoreChange(DateTime minimumDate, HivescorePoller.ePollingType pollingType)
-        {
-            List<string> allLoggedScores = new List<string>();
-
-            string filePath = "";
-
-            if (pollingType == HivescorePoller.ePollingType.hivescore)
-                filePath = hivescorePath;
-            else if (pollingType == HivescorePoller.ePollingType.td)
-                filePath = tdPath;
-
-            if (File.Exists(filePath))
-                allLoggedScores = File.ReadAllLines(filePath).ToList();
-
-            // Get the hivescores that come after the min date as a list
-            List<int> minDateHivescores = new List<int>();
-            foreach (var datedHivescore in allLoggedScores)
-            {
-                long hivescoreDate = long.Parse(datedHivescore.Substring(0, datedHivescore.IndexOf(':')));
-                if (hivescoreDate >= minimumDate.Ticks)
-                    minDateHivescores.Add(int.Parse(datedHivescore.Substring(datedHivescore.IndexOf(':') + 1)));
-            }
-
-            if (minDateHivescores.Count == 0)
-                return 0;
-            else if (minDateHivescores.Count == 1)
-                return 0;
-            else
-                return minDateHivescores.Last() - minDateHivescores.First();
-        }
     }
 }

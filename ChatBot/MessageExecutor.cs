@@ -187,14 +187,7 @@ namespace ChatBot
 
         private void ExecuteYesterday()
         {
-            int hivescoreDifference = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
-
-            if (hivescoreDifference == 0)
-                Say("no data Sadge");
-            else if (hivescoreDifference > 0)
-                Say("+" + hivescoreDifference + " since yesterday ");
-            else if (hivescoreDifference < 0)
-                Say("-" + Math.Abs(hivescoreDifference) + " since yesterday ");
+            Say(HivescoreFetcher.GetOldHivescoreMessage(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore));
         }
 
         private void ExecuteGiveaway(string username)
@@ -204,20 +197,14 @@ namespace ChatBot
 
         private void ExecuteWeek()
         {
-            DateTime lastWeek = DateTime.Today.AddDays(-7);
-            int hivescore = HivescoreLogger.GetHivescoreChange(lastWeek, HivescorePoller.ePollingType.hivescore);
-            string hivescoreString = hivescore > 0 ? "+" + hivescore.ToString() : hivescore.ToString(); // Adds a plus sign for display
-
-            Say(hivescoreString + " hivescore since last week");
+            DateTime lastMonth = DateTime.Today.AddDays(-7);
+            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
         }
 
         private void ExecuteMonth()
         {
             DateTime lastMonth = DateTime.Today.AddDays(-31);
-            int hivescore = HivescoreLogger.GetHivescoreChange(lastMonth, HivescorePoller.ePollingType.hivescore);
-            string hivescoreString = hivescore > 0 ? "+" + hivescore.ToString() : hivescore.ToString(); // Adds a plus sign for display
-
-            Say(hivescoreString + " hivescore since last month");
+            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
         }
 
         private void ExecuteStats()
@@ -245,7 +232,6 @@ namespace ChatBot
 
         private async void ExecuteFollowage(ChatMessage message)
         {
-
             var GetUsersResponse = await api.Helix.Users.GetUsersFollowsAsync(fromId: message.UserId);
 
             try
