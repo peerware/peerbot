@@ -251,14 +251,11 @@ namespace ChatBot
             Say("this handmade bot runs on .net 6" );
         }
 
+        // !elo 
         private void ExecuteRank()
         {
-            int hivescoreChange = HivescoreLogger.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
-
-            if (hivescoreChange >= 0)
-                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore +" + Math.Abs(hivescoreChange) + " since yesterday");
-            else if (hivescoreChange < 0)
-                Say(HivescoreFetcher.FetchHivescore().Result + " hivescore -" + Math.Abs(hivescoreChange) + " since yesterday");
+            string hivescoreChange = HivescoreFetcher.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
+            Say(HivescoreFetcher.FetchHivescore().Result + " hivescore (" + hivescoreChange + ") since yesterday");
         }
 
         private void ExecuteUptime()
