@@ -389,7 +389,7 @@ namespace ChatBot
                     }
 
                     if (speed < MessageSpeakerSettings.minSpeed || speed > MessageSpeakerSettings.maxSpeed)
-                        Say("@" + username + " enter a number from" + MessageSpeakerSettings.minSpeed + "-"
+                        Say("@" + username + " enter a number from " + MessageSpeakerSettings.minSpeed + "-"
                             + MessageSpeakerSettings.maxSpeed);
                     else
                     {
