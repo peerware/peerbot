@@ -20,4 +20,8 @@
       <RollForward>Major</RollForward>
     </PropertyGroup>
 
+    <PropertyGroup>
+      <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
+
 </Project>
