@@ -1,9 +1,6 @@
 taking all suggestions for new features :) 
 
-wip bot might clean it and dockerize it later
-
-might make ui for changing configs later
-
+currently in the process of trying to host this for free
 
 
 
@@ -27,16 +24,8 @@ might make ui for changing configs later
 
 Documentation
 
+Make a Config.cs file with all the missing variables that the IDE will tell you about
 
-ChatBot/HivescoreFetcher -> change to ur steam id
-
-HivescoreLogger.cs -> change file path
-
-MessageLogger -> change file path
-
-MessageSpeaker.cs -> change file path
-
-MessageSpeakerSettingsManager -> change file path
 
 ChatBot/Properties/launchSettings:
 {
