@@ -91,6 +91,9 @@ namespace ChatBot
                 case "!av":
                     ExecuteAV();
                     break;
+                case "!acmo":
+                    ExecuteAcmoELO(message.Username);
+                    break;
                 case "!dpi":
                 case "!sens":
                     ExecuteDPI();
@@ -304,6 +307,12 @@ namespace ChatBot
         private void ExecuteAV()
         {
             Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2330479589");
+        }
+
+        // !acmo
+        private void ExecuteAcmoELO(string username)
+        {
+            Say("@" + username + " acmo's current elo is: " + HivescoreFetcher.FetchAcmoELO().Result);
         }
 
         // !xhair
