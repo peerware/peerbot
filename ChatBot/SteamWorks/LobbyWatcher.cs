@@ -47,7 +47,6 @@ namespace ChatBot.SteamWorks
 
         public WatcherState Status { get; private set; } = WatcherState.Invalid;
 
-
         private readonly Steam2FAData _twoFAdata;
         private readonly List<IDisposable> _cbHandles;
         private readonly CallbackManager _cbManager;
@@ -63,6 +62,7 @@ namespace ChatBot.SteamWorks
         private SteamUser UserImpl => _steamClient.GetHandler<SteamUser>()
             ?? throw new InvalidCastException("Failed to retrieve SteamUser interface");
 
+        private List<ThunderDomeLobby> _lobbies;
 
         public LobbyWatcher(Action<IEnumerable<ThunderDomeLobby>>? matchAction = null, Func<ThunderDomeLobby, bool>? matchPredicate = null)
         {
@@ -92,7 +92,7 @@ namespace ChatBot.SteamWorks
                     return
                         (l.LobbyType == ELobbyType.Public || l.LobbyType == ELobbyType.FriendsOnly) &&
                         (l.Status == ELobbyState.Queueing) &&
-                        (l.NumPlayers >= 10 || l.NumPlayers >= 6 && l.AverageElo >= 2000);
+                        (l.NumPlayers >= 8);
                 };
             }
             else
@@ -147,37 +147,20 @@ namespace ChatBot.SteamWorks
             PollingTask = null;
         }
 
-        public void BeginPolling(CancellationToken? cancellationToken = null)
+        // Called in program.cs - the entry into lobby watcher
+        public void BeginPolling()
         {
-            // no token provided, so bind to CTRL+C on the console to disconnect from steam.
-            if (cancellationToken is null)
-            {
-                var cts = new CancellationTokenSource();
-                Console.CancelKeyPress += (_, e) =>
-                {
-                    if (!cts.IsCancellationRequested)
-                    {
-                        cts.Cancel();
-                    }
-                    e.Cancel = _steamClient.IsConnected;
-                };
-                cancellationToken = cts.Token;
-            }
-
+            // Create the polling task
             PollingTask = Task.Factory.StartNew(() =>
             {
+                // Connect the steam client and update the LobbyWatcher status
                 _steamClient.Connect();
                 Status = WatcherState.Connecting;
 
-                while (!cancellationToken.Value.IsCancellationRequested && Status >= WatcherState.Connecting && Status <= WatcherState.Disconnecting)
+                // Run this while the status of the watcher is connected(ish)
+                while ( Status >= WatcherState.Connecting && Status <= WatcherState.Disconnecting)
                 {
-                    _cbManager.RunWaitCallbacks(TimeSpan.FromMilliseconds(250));
-
-                    if (cancellationToken.Value.IsCancellationRequested)
-                    {
-                        _steamClient.Disconnect();
-                        Status = WatcherState.Disconnecting;
-                    }
+                    _cbManager.RunWaitAllCallbacks(TimeSpan.FromMilliseconds(1000));
                 }
                 Status = WatcherState.Completed;
             });
@@ -269,9 +252,12 @@ namespace ChatBot.SteamWorks
 
             Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(10 * 1000);
-                MatcherImpl.GetLobbyList(Ns2AppId);
-                Status = WatcherState.Searching;
+                while(true)
+                {
+                    Thread.Sleep(10 * 1000);
+                    MatcherImpl.GetLobbyList(Ns2AppId);
+                    Status = WatcherState.Searching;
+                }
             });
         }
 
@@ -342,13 +328,17 @@ namespace ChatBot.SteamWorks
                 .Where(l => _matchPredicate(l))
                 .ToList();
 
+            // Only perform the predicate matched action when a unique lobby is found (unqiue from its ID)
+            foreach (var lobby in lobbies)
+            {
+                _lobbies
+            }
+
             if (lobbies.Any())
             {
                 _matchAction(lobbies);
             }
         }
-
-
 
 
         private static uint GetCellId()
