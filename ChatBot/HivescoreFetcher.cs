@@ -30,10 +30,46 @@ namespace ChatBot
             return ResultString.Substring(ResultString.IndexOf("td_skill") + 10, 4);
         }
 
-        public static async Task<string> FetchAcmoELO()
+        /// <summary>
+        /// Returns an ELO if the friends steamID is added and 0 if their steamID wasnt found 
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> FetchFriendELO(string username)
         {
+            int steamID = 0;
+
+            switch (username.Trim().ToLower())
+            {
+                case "ranger":
+                    steamID = 123819912;
+                    break;
+                case "acmo":
+                    steamID = 123819912;
+                    break;
+                case "nightsy":
+                    steamID = 73407070;
+                    break;
+                case "snowblind":
+                    steamID = 3095193;
+                    break;
+                case "robp":
+                    steamID = 59625362;
+                    break;
+                case "kittn":
+                    steamID = 84276590;
+                    break;
+                case "golden":
+                    steamID = 344054;
+                    break;
+                case "schu":
+                    steamID = 181662;
+                    break;
+                default:
+                    return "0";
+            }
+            
             HttpClient httpClient = new HttpClient();
-            string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/133520863");
+            string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/" + steamID);
 
             return ResultString.Substring(ResultString.IndexOf("td_skill") + 10, 4);
         }

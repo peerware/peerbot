@@ -92,7 +92,14 @@ namespace ChatBot
                     ExecuteAV();
                     break;
                 case "!acmo":
-                    ExecuteAcmoELO(message.Username);
+                case "!ranger":
+                case "!nightsy":
+                case "!snowblind":
+                case "!robp":
+                case "!kittn":
+                case "!golden":
+                case "!schu":
+                    ExecuteFriendELO(message.Username, message.Message.Replace("!", ""));
                     break;
                 case "!dpi":
                 case "!sens":
@@ -309,10 +316,11 @@ namespace ChatBot
             Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2330479589");
         }
 
-        // !acmo
-        private void ExecuteAcmoELO(string username)
+        // !acmo !nightsy !ranger
+        private void ExecuteFriendELO(string username, string requestedUsername)
         {
-            Say("@" + username + " acmo's current elo is: " + HivescoreFetcher.FetchAcmoELO().Result);
+            Say("@" + username + " " + requestedUsername + "'s current elo is: "
+                + HivescoreFetcher.FetchFriendELO(requestedUsername).Result);
         }
 
         // !xhair
