@@ -71,7 +71,7 @@ namespace ChatBot
             HttpClient httpClient = new HttpClient();
             string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/" + steamID);
 
-            return ResultString.Substring(ResultString.IndexOf("td_skill") + 10, 4);
+            return ResultString.Substring(ResultString.IndexOf("skill") + 7, 4);
         }
 
 
