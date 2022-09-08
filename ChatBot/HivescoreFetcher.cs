@@ -61,8 +61,17 @@ namespace ChatBot
                 case "golden":
                     steamID = 344054;
                     break;
+                case "greenrex":
+                    steamID = 68545390;
+                    break;
                 case "schu":
                     steamID = 181662;
+                    break;
+                case "xao":
+                    steamID = 126424875;
+                    break;
+                case "zepar":
+                    steamID = 289836252;
                     break;
                 default:
                     return "0";

@@ -95,10 +95,13 @@ namespace ChatBot
                 case "!ranger":
                 case "!nightsy":
                 case "!snowblind":
+                case "!greenrex":
                 case "!robp":
                 case "!kittn":
                 case "!golden":
                 case "!schu":
+                case "!xao":
+                case "!zepar":
                     ExecuteFriendELO(message.Username, message.Message.Replace("!", ""));
                     break;
                 case "!dpi":
@@ -111,6 +114,13 @@ namespace ChatBot
                     break;
                 case "!bot":
                     ExecuteBot();
+                    break;
+                case "!team":
+                    ExecuteTeam();
+                    break;
+                case "!specs":
+                case "!pc":
+                    ExecuteSpecs();
                     break;
                 case "!elo":
                 case "!rank":
@@ -278,6 +288,18 @@ namespace ChatBot
         private void ExecuteBot()
         {
             Say("this handmade bot runs on .net 6" );
+        }
+
+        // !team 
+        private void ExecuteTeam()
+        {
+            Say("euphie nano ritual tombrady me nabla");
+        }
+
+        // !team 
+        private void ExecuteSpecs()
+        {
+            Say("5800x 3070 240hz G PRO ULTRALIGHT 60% keyboard red switches");
         }
 
         // !elo 
