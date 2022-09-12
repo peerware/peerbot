@@ -194,8 +194,8 @@ namespace ChatBot
             }
             else if (arguments.StartsWith("add"))
             {
-                QuoteManager.AddQuote(GetMessageArgument(arguments));
-                Say("it worked @" + username);
+                int quoteNumber = QuoteManager.AddQuote(GetMessageArgument(arguments));
+                Say("number " + quoteNumber + "added @" + username);
             }
             else if (Int32.TryParse(arguments, out _))
             {

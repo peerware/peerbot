@@ -12,18 +12,19 @@ namespace ChatBot
         static object locker = new object();
         static string filePath = Config.fileSavePath + "quotes.txt";
 
-        public static void AddQuote(string message)
+        public static int AddQuote(string message)
         {
             lock (locker)
             {
                 try
                 {
                     File.AppendAllText(filePath, "\n" + message);
-                    return;
+                    return File.ReadAllLines(filePath).ToList().Count;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Quote adding failed.");
+                    return 0;
                 }
             }
             
