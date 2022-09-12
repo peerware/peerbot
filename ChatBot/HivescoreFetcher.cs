@@ -44,7 +44,7 @@ namespace ChatBot
                     steamID = 123819912;
                     break;
                 case "acmo":
-                    steamID = 123819912;
+                    steamID = 133520863;
                     break;
                 case "nightsy":
                     steamID = 73407070;
