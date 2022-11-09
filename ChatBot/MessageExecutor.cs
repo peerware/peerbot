@@ -27,6 +27,7 @@ namespace ChatBot
         // Don't allow instantiation from outside this class (forces factory-ish instantiaiton)
         private MessageExecutor() { } 
 
+        // todo make this initialize a bunch of stuff based on the provided channel name
         public static async Task<MessageExecutor> GetMessageExecutor(TwitchClient client)
         {
             // Boilerplate code

@@ -142,7 +142,6 @@ namespace ChatBot
             switch (randomNumber)
             {
                 case 1:
-                    return "pepeMeltdown";
                 case 2:
                     return "pepeMeltdown";
                 case 3:
@@ -150,9 +149,6 @@ namespace ChatBot
                 case 4:
                     return "mericCat";
                 case 6:
-                    return "TrollDespair";
-                case 7:
-                    return "AlienPls";
                 case 8:
                     return "Sadge";
                 case 9:

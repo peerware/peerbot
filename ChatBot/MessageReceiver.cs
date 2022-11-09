@@ -17,6 +17,7 @@ namespace ChatBot
         MessageExecutor messageExecutor;
         MessageSpeaker.MessageSpeaker messageSpeaker;
 
+        // todo add channel name to this constructor
         public MessageReceiver()
         {
             ConnectionCredentials credentials = new ConnectionCredentials(Config.botUsername, Config.botPassword);
