@@ -354,7 +354,7 @@ namespace ChatBot
 
         private void ExecuteDPI()
         {
-            Say("800 dpi 2.0 marine 3.96 alien");
+            Say("1200 dpi still figuring out in-game senses");
         }
 
         private void TimeUserOut(string Username)
