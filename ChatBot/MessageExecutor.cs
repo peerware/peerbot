@@ -336,7 +336,7 @@ namespace ChatBot
         // !av
         private void ExecuteAV()
         {
-            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2330479589");
+            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=schnightsy");
         }
 
         // !acmo !nightsy !ranger
