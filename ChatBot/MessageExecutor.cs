@@ -349,7 +349,7 @@ namespace ChatBot
         // !xhair
         private void ExecuteCrosshair()
         {
-            Say("ns2: 11 length 3 width yellow cross with 2 pixel black border");
+            Say("green plus with gap");
         }
 
         private void ExecuteDPI()
