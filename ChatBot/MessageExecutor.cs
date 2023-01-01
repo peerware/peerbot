@@ -123,6 +123,10 @@ namespace ChatBot
                 case "!pc":
                     ExecuteSpecs();
                     break;
+                case "!fortnite":
+                case "!fortnight":
+                    ExecuteFortnite();
+                    break;
                 case "!elo":
                 case "!rank":
                     ExecuteRank();
@@ -331,6 +335,12 @@ namespace ChatBot
             DateTime downtime = new DateTime((DateTime.Now.ToUniversalTime() - InitializationTime.ToUniversalTime()).Ticks);
 
             Say("ResidentSleeper for " + downtime.Hour.ToString() + " hours " + downtime.Minute.ToString() + " minutes and " + downtime.Second.ToString() + " seconds");
+        }
+
+        // !fortnite !fortnight
+        private void ExecuteFortnite()
+        {
+            Say("no");
         }
 
         // !av
