@@ -16,6 +16,8 @@ namespace ChatBot
 
         public static async Task<string> FetchHivescore()
         {
+            return "0"; // todo integrate this with steamworks to fix it
+            
             HttpClient httpClient = new HttpClient();
             string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/87160873");
 
@@ -24,6 +26,8 @@ namespace ChatBot
 
         public static async Task<string> FetchTDELO()
         {
+            return "0"; // todo integrate this with steamworks to fix it
+
             HttpClient httpClient = new HttpClient();
             string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/87160873");
 
@@ -76,7 +80,9 @@ namespace ChatBot
                 default:
                     return "0";
             }
-            
+
+            return "0"; // todo integrate this with steamworks to fix it
+
             HttpClient httpClient = new HttpClient();
             string ResultString = await httpClient.GetStringAsync("http://hive2.ns2cdt.com/api/players/" + steamID);
 
