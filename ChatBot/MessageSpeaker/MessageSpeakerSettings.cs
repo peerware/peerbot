@@ -33,6 +33,7 @@ namespace ChatBot.MessageSpeaker
             canadianFrench,
             korean,
             chinese,
+            russian,
             none
         }
 
@@ -85,6 +86,9 @@ namespace ChatBot.MessageSpeaker
             {
                 case eDialects.australian:
                     languageCode = "en-AU";
+                    return true;
+                case eDialects.russian:
+                    languageCode = "ru-RU";
                     return true;
                 case eDialects.chinese:
                     languageCode = "cmn-TW";
@@ -140,6 +144,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-D";
+                    case eDialects.russian:
+                        return "ru-RU-Wavenet-D";
                     case eDialects.chinese:
                         return "cmn-TW-Wavenet-C";
                     case eDialects.korean:
@@ -168,6 +174,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-C";
+                    case eDialects.russian:
+                        return "ru-RU-Wavenet-C";
                     case eDialects.chinese:
                         return "cmn-TW-Wavenet-A";
                     case eDialects.korean:
@@ -197,6 +205,8 @@ namespace ChatBot.MessageSpeaker
             {
                 case "en-GB":
                     return eDialects.british;
+                case "ru-RU":
+                    return eDialects.russian;
                 case "ko-KR":
                     return eDialects.korean;
                 case "cmn-TW":
@@ -232,6 +242,8 @@ namespace ChatBot.MessageSpeaker
                     return eDialects.chinese;
                 case "korean":
                     return eDialects.korean;
+                case "russian":
+                    return eDialects.russian;
                 case "irish":
                 case "ireland":
                     return eDialects.irish;
