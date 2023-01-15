@@ -32,6 +32,7 @@ namespace ChatBot.MessageSpeaker
             japanese,
             canadianFrench,
             korean,
+            chinese,
             none
         }
 
@@ -85,6 +86,9 @@ namespace ChatBot.MessageSpeaker
                 case eDialects.australian:
                     languageCode = "en-AU";
                     return true;
+                case eDialects.chinese:
+                    languageCode = "cmn-TW";
+                    return true;
                 case eDialects.korean:
                     languageCode = "ko-KR";
                     return true;
@@ -136,6 +140,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-D";
+                    case eDialects.chinese:
+                        return "cmn-TW-Wavenet-C";
                     case eDialects.korean:
                         return "ko-KR-Wavenet-C";
                     case eDialects.british:
@@ -162,6 +168,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-C";
+                    case eDialects.chinese:
+                        return "cmn-TW-Wavenet-A";
                     case eDialects.korean:
                         return "ko-KR-Wavenet-A";
                     case eDialects.british:
@@ -190,7 +198,9 @@ namespace ChatBot.MessageSpeaker
                 case "en-GB":
                     return eDialects.british;
                 case "ko-KR":
-                    return eDialects.british;
+                    return eDialects.korean;
+                case "cmn-TW":
+                    return eDialects.chinese;
                 case "it-IT":
                     return eDialects.italian;
                 case "de-DE":
@@ -218,6 +228,8 @@ namespace ChatBot.MessageSpeaker
                 case "australia":
                 case "aus":
                     return eDialects.australian;
+                case "chinese":
+                    return eDialects.chinese;
                 case "korean":
                     return eDialects.korean;
                 case "irish":
