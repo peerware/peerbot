@@ -410,7 +410,7 @@ namespace ChatBot
             {
                 case "help":
                     Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, " +
-                        "italy, uk, america, french, japanese, bog, " +
+                        "italy, uk, america, french, japanese, bog, korean, " +
                         "speed (" + MessageSpeakerSettings.minSpeed + "-" + MessageSpeakerSettings.maxSpeed +
                         "), pitch (" + MessageSpeakerSettings.minPitch + "-" + MessageSpeakerSettings.maxPitch +")");
                     MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
@@ -473,6 +473,7 @@ namespace ChatBot
                 case "australian":
                 case "australia":
                 case "aus":
+                case "korean":
                 case "irish":
                 case "ireland":
                 case "german":

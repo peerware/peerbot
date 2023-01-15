@@ -31,6 +31,7 @@ namespace ChatBot.MessageSpeaker
             french,
             japanese,
             canadianFrench,
+            korean,
             none
         }
 
@@ -84,27 +85,24 @@ namespace ChatBot.MessageSpeaker
                 case eDialects.australian:
                     languageCode = "en-AU";
                     return true;
-                    break;
+                case eDialects.korean:
+                    languageCode = "ko-KR";
+                    return true;
                 case eDialects.irish:
                     languageCode = "en-IE";
                     return true;
-                    break;
                 case eDialects.british:
                     languageCode = "en-GB";
                     return true;
-                    break;
                 case eDialects.italian:
                     languageCode = "it-IT";
                     return true;
-                    break;
                 case eDialects.german:
                     languageCode = "de-DE";
                     return true;
-                    break;
                 case eDialects.american:
                     languageCode = "en-US";
                     return true;
-                    break;
                 case eDialects.french:
                     languageCode = "fr-FR";
                     return true;
@@ -138,6 +136,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-D";
+                    case eDialects.korean:
+                        return "ko-KR-Wavenet-C";
                     case eDialects.british:
                         return "en-GB-Wavenet-D";
                     case eDialects.italian:
@@ -162,6 +162,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-C";
+                    case eDialects.korean:
+                        return "ko-KR-Wavenet-A";
                     case eDialects.british:
                         return "en-GB-Wavenet-F";
                     case eDialects.italian:
@@ -186,6 +188,8 @@ namespace ChatBot.MessageSpeaker
             switch (languageCode)
             {
                 case "en-GB":
+                    return eDialects.british;
+                case "ko-KR":
                     return eDialects.british;
                 case "it-IT":
                     return eDialects.italian;
@@ -214,6 +218,8 @@ namespace ChatBot.MessageSpeaker
                 case "australia":
                 case "aus":
                     return eDialects.australian;
+                case "korean":
+                    return eDialects.korean;
                 case "irish":
                 case "ireland":
                     return eDialects.irish;
