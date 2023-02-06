@@ -359,7 +359,7 @@ namespace ChatBot
         // !xhair
         private void ExecuteCrosshair()
         {
-            Say("green plus with gap");
+            Say("green plus without gap");
         }
 
         private void ExecuteDPI()
