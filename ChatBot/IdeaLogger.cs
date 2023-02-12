@@ -48,5 +48,22 @@ namespace ChatBot
                 }
             }
         }
+
+        public static int GetNumberOfIdeas()
+        {
+            lock (locker)
+            {
+                try
+                {
+                    // Get the number of lines in the ideas.txt file
+                    return File.ReadAllLines(filePath).Length;
+                }
+                catch (Exception e)
+                {
+                    Console.Write("Ideas are broken :(");
+                    return -1;
+                }
+            }
+        }
     }
 }

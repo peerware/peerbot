@@ -269,8 +269,13 @@ namespace ChatBot
         // !todo, !idea, !suggestion
         private void ExecuteTodo(string username, string message)
         {
-            IdeaLogger.LogIdea(username, message);
-            Say(IdeaLogger.GetFormattedSuccessMessage(username));
+            if (message.Trim().ToLower() == "!todo")
+                Say("There are " + IdeaLogger.GetNumberOfIdeas() + " ideas in the list right now");
+            else
+            {
+                IdeaLogger.LogIdea(username, message);
+                Say(IdeaLogger.GetFormattedSuccessMessage(username));
+            }
         }
 
         private async void ExecuteFollowage(ChatMessage message)
