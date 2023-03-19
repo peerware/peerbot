@@ -50,10 +50,10 @@ namespace ChatBot
         /// <param name="e"></param>
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            MessageLogger.LogMessage(e.ChatMessage);
+
             if (e.ChatMessage.DisplayName == Config.botUsername)
                 return;
-
-            MessageLogger.LogMessage(e.ChatMessage);
 
             if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, client))
                 return;
