@@ -41,6 +41,9 @@ namespace ChatBot
                 message.Contains("free and high quality") ||
                 message.Contains("top streamer") ||
                 message.Contains("your viewers") ||
+                message.Contains("dot com") ||
+                message.Contains("dogehype") ||
+                (message.Contains("channel") && message.Contains("view") && message.Contains("follow")) ||
                 message.Contains("your graphics/branding"))
                 return true;
             else
