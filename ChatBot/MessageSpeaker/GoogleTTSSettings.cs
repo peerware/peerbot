@@ -269,8 +269,8 @@ namespace ChatBot.MessageSpeaker
                     userTTSSettings.ttsSettings.languageCode = "fr-FR";
                     break;
                 case voicePresets.bog:
-                    userTTSSettings.ttsSettings.speakingRate = 0.57;
-                    userTTSSettings.ttsSettings.pitch = -2.5;
+                    userTTSSettings.ttsSettings.speakingRate = 0.58;
+                    userTTSSettings.ttsSettings.pitch = -3;
                     userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
                     userTTSSettings.ttsSettings.languageCode = "fr-CA";
                     break;

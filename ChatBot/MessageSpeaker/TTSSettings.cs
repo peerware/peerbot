@@ -8,10 +8,10 @@ namespace ChatBot.MessageSpeaker
     public class TTSSettings
     {
 
-        public double speakingRate = 1.12;
-        public double pitch = -1.3;
-        public eGender gender = eGender.female;
-        public string languageCode = "fr-FR"; // Only used by google text-to-speech API
+        public double speakingRate = 0.58;
+        public double pitch = -3.8;
+        public eGender gender = eGender.male;
+        public string languageCode = "fr-CA"; // Only used by google text-to-speech API
 
         public enum eGender
         {

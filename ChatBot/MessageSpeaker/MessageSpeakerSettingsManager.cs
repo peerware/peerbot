@@ -52,7 +52,7 @@ namespace ChatBot.MessageSpeaker
             }
         }
 
-        public static UserTTSSettings GetSettingsFromStorage(string Username)
+        public static UserTTSSettings GetSettingsFromStorage(string username)
         {
             UserTTSSettings Output = new UserTTSSettings();
 
@@ -61,7 +61,7 @@ namespace ChatBot.MessageSpeaker
                 List<string> AllSettings = File.ReadAllLines(filePath).ToList();
                 foreach (var Setting in AllSettings)
                 {
-                    if (Setting.Contains(Username))
+                    if (Setting.Contains(username))
                         Output = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
                 }
             }
