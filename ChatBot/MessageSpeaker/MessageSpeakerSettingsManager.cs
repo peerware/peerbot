@@ -15,70 +15,25 @@ namespace ChatBot.MessageSpeaker
         static object locker = new object();
         static string filePath = Config.fileSavePath + "speechsettings.txt";
 
-        public enum voicePresets
-        {
-            frenchWoman,
-            frenchMan,
-            bog
-        }
-
-        /// <summary>
-        /// Gives a user a handmade preconfigurated voice
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="voicePresets"></param>
-        public static void SetPresetVoice(string username, voicePresets voicePresets)
-        {
-            MessageSpeakerSettings preset = new MessageSpeakerSettings();
-            preset.twitchUsername = username;
-
-            switch (voicePresets)
-            {
-                case voicePresets.frenchWoman:
-                    preset.speakingRate = 1.16;
-                    preset.pitch = -1.3;
-                    preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Female;
-                    preset.isSpeechEnabled = true;
-                    preset.languageCode = "fr-FR";
-                    break;
-                case voicePresets.bog:
-                    preset.speakingRate = 0.57;
-                    preset.pitch = -2.5;
-                    preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Male;
-                    preset.isSpeechEnabled = true;
-                    preset.languageCode = "fr-CA";
-                    break;
-                case voicePresets.frenchMan:
-                    preset.speakingRate = 1.17;
-                    preset.pitch = -2;
-                    preset.gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Male;
-                    preset.isSpeechEnabled = true;
-                    preset.languageCode = "fr-FR";
-                    break;
-            }
-
-            SaveSettingsToStorage(preset);
-        } 
-
-        public static void SaveSettingsToStorage(MessageSpeakerSettings messageSpeakerSettings)
+        public static void SaveSettingsToStorage(UserTTSSettings messageSpeakerSettings)
         {
             lock (locker)
             {
                 // First get the existing settings from storage to see if we are saving new vs overwriting
-                MessageSpeakerSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
+                UserTTSSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
 
                 // If the setting already exists delete it then save the new settings
                 if (settings.twitchUsername.Length > 0)
                 {
                     List<string> allSettings = File.ReadAllLines(filePath).ToList();
-                    string existingSettingsLine = "";
+                    string existingTTSSettings = "";
 
-                    foreach (var setting in allSettings)
+                    foreach (var fileSetting in allSettings)
                     {
-                        if (setting.Contains(settings.twitchUsername))
-                            existingSettingsLine = setting;
+                        if (fileSetting.Contains(settings.twitchUsername))
+                            existingTTSSettings = fileSetting;
                     }
-                    allSettings.Remove(existingSettingsLine);
+                    allSettings.Remove(existingTTSSettings);
 
                     File.Delete(filePath);
                     File.WriteAllLines(filePath, allSettings);
@@ -97,9 +52,9 @@ namespace ChatBot.MessageSpeaker
             }
         }
 
-        public static MessageSpeakerSettings GetSettingsFromStorage(string Username)
+        public static UserTTSSettings GetSettingsFromStorage(string Username)
         {
-            MessageSpeakerSettings Output = new MessageSpeakerSettings();
+            UserTTSSettings Output = new UserTTSSettings();
 
             if (File.Exists(filePath))
             {
@@ -107,7 +62,7 @@ namespace ChatBot.MessageSpeaker
                 foreach (var Setting in AllSettings)
                 {
                     if (Setting.Contains(Username))
-                        Output = JsonConvert.DeserializeObject<MessageSpeakerSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
+                        Output = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
                 }
             }
 

@@ -3,22 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace ChatBot.MessageSpeaker
 {
-    public class MessageSpeakerSettings
+    public class GoogleTTSSettings
     {
-        public string twitchUsername = "";
-        public double speakingRate = 1.12;
-        public double pitch = -1.3;
-        public string languageCode = "fr-FR";
-        public SsmlVoiceGender gender = Google.Cloud.TextToSpeech.V1.SsmlVoiceGender.Female;
-        public bool isSpeechEnabled = true;
-
-        public const double minPitch = -5;
-        public const double maxPitch = 5;
-        public const double minSpeed = 0.45;
-        public const double maxSpeed = 2;
+        //public string languageCode = "fr-FR";
 
         public enum eDialects
         {
@@ -37,105 +26,59 @@ namespace ChatBot.MessageSpeaker
             none
         }
 
-        public void SetIsSpeechEnabled(string argumet)
+        public static string GetLanguageCodeFromDialect(string dialect)
         {
-            if (argumet.StartsWith("enable"))
-                isSpeechEnabled = true;
-            if (argumet.StartsWith("disable"))
-                isSpeechEnabled = false;
-        }
-
-        public bool SetGender(string gender)
-        {   
-            switch (gender)
-            {
-                case "man":
-                    this.gender = SsmlVoiceGender.Male;
-                    return true;
-                    break;
-                case "woman":
-                    this.gender = SsmlVoiceGender.Female;
-                    return true;
-                    break;
-                case "unspecified":
-                    this.gender = SsmlVoiceGender.Unspecified;
-                    return true;
-                    break;
-                case "neutral":
-                    this.gender = SsmlVoiceGender.Neutral;
-                    return true;
-                    break;
-                default:
-                    return false;
-            }
-        }
-
-        public void SetSpeed(double value)
-        {
-            speakingRate = value;
-        }
-
-        public void SetPitch(double value)
-        {
-            pitch = value;
-        }
-
-        public bool SetLanguage(string dialect)
-        {
-            switch (MessageSpeakerSettings.GetDialectFromString(dialect))
+            switch (GetDialectFromString(dialect))
             {
                 case eDialects.australian:
-                    languageCode = "en-AU";
-                    return true;
+                    return "en-AU";
                 case eDialects.russian:
-                    languageCode = "ru-RU";
-                    return true;
+                    return "ru-RU";
                 case eDialects.chinese:
-                    languageCode = "cmn-TW";
-                    return true;
+                    return "cmn-TW";
                 case eDialects.korean:
-                    languageCode = "ko-KR";
-                    return true;
+                    return "ko-KR";
                 case eDialects.irish:
-                    languageCode = "en-IE";
-                    return true;
+                    return "en-IE";
                 case eDialects.british:
-                    languageCode = "en-GB";
-                    return true;
+                    return "en-GB";
                 case eDialects.italian:
-                    languageCode = "it-IT";
-                    return true;
+                    return "it-IT";
                 case eDialects.german:
-                    languageCode = "de-DE";
-                    return true;
+                    return "de-DE";
                 case eDialects.american:
-                    languageCode = "en-US";
-                    return true;
+                    return "en-US";
                 case eDialects.french:
-                    languageCode = "fr-FR";
-                    return true;
+                    return "fr-FR";
                 case eDialects.japanese:
-                    languageCode = "ja-JP";
-                    return true;
+                    return "ja-JP";
                 case eDialects.canadianFrench:
-                    languageCode = "fr-CA";
-                    return true;
+                    return "fr-CA";
                 default:
-                    return false;
+                    return "";
             }
         }
 
-        private VoiceSelectionParams GetVoiceParams()
+        private static VoiceSelectionParams GetVoiceParams(SsmlVoiceGender gender, string languageCode)
         {
             VoiceSelectionParams voiceParams = new VoiceSelectionParams();
             voiceParams.LanguageCode = languageCode;
-            voiceParams.SsmlGender = gender;
-            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode);
+            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
 
             return voiceParams;
         }
 
-        public string GetVoiceNameFromLanguageCode(string languageCode)
+        private static SsmlVoiceGender ConvertGender(TTSSettings.eGender gender)
+        {
+            if (gender == TTSSettings.eGender.male)
+                return SsmlVoiceGender.Male;
+            else if (gender == TTSSettings.eGender.female)
+                return SsmlVoiceGender.Female;
+
+            return SsmlVoiceGender.Female;
+        }
+
+        private static string GetVoiceNameFromLanguageCode(string languageCode, SsmlVoiceGender gender)
         {
             // Hand picked voice sounds by region - if the enum isnt covered in this list just use the default voice name
             if (gender == SsmlVoiceGender.Male)
@@ -168,7 +111,7 @@ namespace ChatBot.MessageSpeaker
                         return "fr-FR-Wavenet-B";
                 }
             }
-            else if (gender == SsmlVoiceGender.Female)
+            else if (gender  == SsmlVoiceGender.Female)
             {
                 switch (GetDialectFromLanguageCode(languageCode))
                 {
@@ -199,7 +142,7 @@ namespace ChatBot.MessageSpeaker
             else return "fr-FR-Wavenet-A";
         }
 
-        public eDialects GetDialectFromLanguageCode(string languageCode)
+        public static eDialects GetDialectFromLanguageCode(string languageCode)
         {
             switch (languageCode)
             {
@@ -273,7 +216,7 @@ namespace ChatBot.MessageSpeaker
         }
 
 
-        private AudioConfig GetAudioConfig()
+        private static AudioConfig GetAudioConfig(double speakingRate, double pitch)
         {
             AudioConfig audioConfig = new AudioConfig();
             audioConfig.AudioEncoding = AudioEncoding.Mp3;
@@ -282,11 +225,10 @@ namespace ChatBot.MessageSpeaker
             return audioConfig;
         }
 
-        public SynthesizeSpeechRequest GetSpeechRequest(string Username, string Message)
+        public static SynthesizeSpeechRequest GetSpeechRequest(string message, UserTTSSettings userTTSSettings)
         {
-            var settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(Username);
-            var config = settings.GetAudioConfig();
-            var voiceParams = settings.GetVoiceParams();
+            var config = GetAudioConfig(userTTSSettings.ttsSettings.speakingRate, userTTSSettings.ttsSettings.pitch);
+            var voiceParams = GetVoiceParams(ConvertGender(userTTSSettings.ttsSettings.gender), userTTSSettings.ttsSettings.languageCode);
 
             SynthesizeSpeechRequest request = new SynthesizeSpeechRequest();
             request.AudioConfig = config;
@@ -294,10 +236,53 @@ namespace ChatBot.MessageSpeaker
 
             // Build the input and add it
             SynthesisInput input = new SynthesisInput();
-            input.Text = Message;
+            input.Text = message;
             request.Input = input;
 
             return request;
+        }
+
+        public enum voicePresets
+        {
+            frenchWoman,
+            frenchMan,
+            bog
+        }
+
+        /// <summary>
+        /// Gives a user a handmade preconfigurated voice
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="voicePreset"></param>
+        public static void SetPresetVoice(string username, voicePresets voicePreset)
+        {
+            UserTTSSettings userTTSSettings = new UserTTSSettings();
+            userTTSSettings.twitchUsername = username;
+            userTTSSettings.isSpeechEnabled = true;
+
+            switch (voicePreset)
+            {
+                case voicePresets.frenchWoman:
+                    userTTSSettings.ttsSettings.speakingRate = 1.16;
+                    userTTSSettings.ttsSettings.pitch = -1.3;
+                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.female;
+                    userTTSSettings.ttsSettings.languageCode = "fr-FR";
+                    break;
+                case voicePresets.bog:
+                    userTTSSettings.ttsSettings.speakingRate = 0.57;
+                    userTTSSettings.ttsSettings.pitch = -2.5;
+                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
+                    userTTSSettings.ttsSettings.languageCode = "fr-CA";
+                    break;
+                case voicePresets.frenchMan:
+                    userTTSSettings.ttsSettings.speakingRate = 1.17;
+                    userTTSSettings.ttsSettings.pitch = -2;
+                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
+                    userTTSSettings.ttsSettings.languageCode = "fr-FR";
+                    break;
+            }
+
+            MessageSpeakerSettingsManager.SaveSettingsToStorage(userTTSSettings);
         }
     }
 }

@@ -22,12 +22,19 @@ namespace ChatBot.MessageSpeaker
             if (!IsMessageAllowedSpoken(message.Message))
                 return;
 
-            // Filter users who have tts disabled
-            var settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(message.Username);
-            if (!settings.isSpeechEnabled)
+            // Get the users settings and figure out which TTS platform to use
+            UserTTSSettings userTTSSettings = MessageSpeakerSettingsManager.GetSettingsFromStorage(message.Username);
+            if (!userTTSSettings.isSpeechEnabled) // Filter users who have tts disabled
                 return;
 
-            SynthesizeSpeechRequest request = settings.GetSpeechRequest(message.Username, message.Message);
+            if (userTTSSettings.TTSType == UserTTSSettings.eTTSType.google)
+                SpeakGoogleMessage(userTTSSettings, message.Message);
+        }
+
+        public void SpeakGoogleMessage(UserTTSSettings userTTSSettings, string message)
+        {
+
+            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, userTTSSettings);
 
             try
             {
@@ -42,21 +49,26 @@ namespace ChatBot.MessageSpeaker
                 var ms = new MemoryStream();
                 response.AudioContent.WriteTo(ms);
 
-                // This is an easy and tested safe way of playing mp3 files (its tricky)
-                using (var audioFile = new AudioFileReader(settingsFilePath))
-                using (var outputDevice = new WaveOutEvent())
-                {
-                    outputDevice.Init(audioFile);
-                    outputDevice.Play();
-                    while (outputDevice.PlaybackState == PlaybackState.Playing)
-                    {
-                        Thread.Sleep(500);
-                    }
-                }
+                PlayAudioFromFile(settingsFilePath);
             }
             catch (Exception e)
             {
                 Console.Write("\n" + e.Message);
+            }
+        }
+
+        private void PlayAudioFromFile(string filePath)
+        {
+            // This is an easy and tested safe way of playing mp3 files (its tricky)
+            using (var audioFile = new AudioFileReader(filePath))
+            using (var outputDevice = new WaveOutEvent())
+            {
+                outputDevice.Init(audioFile);
+                outputDevice.Play();
+                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                {
+                    Thread.Sleep(500);
+                }
             }
         }
 
