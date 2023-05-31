@@ -12,6 +12,7 @@ namespace ChatBot.MessageSpeaker
         public double pitch = -3.8;
         public eGender gender = eGender.male;
         public string languageCode = "fr-CA"; // Only used by google text-to-speech API
+        public string voiceName = "";
 
         public enum eGender
         {
@@ -21,12 +22,14 @@ namespace ChatBot.MessageSpeaker
 
         public bool SetGender(string gender)
         {
-            switch (gender)
+            switch (gender.ToLower().Trim())
             {
+                case "male":
                 case "man":
                     this.gender = eGender.male;
                     return true;
                     break;
+                case "female":
                 case "woman":
                     this.gender = eGender.female;
                     return true;

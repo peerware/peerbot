@@ -5,15 +5,16 @@ using System.Media;
 using System.IO;
 using NAudio.Wave;
 using System.Threading;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ChatBot.MessageSpeaker
 {
     public class MessageSpeaker
     {
         TextToSpeechClient client = TextToSpeechClient.Create();
-        Mp3FileReader reader = null;
-        WaveOut waveOut = null;
-        string settingsFilePath = Config.fileSavePath + "output.mp3";
+        string settingsFilePath = Config.fileSavePath + "output.ogg";
 
         // Speaks a message using the user's saved settings (otherwise use custom defaults)
         public void SpeakMessage(ChatMessage message)
@@ -27,14 +28,21 @@ namespace ChatBot.MessageSpeaker
             if (!userTTSSettings.isSpeechEnabled) // Filter users who have tts disabled
                 return;
 
-            if (userTTSSettings.TTSType == UserTTSSettings.eTTSType.google)
-                SpeakGoogleMessage(userTTSSettings, message.Message);
-        }
+            if (Config.IsDefaultTTSEnabled)
+            {
+                SpeakGoogleMessage(GoogleTTSSettings.GetDefaultVoice(), message.Message);
+                return;
+            }
 
-        public void SpeakGoogleMessage(UserTTSSettings userTTSSettings, string message)
+            if (userTTSSettings.TTSType == UserTTSSettings.eTTSType.google)
+                SpeakGoogleMessage(userTTSSettings.ttsSettings, message.Message);
+        }
+        
+
+        public void SpeakGoogleMessage(TTSSettings ttsSettings, string message)
         {
 
-            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, userTTSSettings);
+            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
 
             try
             {
@@ -59,6 +67,7 @@ namespace ChatBot.MessageSpeaker
 
         private void PlayAudioFromFile(string filePath)
         {
+            
             // This is an easy and tested safe way of playing mp3 files (its tricky)
             using (var audioFile = new AudioFileReader(filePath))
             using (var outputDevice = new WaveOutEvent())

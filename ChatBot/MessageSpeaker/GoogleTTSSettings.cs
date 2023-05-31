@@ -23,7 +23,20 @@ namespace ChatBot.MessageSpeaker
             korean,
             chinese,
             russian,
+            danish,
             none
+        }
+
+        public static TTSSettings GetDefaultVoice()
+        {
+            return new TTSSettings
+            {
+                languageCode = "en-US",
+                voiceName = "en-US-Neural2-F",
+                gender = TTSSettings.eGender.female,
+                speakingRate = 0.75,
+                pitch = -4
+            };
         }
 
         public static string GetLanguageCodeFromDialect(string dialect)
@@ -32,6 +45,8 @@ namespace ChatBot.MessageSpeaker
             {
                 case eDialects.australian:
                     return "en-AU";
+                case eDialects.danish:
+                    return "da-DK";
                 case eDialects.russian:
                     return "ru-RU";
                 case eDialects.chinese:
@@ -59,11 +74,16 @@ namespace ChatBot.MessageSpeaker
             }
         }
 
-        private static VoiceSelectionParams GetVoiceParams(SsmlVoiceGender gender, string languageCode)
+        private static VoiceSelectionParams GetVoiceParams(SsmlVoiceGender gender, string languageCode, string voiceName)
         {
             VoiceSelectionParams voiceParams = new VoiceSelectionParams();
             voiceParams.LanguageCode = languageCode;
-            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
+            voiceParams.SsmlGender = gender;
+
+            if (string.IsNullOrEmpty(voiceName))
+                voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
+            else
+                voiceParams.Name = voiceName;
 
             return voiceParams;
         }
@@ -87,6 +107,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-D";
+                    case eDialects.danish:
+                        return "da-DK-Standard-C";
                     case eDialects.russian:
                         return "ru-RU-Wavenet-D";
                     case eDialects.chinese:
@@ -117,6 +139,8 @@ namespace ChatBot.MessageSpeaker
                 {
                     case eDialects.australian:
                         return "en-AU-Wavenet-C";
+                    case eDialects.danish:
+                        return "da-DK-Wavenet-A";
                     case eDialects.russian:
                         return "ru-RU-Wavenet-C";
                     case eDialects.chinese:
@@ -148,6 +172,8 @@ namespace ChatBot.MessageSpeaker
             {
                 case "en-GB":
                     return eDialects.british;
+                case "da-DK":
+                    return eDialects.danish;
                 case "ru-RU":
                     return eDialects.russian;
                 case "ko-KR":
@@ -183,6 +209,8 @@ namespace ChatBot.MessageSpeaker
                     return eDialects.australian;
                 case "chinese":
                     return eDialects.chinese;
+                case "danish":
+                    return eDialects.danish;
                 case "korean":
                     return eDialects.korean;
                 case "russian":
@@ -219,16 +247,22 @@ namespace ChatBot.MessageSpeaker
         private static AudioConfig GetAudioConfig(double speakingRate, double pitch)
         {
             AudioConfig audioConfig = new AudioConfig();
-            audioConfig.AudioEncoding = AudioEncoding.Mp3;
+            audioConfig.AudioEncoding = AudioEncoding.Linear16;
             audioConfig.SpeakingRate = speakingRate;
             audioConfig.Pitch = pitch;
             return audioConfig;
         }
 
-        public static SynthesizeSpeechRequest GetSpeechRequest(string message, UserTTSSettings userTTSSettings)
+        public static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
         {
-            var config = GetAudioConfig(userTTSSettings.ttsSettings.speakingRate, userTTSSettings.ttsSettings.pitch);
-            var voiceParams = GetVoiceParams(ConvertGender(userTTSSettings.ttsSettings.gender), userTTSSettings.ttsSettings.languageCode);
+            var config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
+
+
+            // config.AudioEncoding = AudioEncoding. todo get a linear16 or ogg file instead of an mp3
+
+
+            var voiceParams = GetVoiceParams(ConvertGender(ttsSettings.gender),
+                ttsSettings.languageCode, ttsSettings.voiceName);
 
             SynthesizeSpeechRequest request = new SynthesizeSpeechRequest();
             request.AudioConfig = config;
