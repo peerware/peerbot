@@ -258,9 +258,6 @@ namespace ChatBot.MessageSpeaker
             var config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
 
 
-            // config.AudioEncoding = AudioEncoding. todo get a linear16 or ogg file instead of an mp3
-
-
             var voiceParams = GetVoiceParams(ConvertGender(ttsSettings.gender),
                 ttsSettings.languageCode, ttsSettings.voiceName);
 

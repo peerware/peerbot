@@ -54,7 +54,7 @@ namespace ChatBot.MessageSpeaker
 
         public static UserTTSSettings GetSettingsFromStorage(string username)
         {
-            UserTTSSettings Output = new UserTTSSettings();
+            UserTTSSettings userTTSSettings = new UserTTSSettings();
 
             if (File.Exists(filePath))
             {
@@ -62,11 +62,14 @@ namespace ChatBot.MessageSpeaker
                 foreach (var Setting in AllSettings)
                 {
                     if (Setting.Contains(username))
-                        Output = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
+                        userTTSSettings = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
                 }
             }
 
-            return Output;
+            if (string.IsNullOrWhiteSpace(userTTSSettings.twitchUsername))
+                userTTSSettings.ttsSettings = GoogleTTSSettings.GetDefaultVoice();
+
+            return userTTSSettings;
         }
     }
 }
