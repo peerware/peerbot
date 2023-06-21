@@ -1,4 +1,4 @@
-﻿using Google.Cloud.TextToSpeech.V1;
+using Google.Cloud.TextToSpeech.V1;
 using System;
 using System.Collections.Generic;
 using System.Text;

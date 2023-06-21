@@ -10,7 +10,7 @@ namespace ChatBot.MessageSpeaker
     /// <summary>
     /// Responsible for saving and fetching message speaker options
     /// </summary>
-    class MessageSpeakerSettingsManager
+    public static class UserTTSSettingsManager
     {
         static object locker = new object();
         static string filePath = Config.fileSavePath + "speechsettings.txt";

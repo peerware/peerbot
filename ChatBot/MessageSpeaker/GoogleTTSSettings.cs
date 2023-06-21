@@ -1,14 +1,13 @@
 ﻿using Google.Cloud.TextToSpeech.V1;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace ChatBot.MessageSpeaker
 {
     public class GoogleTTSSettings
     {
-        //public string languageCode = "fr-FR";
-
         public enum eDialects
         {
             australian,
@@ -25,6 +24,25 @@ namespace ChatBot.MessageSpeaker
             russian,
             danish,
             none
+        }
+
+        /// <summary>
+        /// Returns a memory stream with a wav header of a user's message in their custom voice
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="message"></param>
+        /// <param name="client"></param>
+        /// <returns></returns>
+        public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client)
+        {
+            TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
+            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
+            SynthesizeSpeechResponse response = client.SynthesizeSpeech(request);
+
+            MemoryStream outputMemoryStream = new MemoryStream();
+            response.AudioContent.WriteTo(outputMemoryStream);
+
+            return outputMemoryStream;
         }
 
         public static TTSSettings GetDefaultVoice()
@@ -253,7 +271,13 @@ namespace ChatBot.MessageSpeaker
             return audioConfig;
         }
 
-        public static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
+        /// <summary>
+        /// Returns speech request with audio as linear16 with wav header
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ttsSettings"></param>
+        /// <returns></returns>
+        private static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
         {
             var config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
 
@@ -313,7 +337,7 @@ namespace ChatBot.MessageSpeaker
                     break;
             }
 
-            MessageSpeakerSettingsManager.SaveSettingsToStorage(userTTSSettings);
+            UserTTSSettingsManager.SaveSettingsToStorage(userTTSSettings);
         }
     }
 }

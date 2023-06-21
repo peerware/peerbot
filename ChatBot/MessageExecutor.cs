@@ -407,7 +407,7 @@ namespace ChatBot
                 ttsCommand = "help";
 
             // Get existing settings - constructor will provide defaults otherwise
-            UserTTSSettings settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(username);
+            UserTTSSettings settings = UserTTSSettingsManager.GetSettingsFromStorage(username);
             settings.twitchUsername = username;
 
             // Overwrite settings if we get a valid command
@@ -418,7 +418,7 @@ namespace ChatBot
                         "italy, uk, america, french, japanese, danish, bog, korean, chinese, russian, " +
                         "speed (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed +
                         "), pitch (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch +")");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":
                     Say("@" + username + " " + JsonConvert.SerializeObject(settings));
@@ -426,19 +426,19 @@ namespace ChatBot
                 case "enable":
                     settings.SetIsSpeechEnabled("enable");
                     Say("tts on");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "disable":
                     settings.SetIsSpeechEnabled("disable");
                     Say("tts off");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "speed":
                     double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : -200;
 
                     if (speed == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).ttsSettings.speakingRate.ToString() +
+                        Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.speakingRate.ToString() +
                             " (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed + ")");
                         return;
                     }
@@ -451,7 +451,7 @@ namespace ChatBot
                         settings.ttsSettings.SetSpeed(speed);
                         Say("speed set");
                     }
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "pitch":
                     // If the user didn't specify a pitch then display their current pitch
@@ -459,7 +459,7 @@ namespace ChatBot
 
                     if (pitch == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).ttsSettings.pitch.ToString() + 
+                        Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.pitch.ToString() + 
                             " (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch + ")");
                         return;
                     }
@@ -473,7 +473,7 @@ namespace ChatBot
                         Say("pitch set");
                     }
 
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "australian":
                 case "australia":
@@ -550,7 +550,7 @@ namespace ChatBot
                 Say("dialect saved");
             else
                 Say("@" + username + " Choose between australian, irish, german, italian, british, american, french, japanese");
-            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 
         private void SaveGenderSayResult(UserTTSSettings settings, string gender, string Username)
@@ -561,7 +561,7 @@ namespace ChatBot
                 Say("gender saved");
             else
                 Say("@" + Username + " Choose between man, woman, neutral, and unspecified");
-            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 
         private void Say(string Message)

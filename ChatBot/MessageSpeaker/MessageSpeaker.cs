@@ -1,4 +1,4 @@
-﻿using TwitchLib.Client.Models;
+using TwitchLib.Client.Models;
 using Google.Cloud.TextToSpeech.V1;
 using System;
 using System.Media;
@@ -13,6 +13,13 @@ namespace ChatBot.MessageSpeaker
 {
     public class MessageSpeaker
     {
+        public MessageSpeaker()
+        {
+            // Auths into google (probably a better way but this is fast)
+            string credential_path = Config.fileSavePath + "peerbot-329501-7bffcbd28a99.json";
+            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
+        }
+
         TextToSpeechClient client = TextToSpeechClient.Create();
         string settingsFilePath = Config.fileSavePath + "output.ogg";
 
@@ -24,40 +31,24 @@ namespace ChatBot.MessageSpeaker
                 return;
 
             // Get the users settings and figure out which TTS platform to use
-            UserTTSSettings userTTSSettings = MessageSpeakerSettingsManager.GetSettingsFromStorage(message.Username);
+            UserTTSSettings userTTSSettings = UserTTSSettingsManager.GetSettingsFromStorage(message.Username);
             if (!userTTSSettings.isSpeechEnabled) // Filter users who have tts disabled
                 return;
 
-            if (Config.IsDefaultTTSEnabled)
-            {
-                SpeakGoogleMessage(GoogleTTSSettings.GetDefaultVoice(), message.Message);
-                return;
-            }
-
             if (userTTSSettings.TTSType == UserTTSSettings.eTTSType.google)
-                SpeakGoogleMessage(userTTSSettings.ttsSettings, message.Message);
+                SpeakGoogleMessage(userTTSSettings, message.Message);
         }
         
-
-        public void SpeakGoogleMessage(TTSSettings ttsSettings, string message)
+        /// <summary>
+        /// Plays a google TTS message using NAudio
+        /// </summary>
+        /// <param name="ttsSettings"></param>
+        /// <param name="message"></param>
+        public void SpeakGoogleMessage(UserTTSSettings userTTSSettings, string message)
         {
-
-            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
-
             try
             {
-                var response = client.SynthesizeSpeech(request);
-
-                // Write the response to the output file.
-                using (var output = File.Create(settingsFilePath))
-                {
-                    response.AudioContent.WriteTo(output);
-                }
-
-                var ms = new MemoryStream();
-                response.AudioContent.WriteTo(ms);
-
-                PlayAudioFromFile(settingsFilePath);
+                PlayAudioFromStream(GoogleTTSSettings.GetVoiceAudio(userTTSSettings.twitchUsername, message, client));
             }
             catch (Exception e)
             {
@@ -65,14 +56,13 @@ namespace ChatBot.MessageSpeaker
             }
         }
 
-        private void PlayAudioFromFile(string filePath)
+        private void PlayAudioFromStream(MemoryStream stream)
         {
-            
-            // This is an easy and tested safe way of playing mp3 files (its tricky)
-            using (var audioFile = new AudioFileReader(filePath))
+            WaveFileReader reader = new WaveFileReader(new MemoryStream(stream.ToArray()));
+
             using (var outputDevice = new WaveOutEvent())
             {
-                outputDevice.Init(audioFile);
+                outputDevice.Init(reader);
                 outputDevice.Play();
                 while (outputDevice.PlaybackState == PlaybackState.Playing)
                 {
