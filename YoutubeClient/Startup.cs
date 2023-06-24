@@ -14,6 +14,12 @@ namespace YoutubeClient
 {
     public class Startup
     {
+        /// Global objects/variables (each user may or may not get their own version of these, )
+        public static MessageReceiver messageReceiver;
+
+        /// <summary>
+        /// integrate message receiver in a way thats accessible across the whole application
+        /// </summary>
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -30,7 +36,7 @@ namespace YoutubeClient
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            MessageReceiver messageReceiver = new MessageReceiver();
+            messageReceiver = new MessageReceiver();
 
             if (env.IsDevelopment())
             {

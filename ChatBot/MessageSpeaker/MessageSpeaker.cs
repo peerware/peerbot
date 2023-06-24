@@ -20,23 +20,22 @@ namespace ChatBot.MessageSpeaker
             System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
         }
 
-        TextToSpeechClient client = TextToSpeechClient.Create();
-        string settingsFilePath = Config.fileSavePath + "output.ogg";
+        public TextToSpeechClient client = TextToSpeechClient.Create();
 
         // Speaks a message using the user's saved settings (otherwise use custom defaults)
-        public void SpeakMessage(ChatMessage message)
+        public void SpeakMessage(string username, string message)
         {
             // Filter messages we don't want spoken
-            if (!IsMessageAllowedSpoken(message.Message))
+            if (!IsMessageAllowedSpoken(message))
                 return;
 
             // Get the users settings and figure out which TTS platform to use
-            UserTTSSettings userTTSSettings = UserTTSSettingsManager.GetSettingsFromStorage(message.Username);
+            UserTTSSettings userTTSSettings = UserTTSSettingsManager.GetSettingsFromStorage(username);
             if (!userTTSSettings.isSpeechEnabled) // Filter users who have tts disabled
                 return;
 
             if (userTTSSettings.TTSType == UserTTSSettings.eTTSType.google)
-                SpeakGoogleMessage(userTTSSettings, message.Message);
+                SpeakGoogleMessage(userTTSSettings, message);
         }
         
         /// <summary>

@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using YoutubeClient.Models;
+using ChatBot.MessageSpeaker;
+using System.IO;
 
 namespace YoutubeClient.Controllers
 {
@@ -16,9 +18,20 @@ namespace YoutubeClient.Controllers
 
         private readonly ILogger<HomeController> _logger;
 
+        private MessageSpeaker messageSpeaker = new MessageSpeaker();
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+        }
+
+        [HttpGet]
+        public ActionResult GetMessageAudio()
+        {
+            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+                .GetVoiceAudio("peerlessunderthestars", "test", messageSpeaker.client).ToArray());
+
+            return File(audioMemoryStream, "audio/wav");
         }
 
         public IActionResult Index()

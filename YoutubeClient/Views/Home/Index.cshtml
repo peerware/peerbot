@@ -1,4 +1,5 @@
 ﻿@{
+
     ViewData["Title"] = "Home Page";
 
 }
@@ -15,12 +16,24 @@
         });
 
     function OpenMedia() {
-
+            var a = $.ajax({
+                type: "GET",
+                url: '@Url.Action("Get", "Home")',
+                contentType: "application/json; charset=utf-8",
+                //data: { a: "testing" },
+                dataType: "text",
+                //dataType: "json",
+                success: function() { alert('Success'); }
+            });
            // window.open(
                 //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
         } 
 </script>
 
 <div class="text-center">
+    <div>
+        <audio controls><source src="@Url.Action("GetMessageAudio", "Home")" type="audio/wav" /></audio>
+    </div>
+    <a href="/Home/GetTestString">:3</a>
     <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="OpenMedia()">hi</a>
 </div>

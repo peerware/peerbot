@@ -12,10 +12,13 @@ namespace YoutubeClient
 {
     public class Program
     {
+        /// <summary>
+        /// Used for calling Startup.cs
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
-
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run(); // Code will not run after this line
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

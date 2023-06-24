@@ -59,7 +59,7 @@ namespace ChatBot
                 return;
 
             if (Config.IsTextToSpeechEnabled)
-                messageSpeaker.SpeakMessage(e.ChatMessage);
+                messageSpeaker.SpeakMessage(e.ChatMessage.Username, e.ChatMessage.Message);
              
             if (e.ChatMessage.Message.StartsWith("!"))
                 messageExecutor.ExecuteMessage(e.ChatMessage);
