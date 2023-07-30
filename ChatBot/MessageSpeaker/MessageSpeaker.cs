@@ -20,7 +20,7 @@ namespace ChatBot.MessageSpeaker
             System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
         }
 
-        public TextToSpeechClient client = TextToSpeechClient.Create();
+        public TextToSpeechClient ttsClient = TextToSpeechClient.Create();
 
         // Speaks a message using the user's saved settings (otherwise use custom defaults)
         public void SpeakMessage(string username, string message)
@@ -47,7 +47,7 @@ namespace ChatBot.MessageSpeaker
         {
             try
             {
-                PlayAudioFromStream(GoogleTTSSettings.GetVoiceAudio(userTTSSettings.twitchUsername, message, client));
+                PlayAudioFromStream(GoogleTTSSettings.GetVoiceAudio(userTTSSettings.twitchUsername, message, ttsClient));
             }
             catch (Exception e)
             {

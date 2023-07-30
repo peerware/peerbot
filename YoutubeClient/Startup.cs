@@ -9,14 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YoutubeClient.Hubs;
 
 namespace YoutubeClient
 {
     public class Startup
     {
-        /// Global objects/variables (each user may or may not get their own version of these, )
-        public static MessageReceiver messageReceiver;
-
         /// <summary>
         /// integrate message receiver in a way thats accessible across the whole application
         /// </summary>
@@ -31,13 +29,12 @@ namespace YoutubeClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            messageReceiver = new MessageReceiver();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -57,6 +54,8 @@ namespace YoutubeClient
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chatHub");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
