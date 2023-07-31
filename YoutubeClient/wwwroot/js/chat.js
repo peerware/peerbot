@@ -14,6 +14,18 @@ connection.on("ReceiveMessage", function (user, message) {
     li.textContent = `${user} says ${message}`;
 });
 
+connection.on("ReceiveMessageAudio", function (messageAudio) {
+
+    document.getElementById("audioPlayer");
+    var snd = new Audio("data:audio/wav;base64," + messageAudio);
+    snd.play();
+});
+
+connection.on("ReceiveMessageAudio", function (messageAudio) {
+
+    document.getElementById("audioPlayer");
+});
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {

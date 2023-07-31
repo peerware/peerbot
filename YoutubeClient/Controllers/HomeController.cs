@@ -10,6 +10,8 @@ using ChatBot.MessageSpeaker;
 using System.IO;
 using ChatBot;
 using TwitchLib.Client.Events;
+using YoutubeClient.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace YoutubeClient.Controllers
 {
@@ -19,14 +21,20 @@ namespace YoutubeClient.Controllers
         private string links = null;
 
         private readonly ILogger<HomeController> _logger;
+        private readonly IHubContext<ChatHub> chatHub = null;
 
-        private MessageSpeaker messageSpeaker = new MessageSpeaker();
+        private GoogleTTSSettings googleTTSSettings = new GoogleTTSSettings();
         private MessageReceiver messageReceiver = new MessageReceiver();
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHubContext<ChatHub> chatHub)
         {
+            if (this.chatHub != null)
+                return;
+
             messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
             _logger = logger;
+
+            this.chatHub = chatHub;
         }
 
 
@@ -35,18 +43,20 @@ namespace YoutubeClient.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetMessageAudio()
+        public ActionResult GetMessageAudio(string username, string message)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio("peerlessunderthestars", "test", messageSpeaker.ttsClient).ToArray());
+                .GetVoiceAudio(username, message, googleTTSSettings.ttsClient).ToArray());
 
-            return File(audioMemoryStream, "audio/wav");
+            chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
+
+            return null;
         }
 
 
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            GetMessageAudio();
+            GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message);
         }
 
         public IActionResult Index()
@@ -64,5 +74,21 @@ namespace YoutubeClient.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        /// <summary>
+        /// Commented out example of restful method that returns data, can be called from client
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet]
+        //public ActionResult GetMessageAudio(string username, string message)
+        //{
+        //    MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+        //        .GetVoiceAudio(username, message, googleTTSSettings.ttsClient).ToArray());
+
+        //    chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
+        //    // data is received by client, need to make memorystream audio play
+
+        //    return null; //File(audioMemoryStream, "audio/wav");
+        //}
     }
 }
