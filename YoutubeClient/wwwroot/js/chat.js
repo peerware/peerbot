@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
@@ -16,7 +16,6 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.on("ReceiveMessageAudio", function (messageAudio) {
 
-    document.getElementById("audioPlayer");
     var snd = new Audio("data:audio/wav;base64," + messageAudio);
     snd.play();
 });

@@ -12,6 +12,7 @@ using ChatBot;
 using TwitchLib.Client.Events;
 using YoutubeClient.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Threading;
 
 namespace YoutubeClient.Controllers
 {
@@ -42,15 +43,19 @@ namespace YoutubeClient.Controllers
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public ActionResult GetMessageAudio(string username, string message)
+        public void GetMessageAudio(string username, string message)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
                 .GetVoiceAudio(username, message, googleTTSSettings.ttsClient).ToArray());
+            
+            long audioLength = audioMemoryStream.Length;
 
             chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
 
-            return null;
+            // fast way to make it so audio doesn't overlap - need to make a queue system for playing audio in javascript
+            Thread.Sleep((int)audioLength / 54000 * 1000);
+
+            return;
         }
 
 
