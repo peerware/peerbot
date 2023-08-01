@@ -15,7 +15,6 @@ namespace ChatBot
     {
         public TwitchClient twitchClient;
         MessageExecutor messageExecutor;
-        MessageSpeaker.MessageSpeaker messageSpeaker;
 
         // todo add channel name to this constructor
         public MessageReceiver()
@@ -36,7 +35,6 @@ namespace ChatBot
             twitchClient.Connect();
 
             messageExecutor = MessageExecutor.GetMessageExecutor(twitchClient).Result;
-            messageSpeaker = new MessageSpeaker.MessageSpeaker();
         }
 
         /// <summary>

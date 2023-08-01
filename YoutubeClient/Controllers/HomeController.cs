@@ -25,14 +25,19 @@ namespace YoutubeClient.Controllers
         private readonly IHubContext<ChatHub> chatHub = null;
 
         private GoogleTTSSettings googleTTSSettings = new GoogleTTSSettings();
-        private MessageReceiver messageReceiver = new MessageReceiver();
+        private MessageReceiver messageReceiver = null;
 
         public HomeController(ILogger<HomeController> logger, IHubContext<ChatHub> chatHub)
         {
             if (this.chatHub != null)
                 return;
 
-            messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
+            if (messageReceiver == null)
+            {
+                messageReceiver = new MessageReceiver();
+                messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
+            }
+
             _logger = logger;
 
             this.chatHub = chatHub;
@@ -51,9 +56,6 @@ namespace YoutubeClient.Controllers
             long audioLength = audioMemoryStream.Length;
 
             chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
-
-            // fast way to make it so audio doesn't overlap - need to make a queue system for playing audio in javascript
-            Thread.Sleep((int)audioLength / 54000 * 1000);
 
             return;
         }

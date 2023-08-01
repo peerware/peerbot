@@ -1,5 +1,8 @@
 "use strict";
 
+var messageQueue = [];
+var isMessagePlaying = false;
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 //Disable the send button until connection is established.
@@ -16,9 +19,27 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.on("ReceiveMessageAudio", function (messageAudio) {
 
-    var snd = new Audio("data:audio/wav;base64," + messageAudio);
-    snd.play();
+    messageQueue.push(messageAudio);
+    ProcessMessageQueue();
 });
+
+function ProcessMessageQueue() {
+    if (isMessagePlaying || messageQueue.length < 1)
+        return;
+
+    // play all the messages in the queue while removing the played messages
+    var audioPlayer = new Audio("data:audio/wav;base64," + messageQueue[0]);
+
+    audioPlayer.addEventListener("ended", function () {
+        isMessagePlaying = false;
+        ProcessMessageQueue();
+    });
+
+    messageQueue.shift();
+    isMessagePlaying = true;
+    audioPlayer.play();
+    
+}
 
 connection.on("ReceiveMessageAudio", function (messageAudio) {
 

@@ -15,6 +15,9 @@ namespace ChatBot
             if (isMessageBanned)
                 DeleteMessage(username, client);
 
+            // Don't allow URLs or commands to be spoken, but don't delete them either
+            isMessageBanned = IsMessageWebsiteURL(message);
+
             return isMessageBanned;
         }
 
@@ -59,5 +62,11 @@ namespace ChatBot
         {
             client.SendMessage(Config.channelUsername, "/timeout " + Username + " 1");
         }
+
+        public static bool IsMessageWebsiteURL(string message)
+        {
+            return message.StartsWith("!") || message.StartsWith("http") || message.StartsWith("www.") ? false : true;
+        }
     }
 }
+
