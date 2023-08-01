@@ -1,39 +1,43 @@
 ﻿@{
-
     ViewData["Title"] = "Home Page";
-
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-        $(document).ready(function () {
+<script type="text/javascript"> 
 
-            //$('#youtubePlayer').trigger('click');
-
-            //$('#youtubePlayer').click(function () {
-            //    alert("click event triggered");
-            //    $('#youtubePlayer').click();
-            //});
-        });
-
-    function OpenMedia() {
-            var a = $.ajax({
-                type: "GET",
-                url: '@Url.Action("Get", "Home")',
-                contentType: "application/json; charset=utf-8",
-                //data: { a: "testing" },
-                dataType: "text",
-                //dataType: "json",
-                success: function() { alert('Success'); }
-            });
-           // window.open(
-                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
-        } 
 </script>
 
 <div class="text-center">
     <div>
-        <audio controls><source src="@Url.Action("GetMessageAudio", "Home")" type="audio/wav" /></audio>
     </div>
     <a href="/Home/GetTestString">:3</a>
     <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="OpenMedia()">hi</a>
 </div>
+@ViewData["Title"]
+
+<div class="container" style="background-color: red;">
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>

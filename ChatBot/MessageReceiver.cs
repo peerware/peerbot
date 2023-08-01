@@ -13,9 +13,8 @@ namespace ChatBot
 {
     public class MessageReceiver
     {
-        TwitchClient client;
+        public TwitchClient twitchClient;
         MessageExecutor messageExecutor;
-        MessageSpeaker.MessageSpeaker messageSpeaker;
 
         // todo add channel name to this constructor
         public MessageReceiver()
@@ -28,15 +27,14 @@ namespace ChatBot
             };
 
             WebSocketClient customClient = new WebSocketClient(clientOptions);
-            client = new TwitchClient(customClient);
-            client.Initialize(credentials, Config.channelUsername);
+            twitchClient = new TwitchClient(customClient);
+            twitchClient.Initialize(credentials, Config.channelUsername);
 
-            client.OnMessageReceived += Client_OnMessageReceived;
+            twitchClient.OnMessageReceived += Client_OnMessageReceived;
 
-            client.Connect();
+            twitchClient.Connect();
 
-            messageExecutor = MessageExecutor.GetMessageExecutor(client).Result;
-            messageSpeaker = new MessageSpeaker.MessageSpeaker();
+            messageExecutor = MessageExecutor.GetMessageExecutor(twitchClient).Result;
         }
 
         /// <summary>
@@ -55,11 +53,8 @@ namespace ChatBot
             if (e.ChatMessage.DisplayName == Config.botUsername)
                 return;
 
-            if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, client))
+            if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, twitchClient))
                 return;
-
-            if (Config.IsTextToSpeechEnabled)
-                messageSpeaker.SpeakMessage(e.ChatMessage.Username, e.ChatMessage.Message);
              
             if (e.ChatMessage.Message.StartsWith("!"))
                 messageExecutor.ExecuteMessage(e.ChatMessage);

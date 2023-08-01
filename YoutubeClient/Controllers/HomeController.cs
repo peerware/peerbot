@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 using YoutubeClient.Models;
 using ChatBot.MessageSpeaker;
 using System.IO;
+using ChatBot;
+using TwitchLib.Client.Events;
+using YoutubeClient.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using System.Threading;
 
 namespace YoutubeClient.Controllers
 {
@@ -17,21 +22,11 @@ namespace YoutubeClient.Controllers
         private string links = null;
 
         private readonly ILogger<HomeController> _logger;
-
-        private MessageSpeaker messageSpeaker = new MessageSpeaker();
+        private readonly IHubContext<ChatHub> chatHub = null;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-        }
-
-        [HttpGet]
-        public ActionResult GetMessageAudio()
-        {
-            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio("peerlessunderthestars", "test", messageSpeaker.client).ToArray());
-
-            return File(audioMemoryStream, "audio/wav");
         }
 
         public IActionResult Index()

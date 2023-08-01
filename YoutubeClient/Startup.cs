@@ -9,18 +9,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YoutubeClient.Hubs;
+using ChatBot.MessageSpeaker;
+using System.IO;
+using Microsoft.AspNetCore.SignalR;
+using TwitchLib.Client.Events;
 
 namespace YoutubeClient
 {
     public class Startup
     {
-        /// Global objects/variables (each user may or may not get their own version of these, )
-        public static MessageReceiver messageReceiver;
-
         /// <summary>
         /// integrate message receiver in a way thats accessible across the whole application
         /// </summary>
         public IConfiguration Configuration { get; }
+        private MessageReceiver messageReceiver = new MessageReceiver();
+        private GoogleTTSSettings googleTTSSettings = new GoogleTTSSettings();
+        private IHubContext<ChatHub> chatHub;
 
         public Startup(IConfiguration configuration)
         {
@@ -31,12 +36,14 @@ namespace YoutubeClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHubContext<ChatHub> chatHub)
         {
-            messageReceiver = new MessageReceiver();
+            messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
+            this.chatHub = chatHub;
 
             if (env.IsDevelopment())
             {
@@ -57,10 +64,32 @@ namespace YoutubeClient
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chatHub");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+        private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
+        {
+            GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message);
+        }
+
+        /// <summary>
+        /// Plays audio in the browser when recieving a message
+        /// </summary>
+        /// <returns></returns>
+        public void GetMessageAudio(string username, string message)
+        {
+            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+                .GetVoiceAudio(username, message, googleTTSSettings.ttsClient).ToArray());
+
+            long audioLength = audioMemoryStream.Length;
+
+            chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
+
+            return;
         }
     }
 }
