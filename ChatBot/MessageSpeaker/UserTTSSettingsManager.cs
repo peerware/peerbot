@@ -19,6 +19,10 @@ namespace ChatBot.MessageSpeaker
         {
             lock (locker)
             {
+                // Ensure the file is created to prevent errors
+                if (!File.Exists(filePath))
+                    File.Create(filePath);
+
                 // First get the existing settings from storage to see if we are saving new vs overwriting
                 UserTTSSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
 

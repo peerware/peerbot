@@ -15,6 +15,10 @@ namespace ChatBot
             {
                 try
                 {
+                    // Ensure the file is created to prevent errors
+                    if (!File.Exists(filePath))
+                        File.Create(filePath);
+
                     string idea = message.Substring(message.IndexOf(" "));
 
                     // Get the current time in this time zone (I want the text file to also be in my timezone and this should account for daylight savings)
@@ -37,6 +41,10 @@ namespace ChatBot
             {
                 try
                 {
+                    // Ensure the file is created to prevent errors
+                    if (!File.Exists(filePath))
+                        File.Create(filePath);
+
                     // Get the number of lines in the ideas.txt file
                     string[] quotes = File.ReadAllLines(filePath);
                     return "@" + username + " thank you for the idea yours is position " + quotes.Length + " in the queue";
@@ -55,6 +63,10 @@ namespace ChatBot
             {
                 try
                 {
+                    // Ensure the file is created to prevent errors
+                    if (!File.Exists(filePath))
+                        File.Create(filePath);
+
                     // Get the number of lines in the ideas.txt file
                     return File.ReadAllLines(filePath).Length;
                 }

@@ -20,8 +20,6 @@ namespace ChatBot
         Streams streamObject = null;
         TwitchLib.Api.Helix.Models.Streams.GetStreams.Stream channelStream = null;
         TwitchClient client = null;
-        HivescorePoller hivescorePoller;
-        HivescorePoller tdPoller;
         DateTime InitializationTime;
 
         // Don't allow instantiation from outside this class (forces factory-ish instantiaiton)
@@ -37,13 +35,6 @@ namespace ChatBot
             messageExecutor.streamObject = messageExecutor.api.Helix.Streams;
             messageExecutor.channelStream = (await messageExecutor.streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
             messageExecutor.client = client;
-
-            // Poll for regular hivescore and td hivescore
-            messageExecutor.hivescorePoller = new HivescorePoller(client, HivescorePoller.ePollingType.hivescore);
-            messageExecutor.hivescorePoller.BeginPolling();
-
-            messageExecutor.tdPoller = new HivescorePoller(client, HivescorePoller.ePollingType.td);
-            messageExecutor.tdPoller.BeginPolling();
 
             // Get the latest message in the logs (assume this is when the last stream happened, this might change in the future but its fine for now)
             messageExecutor.InitializationTime = MessageLogger.GetTimeOfLatestMessage();
@@ -92,19 +83,6 @@ namespace ChatBot
                 case "!av":
                     ExecuteAV();
                     break;
-                case "!acmo":
-                case "!ranger":
-                case "!nightsy":
-                case "!snowblind":
-                case "!greenrex":
-                case "!robp":
-                case "!kittn":
-                case "!golden":
-                case "!schu":
-                case "!xao":
-                case "!zepar":
-                    ExecuteFriendELO(message.Username, message.Message.Replace("!", ""));
-                    break;
                 case "!dpi":
                 case "!sens":
                     ExecuteDPI();
@@ -127,14 +105,6 @@ namespace ChatBot
                 case "!fortnight":
                     ExecuteFortnite();
                     break;
-                case "!elo":
-                case "!rank":
-                    ExecuteRank();
-                    break;
-                case "!today":
-                case "!daily":
-                    ExecuteDailyStats();
-                    break;
                 case "!tomorrow":
                     ExecuteTomorrow();
                     break;
@@ -146,21 +116,6 @@ namespace ChatBot
                     break;
                 case "!followage":
                     ExecuteFollowage(message);
-                    break;
-                case "!yesterday":
-                    ExecuteYesterday();
-                    break;
-                case "!week":
-                    ExecuteWeek();
-                    break;
-                case "!month":
-                    ExecuteMonth();
-                    break;
-                case "!year":
-                    ExecuteYear();
-                    break;
-                case "!stats":
-                    ExecuteStats();
                     break;
                 case "!quote":
                     ExecuteQuote(message.Username, message.Message);
@@ -214,46 +169,12 @@ namespace ChatBot
             Say("!uptime !giveaway !downtime !av !quote !quote add <quote> !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
         }
 
-        private void ExecuteYesterday()
-        {
-            Say(HivescoreFetcher.GetOldHivescoreMessage(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore));
-        }
-
         // !giveaway
         private void ExecuteGiveaway(string username)
         {
             Say("@" + username + " use !claim");
         }
 
-        // !week
-        private void ExecuteWeek()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-7);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !month
-        private void ExecuteMonth()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-31);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !year
-        private void ExecuteYear()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-365);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !stats
-        private void ExecuteStats()
-        {
-            ExecuteYesterday();
-            ExecuteWeek();
-            ExecuteMonth();
-        }
-        
         // !claim
         private void ExecuteClaim(string username)
         {
@@ -312,13 +233,6 @@ namespace ChatBot
             Say("5800x 3070 240hz G PRO ULTRALIGHT 60% keyboard red switches");
         }
 
-        // !elo 
-        private void ExecuteRank()
-        {
-            string hivescoreChange = HivescoreFetcher.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
-            Say(HivescoreFetcher.FetchHivescore().Result + " hivescore (" + hivescoreChange + ") since yesterday");
-        }
-
         // !uptime
         private void ExecuteUptime()
         {
@@ -354,13 +268,6 @@ namespace ChatBot
             Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=schnightsy");
         }
 
-        // !acmo !nightsy !ranger
-        private void ExecuteFriendELO(string username, string requestedUsername)
-        {
-            Say("@" + username + " " + requestedUsername + "'s current elo is: "
-                + HivescoreFetcher.FetchFriendELO(requestedUsername).Result);
-        }
-
         // !xhair
         private void ExecuteCrosshair()
         {
@@ -375,12 +282,6 @@ namespace ChatBot
         private void TimeUserOut(string Username)
         {
             Say("/timeout " + Username + " 1");
-        }
-
-        // !today !daily
-        private void ExecuteDailyStats()
-        {
-            Say(hivescorePoller.GetDailyStatsMessage());
         }
 
         // !vm

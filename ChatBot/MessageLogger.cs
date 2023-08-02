@@ -18,6 +18,10 @@ namespace ChatBot
             {
                 try
                 {
+                    // Ensure the file is created to prevent errors
+                    if (!File.Exists(filePath))
+                        File.Create(filePath);
+
                     // Get the current time in this time zone (I want the text file to also be in my timezone and this should account for daylight savings)
                     TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                     DateTime easternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
@@ -38,8 +42,23 @@ namespace ChatBot
         /// <returns></returns>
         public static DateTime GetTimeOfLatestMessage()
         {
-            List<string> FileAsLines = File.ReadAllLines(filePath).ToList();
-            string LastLine = FileAsLines.Last();
+            // Ensure the file is created to prevent errors
+            if (!File.Exists(filePath))
+                File.Create(filePath);
+
+
+            List<string> FileAsLines;
+            string LastLine;
+
+            try
+            {
+                FileAsLines = File.ReadAllLines(filePath).ToList();
+                LastLine = FileAsLines.Last();
+            }
+            catch (Exception ex)
+            {
+                return DateTime.MinValue; // This error will only occur on a fresh deployment, no need to handle it properly for now
+            }
 
             // Read the date
             DateTime BrokenDateTime = DateTime.Now;
