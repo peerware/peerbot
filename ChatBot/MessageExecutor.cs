@@ -190,7 +190,7 @@ namespace ChatBot
         // !todo, !idea, !suggestion
         private void ExecuteTodo(string username, string message)
         {
-            if (message.Trim().ToLower() == "!todo" || message.Trim().ToLower() == "!idea")
+            if (message.Trim().ToLower() == "!todo" || message.Trim().ToLower() == "!idea" || message.Trim().ToLower() == "!ideas")
                 Say("There are " + IdeaLogger.GetNumberOfIdeas() + " ideas in the list right now");
             else
             {
