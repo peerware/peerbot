@@ -14,6 +14,7 @@ using ChatBot.MessageSpeaker;
 using System.IO;
 using Microsoft.AspNetCore.SignalR;
 using TwitchLib.Client.Events;
+using Google.Cloud.TextToSpeech.V1;
 
 namespace YoutubeClient
 {
@@ -24,8 +25,8 @@ namespace YoutubeClient
         /// </summary>
         public IConfiguration Configuration { get; }
         private MessageReceiver messageReceiver = new MessageReceiver();
-        private GoogleTTSSettings googleTTSSettings = new GoogleTTSSettings();
         private IHubContext<ChatHub> chatHub;
+        private TextToSpeechClient ttsClient;
 
         public Startup(IConfiguration configuration)
         {
@@ -42,8 +43,14 @@ namespace YoutubeClient
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHubContext<ChatHub> chatHub)
         {
+            // Setup google TTS environment variable
+            string credential_path = Config.fileSavePath + "peerbot-329501-7bffcbd28a99.json";
+            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
+
+            // Setup google tts events and objects
             messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
             this.chatHub = chatHub;
+            this.ttsClient = GoogleTTSSettings.GetTTSClient();
 
             if (env.IsDevelopment())
             {
@@ -83,7 +90,7 @@ namespace YoutubeClient
         public void GetMessageAudio(string username, string message)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio(username, message, googleTTSSettings.ttsClient).ToArray());
+                .GetVoiceAudio(username, message, ttsClient).ToArray());
 
             long audioLength = audioMemoryStream.Length;
 

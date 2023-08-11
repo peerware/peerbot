@@ -6,16 +6,8 @@ using System.Text;
 
 namespace ChatBot.MessageSpeaker
 {
-    public class GoogleTTSSettings
+    public static class GoogleTTSSettings
     {
-        public GoogleTTSSettings()
-        {
-            // Auths into google (probably a better way but this is fast)
-            string credential_path = Config.fileSavePath + "peerbot-329501-7bffcbd28a99.json";
-            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
-        }
-
-        public TextToSpeechClient ttsClient = TextToSpeechClient.Create();
 
         public enum eDialects
         {
@@ -33,6 +25,19 @@ namespace ChatBot.MessageSpeaker
             russian,
             danish,
             none
+        }
+
+        public enum voicePresets
+        {
+            frenchWoman,
+            frenchMan,
+            bog
+        }
+
+        public static TextToSpeechClient GetTTSClient()
+        {
+            TextToSpeechClient ttsClient = TextToSpeechClient.Create();
+            return ttsClient;
         }
 
         /// <summary>
@@ -304,13 +309,6 @@ namespace ChatBot.MessageSpeaker
             request.Input = input;
 
             return request;
-        }
-
-        public enum voicePresets
-        {
-            frenchWoman,
-            frenchMan,
-            bog
         }
 
         /// <summary>
