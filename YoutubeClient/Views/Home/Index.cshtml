@@ -4,17 +4,37 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript"> 
 
+        function SetTTSVoice() {
+            var voice = {
+                id: $('#voiceid').val(),
+                username: $('#username').val(),
+                speed: $('#speed').val(),
+                pitch: $('#pitch').val(),
+            };
+        
+            var a = $.ajax({
+                type: 'post',
+                url: '@Url.Action("SetTTSVoice", "Home")',
+                contentType: "application/json",
+                data: JSON.stringify(voice),
+                success: function() { }
+            });
+            // window.open(
+                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
+             
+        }
+    
 </script>
 
 <div class="text-center">
     <div>
     </div>
     <a href="/Home/GetTestString">:3</a>
-    <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="OpenMedia()">hi</a>
+    <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="SetTTSVoice()">hi</a>
 </div>
 @ViewData["Title"]
 
-<div class="container" style="background-color: red;">
+<div class="container">
     <div class="row p-1">
         <div class="col-1">User</div>
         <div class="col-5"><input type="text" id="userInput" /></div>
@@ -37,6 +57,17 @@
         <div class="col-6">
             <ul id="messagesList"></ul>
         </div>
+        Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="4">
+        Pitch (-20 - 20)<input type="number" id="pitch" name="pitch" min="-20" max="20">   
+    </div>
+
+</div>
+
+<div>
+    <div>
+            @Html.DropDownList("voiceid", ViewBag.googleTTSVoices, "", "")
+            <input type="button" onclick="SetTTSVoice()" />
+            <input type="text" id="username" />
     </div>
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>

@@ -15,6 +15,7 @@ using System.IO;
 using Microsoft.AspNetCore.SignalR;
 using TwitchLib.Client.Events;
 using Google.Cloud.TextToSpeech.V1;
+using YoutubeClient.Models;
 
 namespace YoutubeClient
 {
@@ -26,7 +27,8 @@ namespace YoutubeClient
         public IConfiguration Configuration { get; }
         private MessageReceiver messageReceiver = new MessageReceiver();
         private IHubContext<ChatHub> chatHub;
-        private TextToSpeechClient ttsClient;
+        public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
+        public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
 
         public Startup(IConfiguration configuration)
         {
@@ -50,7 +52,8 @@ namespace YoutubeClient
             // Setup google tts events and objects
             messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
             this.chatHub = chatHub;
-            this.ttsClient = GoogleTTSSettings.GetTTSClient();
+
+            PopulateVoices();
 
             if (env.IsDevelopment())
             {
@@ -81,6 +84,22 @@ namespace YoutubeClient
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
             GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message);
+        }
+
+        private void PopulateVoices()
+        {
+            var response = ttsClient.ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
+
+            for (int i = 0; i < response.Voices.Count; i++)
+            {
+                GoogleTTSVoices.Add(new GoogleTTSVoice
+                {
+                    id = i,
+                    languageName = response.Voices[i].Name,
+                    languageCode = response.Voices[i].LanguageCodes[0],
+                    gender = response.Voices[i].SsmlGender
+                });
+            }
         }
 
         /// <summary>

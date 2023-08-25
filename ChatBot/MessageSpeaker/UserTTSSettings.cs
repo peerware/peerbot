@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChatBot.MessageSpeaker
 {
-    // hold all the tts settings for a user
+    // Holds all the tts settings for a user
     public class UserTTSSettings
     {
         public string twitchUsername = "";

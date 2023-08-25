@@ -13,6 +13,8 @@ using TwitchLib.Client.Events;
 using YoutubeClient.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace YoutubeClient.Controllers
 {
@@ -31,12 +33,31 @@ namespace YoutubeClient.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.googleTTSVoices = Startup.GoogleTTSVoices.Select(item => new SelectListItem { Value = item.id.ToString(), Text = item.GetDisplayName() }).ToList();
+
             return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetTTSVoice([FromBody] GoogleTTSVoice voice)
+        {
+            GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
+
+            UserTTSSettings settings = new UserTTSSettings();
+            settings.twitchUsername = voice.username;
+            settings.ttsSettings.SetSpeed(voice.speed);
+            settings.ttsSettings.SetPitch(voice.pitch);
+            settings.ttsSettings.SetGender(googleVoice.gender);
+            settings.ttsSettings.languageCode = googleVoice.languageCode;
+            settings.ttsSettings.voiceName = googleVoice.languageName;
+
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
+            return null;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
