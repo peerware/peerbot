@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Google.Cloud.TextToSpeech.V1;
 
 namespace YoutubeClient.Controllers
 {
@@ -25,6 +26,7 @@ namespace YoutubeClient.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly IHubContext<ChatHub> chatHub = null;
+        public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -58,6 +60,26 @@ namespace YoutubeClient.Controllers
 
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
             return null;
+        }
+
+        [HttpPost]
+        public ContentResult TestTTSVoice([FromBody] GoogleTTSVoice voice)
+        {
+            GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
+
+            UserTTSSettings settings = new UserTTSSettings();
+            settings.twitchUsername = "test";
+            settings.ttsSettings.SetSpeed(voice.speed);
+            settings.ttsSettings.SetPitch(voice.pitch);
+            settings.ttsSettings.SetGender(googleVoice.gender);
+            settings.ttsSettings.languageCode = googleVoice.languageCode;
+            settings.ttsSettings.voiceName = googleVoice.languageName;
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
+
+            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+            .GetVoiceAudio("test", voice.message, ttsClient).ToArray());
+
+            return Content(System.Convert.ToBase64String(audioMemoryStream.ToArray()));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -21,6 +21,8 @@ namespace YoutubeClient.Models
 
         public double pitch { get; set; } = 0;
 
+        public string message { get; set; } = "";
+
         public SsmlVoiceGender gender { get; set; } = SsmlVoiceGender.Unspecified;
 
 

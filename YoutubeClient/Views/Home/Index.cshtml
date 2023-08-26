@@ -1,8 +1,34 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript"> 
+    
+        function TestTTSVoice() {
+        
+            var voice1 = {
+                id: $('#voiceid').val(),
+                username: 'test',
+                message: $('#txtMessage').val(),
+                speed: $('#speed').val(),
+                pitch: $('#pitch').val(),
+            };
+
+            var b = $.ajax({
+                type: 'post',
+                url: '@Url.Action("TestTTSVoice", "Home")',
+                contentType: "application/json",
+                data: JSON.stringify(voice1),
+                success: function(data) { 
+
+                    audioTester = new Audio("data:audio/wav;base64," + data);
+                    audioTester.play();
+                }
+            });
+            // window.open(
+                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
+             
+        }
 
         function SetTTSVoice() {
             var voice = {
@@ -67,7 +93,9 @@
     <div>
             @Html.DropDownList("voiceid", ViewBag.googleTTSVoices, "", "")
             <input type="button" onclick="SetTTSVoice()" />
-            <input type="text" id="username" />
+            Username: <input type="text" id="username" />
+            Message: <input type="text" id="txtMessage" />
+            Test: <input type="button" onclick="TestTTSVoice()" />
     </div>
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
