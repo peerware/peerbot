@@ -28,7 +28,14 @@ namespace YoutubeClient.Models
 
         public string GetDisplayName()
         {
-            return (new CultureInfo(languageCode.Substring(0, 2))).EnglishName;
+            string genderLabel = "";
+
+            if (gender == SsmlVoiceGender.Male)
+                genderLabel = "male";
+            else
+                genderLabel = "female";
+
+            return (new CultureInfo(languageCode.Substring(0, 2))).EnglishName + " (" + genderLabel + ")";
         }
     }
 }

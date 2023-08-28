@@ -59,7 +59,7 @@ namespace YoutubeClient.Controllers
             settings.ttsSettings.voiceName = googleVoice.languageName;
 
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
-            return null;
+            return Content(":)");
         }
 
         [HttpPost]
