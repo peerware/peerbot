@@ -83,7 +83,7 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message);
+            GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message, 1);
         }
 
         private void PopulateVoices()
@@ -106,10 +106,10 @@ namespace YoutubeClient
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        public void GetMessageAudio(string username, string message)
+        public void GetMessageAudio(string username, string message, int requestCount)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio(username, message, ttsClient).ToArray());
+                .GetVoiceAudio(username, message, ttsClient, requestCount).ToArray());
 
             long audioLength = audioMemoryStream.Length;
 

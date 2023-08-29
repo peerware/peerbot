@@ -26,7 +26,6 @@ namespace YoutubeClient.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly IHubContext<ChatHub> chatHub = null;
-        public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -77,7 +76,10 @@ namespace YoutubeClient.Controllers
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
 
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-            .GetVoiceAudio("test", voice.message, ttsClient).ToArray());
+            .GetVoiceAudio("test", voice.message, Startup.ttsClient, 1).ToArray());
+
+            if (audioMemoryStream is null)
+                return Content(":(");
 
             return Content(System.Convert.ToBase64String(audioMemoryStream.ToArray()));
         }
