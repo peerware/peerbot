@@ -75,8 +75,14 @@ namespace YoutubeClient.Controllers
             settings.ttsSettings.voiceName = googleVoice.languageName;
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
 
+            string inputString;
+            if (voice.message.Length > 20)
+                inputString = voice.message.Substring(0, 20);
+            else
+                inputString = voice.message;
+
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-            .GetVoiceAudio("test", voice.message, Startup.ttsClient, 1).ToArray());
+            .GetVoiceAudio("test", inputString, Startup.ttsClient, 1).ToArray());
 
             if (audioMemoryStream is null)
                 return Content(":(");

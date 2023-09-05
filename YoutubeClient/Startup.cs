@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.SignalR;
 using TwitchLib.Client.Events;
 using Google.Cloud.TextToSpeech.V1;
 using YoutubeClient.Models;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Net;
 
 namespace YoutubeClient
 {
@@ -40,20 +42,20 @@ namespace YoutubeClient
         {
             services.AddControllersWithViews();
             services.AddSignalR();
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHubContext<ChatHub> chatHub)
         {
-            // Setup google TTS environment variable
-            string credential_path = Config.fileSavePath + "peerbot-329501-7bffcbd28a99.json";
-            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credential_path);
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
-            // Setup google tts events and objects
-            messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
-            this.chatHub = chatHub;
-
-            PopulateVoices();
 
             if (env.IsDevelopment())
             {
@@ -63,9 +65,9 @@ namespace YoutubeClient
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -79,7 +81,11 @@ namespace YoutubeClient
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapGet("/", () => "10.0.0.100");
             });
+
+            this.chatHub = chatHub;
+            PopulateVoices();
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
@@ -88,6 +94,12 @@ namespace YoutubeClient
 
         private void PopulateVoices()
         {
+            // Setup google TTS environment variable
+
+            // Setup google tts events and objects
+            messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
+            //this.chatHub = chatHub;
+
             var response = ttsClient.ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
 
             for (int i = 0; i < response.Voices.Count; i++)
@@ -106,7 +118,7 @@ namespace YoutubeClient
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        public void GetMessageAudio(string username, string message, int requestCount)
+        private void GetMessageAudio(string username, string message, int requestCount)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
                 .GetVoiceAudio(username, message, ttsClient, requestCount).ToArray());
