@@ -3,11 +3,17 @@
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript"> 
-    
-        function TestTTSVoice() {
+            $().ready(function () {
+
+                // adjust listbox attributes
+                var listbox = $('#voiceid');
+                listbox.css('height', '250px');
+
+            });
+            function TestTTSVoice() {
         
             var voice1 = {
-                id: $('#voiceid').val(),
+                id: $('#voiceid').val()[0],
                 username: 'test',
                 message: $('#txtMessage').val(),
                 speed: $('#speed').val(),
@@ -83,19 +89,23 @@
         <div class="col-6">
             <ul id="messagesList"></ul>
         </div>
+    </div>
+
+    <div style="background-color: darkseagreen">
+        @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
         Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="4">
         Pitch (-20 - 20)<input type="number" id="pitch" name="pitch" min="-20" max="20">   
     </div>
-
 </div>
 
 <div>
     <div>
-            @Html.DropDownList("voiceid", ViewBag.googleTTSVoices, "", "")
-            Test: <input type="button" onclick="TestTTSVoice()" />
-            Username: <input type="text" id="username" />
             Message: <input type="text" id="txtMessage" />
-            Save<input type="button" onclick="SetTTSVoice()" />
+            <button onclick="TestTTSVoice()">Test</button>
+    </div>
+    <div>
+            Username: <input type="text" id="username" />
+            <button onclick="SetTTSVoice()">Save</button>
     </div>
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
