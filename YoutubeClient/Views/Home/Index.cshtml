@@ -3,13 +3,31 @@
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript"> 
+            
             $().ready(function () {
+
+                // Enable text based filtering for voices
+                $("#voiceSearchBox").bind("keyup", function() {
+                    var text = $(this).val().toLowerCase();
+
+                    Array.from(document.getElementById('voiceid').children).forEach(function (element)
+                    {
+                        if (element.innerText.toLowerCase().includes(text) || text == '') {
+                            element.style.display = 'block';
+                        } else {
+                            element.style.display = 'none';
+                        }
+                    });
+                });
+
 
                 // adjust listbox attributes
                 var listbox = $('#voiceid');
                 listbox.css('height', '250px');
 
             });
+
+
             function TestTTSVoice() {
         
             var voice1 = {
@@ -31,14 +49,12 @@
                     audioTester.play();
                 }
             });
-            // window.open(
-                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
              
         }
 
         function SetTTSVoice() {
             var voice = {
-                id: $('#voiceid').val(),
+                id: $('#voiceid').val()[0],
                 username: $('#username').val(),
                 speed: $('#speed').val(),
                 pitch: $('#pitch').val(),
@@ -51,8 +67,6 @@
                 data: JSON.stringify(voice),
                 success: function() { }
             });
-            // window.open(
-                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
              
         }
     
@@ -94,15 +108,18 @@
     </div>
     Test and save TTS settings
     <div>
-        @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
-        Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="4">
+        <div>
+            @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
+        </div>
+        Search: <input id="voiceSearchBox" type="text" />
+        Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="2" step=0.1>
         Pitch (-20 - 20)<input type="number" id="pitch" name="pitch" min="-20" max="20">   
     </div>
     
     <div>
         <div>
-                Test your voice with a short message (only you will hear this): <input type="text" id="txtMessage" />
-                <button onclick="TestTTSVoice()">Test</button>
+                <input type="text" id="txtMessage" maxlength="20" /><button onclick="TestTTSVoice()">Test</button>
+                Test your voice with a short message (only you will hear this):
         </div>
         <div>
                 Save voice to username: <input type="text" id="username" />

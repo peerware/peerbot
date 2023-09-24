@@ -56,5 +56,17 @@ namespace ChatBot.MessageSpeaker
         {
             pitch = value;
         }
+
+        public static TTSSettings GetDefaultVoice()
+        {
+            return new TTSSettings
+            {
+                languageCode = "en-US",
+                voiceName = "en-US-Neural2-F",
+                gender = TTSSettings.eGender.female,
+                speakingRate = 0.75,
+                pitch = -4
+            };
+        }
     }
 }

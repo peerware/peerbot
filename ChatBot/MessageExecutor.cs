@@ -319,6 +319,7 @@ namespace ChatBot
                         "italy, uk, america, french, japanese, danish, bog, korean, chinese, russian, " +
                         "speed (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed +
                         "), pitch (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch +")");
+                    Say("visit peersoft.asuscomm.com for full tts customization ability");
                     UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":

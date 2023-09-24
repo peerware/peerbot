@@ -34,7 +34,7 @@ namespace YoutubeClient.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.googleTTSVoices = Startup.GoogleTTSVoices.Select(item => new SelectListItem { Value = item.id.ToString(), Text = item.GetDisplayName() }).ToList();
+            ViewBag.googleTTSVoices = Startup.GoogleTTSVoices.Select(item => new SelectListItem { Value = item.id.ToString(), Text = item.GetDisplayName() }).OrderBy(o => o.Text).ToList();
 
             return View();
         }
@@ -50,12 +50,20 @@ namespace YoutubeClient.Controllers
             GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
 
             UserTTSSettings settings = new UserTTSSettings();
-            settings.twitchUsername = voice.username;
             settings.ttsSettings.SetSpeed(voice.speed);
             settings.ttsSettings.SetPitch(voice.pitch);
             settings.ttsSettings.SetGender(googleVoice.gender);
             settings.ttsSettings.languageCode = googleVoice.languageCode;
             settings.ttsSettings.voiceName = googleVoice.languageName;
+
+            // If the username is "testvoice" append a string of random numbers to it
+            if (voice.username.ToLower().Equals("testvoice"))
+            {
+                Random random = new Random();
+                settings.twitchUsername = voice.username + random.Next(0, 4000);
+            }
+            else
+                settings.twitchUsername = voice.username;
 
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
             return Content(":)");

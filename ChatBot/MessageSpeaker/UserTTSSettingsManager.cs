@@ -71,9 +71,31 @@ namespace ChatBot.MessageSpeaker
             }
 
             if (string.IsNullOrWhiteSpace(userTTSSettings.twitchUsername))
-                userTTSSettings.ttsSettings = GoogleTTSSettings.GetDefaultVoice();
+                userTTSSettings.ttsSettings = GetRandomVoice();
 
             return userTTSSettings;
+        }
+
+        public static TTSSettings GetRandomVoice()
+        {
+            UserTTSSettings settings;
+            Random random = new Random();
+
+            if (File.Exists(filePath))
+            {
+                List<string> testVoiceSettings = File.ReadAllLines(filePath).Where(o => o.Contains("testvoice")).ToList();
+
+                // Return a hard coded default voice if there arent any test voices
+                if (testVoiceSettings.Count < 1)
+                    return TTSSettings.GetDefaultVoice();
+
+                // Return a random test voice
+                string testVoiceString = testVoiceSettings[random.Next(0, testVoiceSettings.Count)];
+
+                return JsonConvert.DeserializeObject<UserTTSSettings>(testVoiceString.Substring(testVoiceString.IndexOf(":") + 1)).ttsSettings;
+            }
+            else 
+                return TTSSettings.GetDefaultVoice();
         }
     }
 }

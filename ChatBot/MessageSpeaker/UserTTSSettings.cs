@@ -12,7 +12,6 @@ namespace ChatBot.MessageSpeaker
         public string twitchUsername = "";
         public bool isSpeechEnabled = true;
         public TTSSettings ttsSettings = new TTSSettings();
-        public eTTSType TTSType = eTTSType.google;
 
         public const double minPitch = -5;
         public const double maxPitch = 5;

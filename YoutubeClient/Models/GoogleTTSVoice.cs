@@ -31,11 +31,11 @@ namespace YoutubeClient.Models
             string genderLabel = "";
 
             if (gender == SsmlVoiceGender.Male)
-                genderLabel = "male";
+                genderLabel = "m";
             else
-                genderLabel = "female";
+                genderLabel = "f";
 
-            return (new CultureInfo(languageCode.Substring(0, 2))).EnglishName + " (" + genderLabel + ")";
+            return new CultureInfo(languageCode).EnglishName + " (" + genderLabel + ")";
         }
     }
 }
