@@ -445,6 +445,8 @@ namespace ChatBot
         private void SaveDialectSayResult(UserTTSSettings settings, string dialect, string username)
         {
            settings.ttsSettings.languageCode = GoogleTTSSettings.GetLanguageCodeFromDialect(dialect);
+           settings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode(settings.ttsSettings.languageCode, 
+                settings.ttsSettings.GetGender());
 
             if (settings.ttsSettings.languageCode != "")
                 Say("dialect saved");
@@ -455,7 +457,9 @@ namespace ChatBot
 
         private void SaveGenderSayResult(UserTTSSettings settings, string gender, string Username)
         {
-            bool IsSaved = settings.ttsSettings.SetGender(gender);
+            bool IsSaved = settings.ttsSettings.SetGender(gender); 
+            settings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode(settings.ttsSettings.languageCode,
+                 settings.ttsSettings.GetGender());
 
             if (IsSaved)
                 Say("gender saved");

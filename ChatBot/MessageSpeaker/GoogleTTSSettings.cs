@@ -104,7 +104,7 @@ namespace ChatBot.MessageSpeaker
             VoiceSelectionParams voiceParams = new VoiceSelectionParams();
             voiceParams.LanguageCode = languageCode;
             voiceParams.SsmlGender = gender;
-            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
+            voiceParams.Name = voiceName;
 
             return voiceParams;
         }
@@ -119,7 +119,7 @@ namespace ChatBot.MessageSpeaker
             return SsmlVoiceGender.Female;
         }
 
-        private static string GetVoiceNameFromLanguageCode(string languageCode, SsmlVoiceGender gender)
+        public static string GetVoiceNameFromLanguageCode(string languageCode, SsmlVoiceGender gender)
         {
             // Hand picked voice sounds by region - if the enum isnt covered in this list just use the default voice name
             if (gender == SsmlVoiceGender.Male)
@@ -151,7 +151,7 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.canadianFrench:
                         return "fr-CA-Standard-D";
                     default:
-                        return "fr-FR-Wavenet-B";
+                        return "";
                 }
             }
             else if (gender  == SsmlVoiceGender.Female)
@@ -181,10 +181,10 @@ namespace ChatBot.MessageSpeaker
                     case eDialects.japanese:
                         return "ja-JP-Wavenet-B";
                     default:
-                        return "fr-FR-Wavenet-A";
+                        return "";
                 }
             }
-            else return "fr-FR-Wavenet-A";
+            else return "";
         }
 
         public static eDialects GetDialectFromLanguageCode(string languageCode)

@@ -47,6 +47,14 @@ namespace ChatBot.MessageSpeaker
                 this.gender = eGender.female;
         }
 
+        public SsmlVoiceGender GetGender()
+        {
+            if (gender == eGender.male)
+                return SsmlVoiceGender.Male;
+            else
+                return SsmlVoiceGender.Female;
+        }
+
         public void SetSpeed(double value)
         {
             speakingRate = value;

@@ -84,8 +84,8 @@ namespace YoutubeClient.Controllers
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
 
             string inputString;
-            if (voice.message.Length > 20)
-                inputString = voice.message.Substring(0, 20);
+            if (voice.message.Length > 25)
+                inputString = voice.message.Substring(0, 25);
             else
                 inputString = voice.message;
 
