@@ -89,7 +89,8 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message, 1);
+            if (!e.ChatMessage.Message.StartsWith("!")) // Don't speak commands
+                GetMessageAudio(e.ChatMessage.Username, e.ChatMessage.Message, 1);
         }
 
         private void PopulateVoices()

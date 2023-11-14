@@ -319,8 +319,6 @@ namespace ChatBot
                         "italy, uk, america, french, japanese, danish, bog, korean, chinese, russian, " +
                         "speed (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed +
                         "), pitch (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch +")");
-                    Say("visit peersoft.asuscomm.com for full tts customization ability");
-                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "settings":
                     Say("@" + username + " " + JsonConvert.SerializeObject(settings));
@@ -451,7 +449,7 @@ namespace ChatBot
             if (settings.ttsSettings.languageCode != "")
                 Say("dialect saved");
             else
-                Say("@" + username + " Choose between australian, irish, german, italian, british, american, french, japanese");
+                Say("@" + username + " Choose between australian, german, italian, british, american, french, japanese");
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 

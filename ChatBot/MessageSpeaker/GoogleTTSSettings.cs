@@ -14,7 +14,6 @@ namespace ChatBot.MessageSpeaker
         public enum eDialects
         {
             australian,
-            irish,
             italian,
             german,
             british,
@@ -81,8 +80,6 @@ namespace ChatBot.MessageSpeaker
                     return "cmn-TW";
                 case eDialects.korean:
                     return "ko-KR";
-                case eDialects.irish:
-                    return "en-IE";
                 case eDialects.british:
                     return "en-GB";
                 case eDialects.italian:
@@ -107,11 +104,7 @@ namespace ChatBot.MessageSpeaker
             VoiceSelectionParams voiceParams = new VoiceSelectionParams();
             voiceParams.LanguageCode = languageCode;
             voiceParams.SsmlGender = gender;
-
-            if (string.IsNullOrEmpty(voiceName))
-                voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
-            else
-                voiceParams.Name = voiceName;
+            voiceParams.Name = GetVoiceNameFromLanguageCode(languageCode, gender);
 
             return voiceParams;
         }
@@ -243,9 +236,6 @@ namespace ChatBot.MessageSpeaker
                     return eDialects.korean;
                 case "russian":
                     return eDialects.russian;
-                case "irish":
-                case "ireland":
-                    return eDialects.irish;
                 case "italian":
                 case "italy":
                     return eDialects.italian;
