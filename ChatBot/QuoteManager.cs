@@ -36,10 +36,6 @@ namespace ChatBot
             {
                 try
                 {
-                    // Ensure the file is created to prevent errors
-                    if (!File.Exists(filePath))
-                        File.Create(filePath);
-
                     List<string> quotes = File.ReadAllLines(filePath).ToList();
                     int quoteNumber = new Random().Next(0, quotes.Count);
 
@@ -62,10 +58,6 @@ namespace ChatBot
             {
                 try
                 {
-                    // Ensure the file is created to prevent errors
-                    if (!File.Exists(filePath))
-                        File.Create(filePath);
-
                     List<string> quotes = File.ReadAllLines(filePath).ToList();
 
                     if (quotes.Count == 0)

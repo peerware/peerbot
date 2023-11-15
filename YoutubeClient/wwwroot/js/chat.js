@@ -37,7 +37,11 @@ function ProcessMessageQueue() {
 
     messageQueue.shift();
     isMessagePlaying = true;
-    audioPlayer.play();
+
+    try { // If the user didn't interact with the page before the audio plays an exception will be thrown - try catch to prevent crash
+        audioPlayer.play();
+    }
+    catch (error) { }
     
 }
 

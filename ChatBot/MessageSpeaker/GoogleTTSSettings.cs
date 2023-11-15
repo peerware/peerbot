@@ -50,7 +50,6 @@ namespace ChatBot.MessageSpeaker
         /// <returns></returns>
         public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client, int requestCount)
         {
-
             requestCounter += requestCount;
 
             if (requestCounter > maximumRequests)
