@@ -280,11 +280,20 @@ namespace ChatBot.MessageSpeaker
         {
             // Raise the speaking rate of long messages so they play faster
             if (message.Length > 40 && ttsSettings.speakingRate < 2)
-                ttsSettings.speakingRate += 0.15;
+            {
+                ttsSettings.speakingRate += 0.33;
+                ttsSettings.pitch += 1;
+            }
+            if (message.Length > 55 && ttsSettings.speakingRate < 2)
+            {
+                ttsSettings.speakingRate += 0.33;
+                ttsSettings.pitch += 1.5;
+            }
             if (message.Length > 65 && ttsSettings.speakingRate < 2)
-                ttsSettings.speakingRate += 0.2;
-            if (message.Length > 95 && ttsSettings.speakingRate < 2)
-                ttsSettings.speakingRate += 0.2;
+            {
+                ttsSettings.speakingRate += 0.33;
+                ttsSettings.pitch += 2;
+            }
 
             // Build the audio request
             AudioConfig config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
