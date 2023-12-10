@@ -29,6 +29,7 @@ function ProcessMessageQueue() {
 
     // play all the messages in the queue while removing the played messages
     var audioPlayer = new Audio("data:audio/wav;base64," + messageQueue[0]);
+    audioPlayer.volume = $('#ttsVolume').val() / 100;
 
     audioPlayer.addEventListener("ended", function () {
         isMessagePlaying = false;

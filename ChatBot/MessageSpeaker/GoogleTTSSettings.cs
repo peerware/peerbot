@@ -278,8 +278,16 @@ namespace ChatBot.MessageSpeaker
         /// <returns></returns>
         private static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
         {
-            var config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
+            // Raise the speaking rate of long messages so they play faster
+            if (message.Length > 40 && ttsSettings.speakingRate < 2)
+                ttsSettings.speakingRate += 0.15;
+            if (message.Length > 65 && ttsSettings.speakingRate < 2)
+                ttsSettings.speakingRate += 0.2;
+            if (message.Length > 95 && ttsSettings.speakingRate < 2)
+                ttsSettings.speakingRate += 0.2;
 
+            // Build the audio request
+            AudioConfig config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
 
             var voiceParams = GetVoiceParams(ConvertGender(ttsSettings.gender),
                 ttsSettings.languageCode, ttsSettings.voiceName);
@@ -288,7 +296,7 @@ namespace ChatBot.MessageSpeaker
             request.AudioConfig = config;
             request.Voice = voiceParams;
 
-            // Build the input and add it
+            // Add the text message to the audio request
             SynthesisInput input = new SynthesisInput();
             input.Text = message;
             request.Input = input;
