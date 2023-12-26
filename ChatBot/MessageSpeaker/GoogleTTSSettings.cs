@@ -287,12 +287,12 @@ namespace ChatBot.MessageSpeaker
             if (message.Length > 55 && ttsSettings.speakingRate < 2)
             {
                 ttsSettings.speakingRate += 0.33;
-                ttsSettings.pitch += 1.5;
+                ttsSettings.pitch += 1;
             }
             if (message.Length > 65 && ttsSettings.speakingRate < 2)
             {
-                ttsSettings.speakingRate += 0.33;
-                ttsSettings.pitch += 2;
+                ttsSettings.speakingRate += 0.16;
+                ttsSettings.pitch += 0.7;
             }
 
             // Build the audio request
