@@ -72,7 +72,16 @@ namespace YoutubeClient.Controllers
         [HttpPost]
         public ContentResult TestTTSVoice([FromBody] GoogleTTSVoice voice)
         {
-            GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
+            GoogleTTSVoice googleVoice = null;
+            try
+            {
+                googleVoice = Startup.GoogleTTSVoices[voice.id];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("HomeController.TestTTSVoice failed to save a voice.");
+                return Content(":(");
+            }
 
             UserTTSSettings settings = new UserTTSSettings();
             settings.twitchUsername = "test";
