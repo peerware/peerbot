@@ -279,20 +279,10 @@ namespace ChatBot.MessageSpeaker
         private static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
         {
             // Raise the speaking rate of long messages so they play faster
-            if (message.Length > 40 && ttsSettings.speakingRate < 2)
+            if (message.Length > 70 && ttsSettings.speakingRate < 1.2)
             {
                 ttsSettings.speakingRate += 0.33;
                 ttsSettings.pitch += 1;
-            }
-            if (message.Length > 55 && ttsSettings.speakingRate < 2)
-            {
-                ttsSettings.speakingRate += 0.33;
-                ttsSettings.pitch += 1;
-            }
-            if (message.Length > 65 && ttsSettings.speakingRate < 2)
-            {
-                ttsSettings.speakingRate += 0.16;
-                ttsSettings.pitch += 0.7;
             }
 
             // Build the audio request
