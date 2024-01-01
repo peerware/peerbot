@@ -67,7 +67,7 @@ namespace ChatBot.MessageSpeaker
             }
 
             if (string.IsNullOrWhiteSpace(userTTSSettings.twitchUsername))
-                userTTSSettings.ttsSettings = GetRandomVoice();
+                userTTSSettings.ttsSettings = GetRandomVoice(userTTSSettings.twitchUsername);
 
             return userTTSSettings;
         }
@@ -96,13 +96,16 @@ namespace ChatBot.MessageSpeaker
                 var defaultCustomVoice = JsonConvert.DeserializeObject<UserTTSSettings>(testVoiceString.Substring(testVoiceString.IndexOf(":") + 1)).ttsSettings;
 
                 // Give users with the same default voice a custom sound
-                int randomNumber = username.Length % 5;
+                if (username is not null)
+                {
+                    int randomNumber = username.Length % 5;
 
-                if (username.Length < 6)
-                    randomNumber *= -1;
+                    if (username.Length < 6)
+                        randomNumber *= -1;
 
-                defaultCustomVoice.pitch += randomNumber;
-                defaultCustomVoice.speakingRate += Math.Abs((double)randomNumber / 10);
+                    defaultCustomVoice.pitch += randomNumber;
+                    defaultCustomVoice.speakingRate += Math.Abs((double)randomNumber / 10);
+                }
 
                 return defaultCustomVoice;
             }
