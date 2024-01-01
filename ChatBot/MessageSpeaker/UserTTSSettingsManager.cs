@@ -72,7 +72,11 @@ namespace ChatBot.MessageSpeaker
             return userTTSSettings;
         }
 
-        public static TTSSettings GetRandomVoice()
+        /// <summary>
+        /// Returns a hand sculpted random ai with a name of "testvoice####"
+        /// </summary>
+        /// <returns></returns>
+        public static TTSSettings GetRandomVoice(string username)
         {
             UserTTSSettings settings;
             Random random = new Random();
@@ -88,7 +92,19 @@ namespace ChatBot.MessageSpeaker
                 // Return a random test voice
                 string testVoiceString = testVoiceSettings[random.Next(0, testVoiceSettings.Count)];
 
-                return JsonConvert.DeserializeObject<UserTTSSettings>(testVoiceString.Substring(testVoiceString.IndexOf(":") + 1)).ttsSettings;
+                
+                var defaultCustomVoice = JsonConvert.DeserializeObject<UserTTSSettings>(testVoiceString.Substring(testVoiceString.IndexOf(":") + 1)).ttsSettings;
+
+                // Give users with the same default voice a custom sound
+                int randomNumber = username.Length % 5;
+
+                if (username.Length < 6)
+                    randomNumber *= -1;
+
+                defaultCustomVoice.pitch += randomNumber;
+                defaultCustomVoice.speakingRate += Math.Abs((double)randomNumber / 10);
+
+                return defaultCustomVoice;
             }
             else 
                 return TTSSettings.GetDefaultVoice();
