@@ -13,7 +13,7 @@ namespace ChatBot.MessageSpeaker
     public static class UserTTSSettingsManager
     {
         static object locker = new object();
-        static string filePath = Config.fileSavePath + "speechsettings.txt";
+        static string filePath = @"..\" + Config.fileSavePath + "speechsettings.txt";
 
         public static void SaveSettingsToStorage(UserTTSSettings messageSpeakerSettings)
         {
