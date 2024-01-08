@@ -316,23 +316,12 @@ namespace ChatBot.MessageSpeaker
 
             switch (voicePreset)
             {
-                case voicePresets.frenchWoman:
-                    userTTSSettings.ttsSettings.speakingRate = 1.16;
-                    userTTSSettings.ttsSettings.pitch = -1.3;
-                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.female;
-                    userTTSSettings.ttsSettings.languageCode = "fr-FR";
-                    break;
                 case voicePresets.bog:
                     userTTSSettings.ttsSettings.speakingRate = 0.58;
                     userTTSSettings.ttsSettings.pitch = -3;
                     userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
                     userTTSSettings.ttsSettings.languageCode = "fr-CA";
-                    break;
-                case voicePresets.frenchMan:
-                    userTTSSettings.ttsSettings.speakingRate = 1.17;
-                    userTTSSettings.ttsSettings.pitch = -2;
-                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
-                    userTTSSettings.ttsSettings.languageCode = "fr-FR";
+                    userTTSSettings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode("fr-CA", SsmlVoiceGender.Male);
                     break;
             }
 

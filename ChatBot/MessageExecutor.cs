@@ -400,18 +400,6 @@ namespace ChatBot
                         SaveDialectSayResult(settings, ttsCommand, username);
                         break;
                     }
-                case "frenchwoman":
-                    {
-                        GoogleTTSSettings.SetPresetVoice(username, GoogleTTSSettings.voicePresets.frenchWoman);
-                        Say("dialect saved");
-                        break;
-                    }
-                case "frenchman":
-                    {
-                        GoogleTTSSettings.SetPresetVoice(username, GoogleTTSSettings.voicePresets.frenchMan);
-                        Say("dialect saved");
-                        break;
-                    }
                 case "bog":
                     {
                         GoogleTTSSettings.SetPresetVoice(username, GoogleTTSSettings.voicePresets.bog);
