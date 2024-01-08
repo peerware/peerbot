@@ -112,7 +112,7 @@ namespace ChatBot
                     ExecuteViewModel();
                     break;
                 case "!tts":
-                    ExecuteSaveTTSSettings(message.Username, GetMessageArgument(message.Message.ToLower().Trim()));
+                    SaveTTSSettings(message.Username, GetMessageArgument(message.Message.ToLower().Trim()));
                     break;
                 case "!followage":
                     ExecuteFollowage(message);
@@ -291,7 +291,7 @@ namespace ChatBot
         }
 
         // !tts
-        private void ExecuteSaveTTSSettings(string username, string arguments)
+        private void SaveTTSSettings(string username, string arguments)
         {
             // TTS arguments come in the form of <Type> <Value>
             string ttsCommand = GetMessageCommand(arguments);
