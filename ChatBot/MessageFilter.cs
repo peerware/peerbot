@@ -10,6 +10,8 @@ namespace ChatBot
     {
         public static bool FilterSpam(string username, string message, TwitchClient client)
         {
+
+
             bool isMessageBanned = IsMessageSpam(username, message) || IsMessageNegative(username, message);
 
             if (isMessageBanned)
@@ -23,31 +25,20 @@ namespace ChatBot
 
         private static bool IsMessageSpam(string username, string message)
         {
-            message = message.ToLower();
+            List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy followers", "qualitу sеrvice", "tор streаmers",
+             "custom graphics", "sorry", "interrupting", "channel", "portfolio", "you", "follow", "view", "bot",
+             "price", "quality", "convenient"};
 
-            if (username == "moobot" || 
-                message.Contains("bigfollows") || 
-                message.Contains("t to become famous") || 
-                message.Contains("primes and") || 
-                message.Contains("buy followers")|| 
-                message.Contains("qualitу sеrvice") || 
-                message.Contains("rеal frее") || 
-                message.Contains("tор streаmers") ||
-                message.Contains("can i play with you? add me") ||
-                message.Contains("custom graphics") ||
-                message.Contains("sorry for interrupting") ||
-                message.Contains("for your channel") ||
-                message.Contains("you my portfolio") ||
-                message.Contains("server crasher") ||
-                message.Contains("if you need real") ||
-                message.Contains("i found a cheat that won't get you banned") ||
-                message.Contains("free and high quality") ||
-                message.Contains("top streamer") ||
-                message.Contains("your viewers") ||
-                message.Contains("dot com") ||
-                message.Contains("dogehype") ||
-                (message.Contains("channel") && message.Contains("view") && message.Contains("follow")) ||
-                message.Contains("your graphics/branding"))
+            int spamCutoff = 3;
+            int probableSpam = 0;
+
+            foreach (string s in suspiciousStrings)
+            {
+                if (message.ToLower().Contains(s))
+                    probableSpam++;
+            }
+
+            if (probableSpam >= spamCutoff)
                 return true;
             else
                 return false;
