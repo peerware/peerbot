@@ -1,26 +1,132 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
-
 }
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-        $(document).ready(function () {
+<script type="text/javascript"> 
+            
+            $().ready(function () {
 
-            //$('#youtubePlayer').trigger('click');
+                // Enable text based filtering for voices
+                $("#voiceSearchBox").bind("keyup", function() {
+                    var text = $(this).val().toLowerCase();
 
-            //$('#youtubePlayer').click(function () {
-            //    alert("click event triggered");
-            //    $('#youtubePlayer').click();
-            //});
-        });
+                    Array.from(document.getElementById('voiceid').children).forEach(function (element)
+                    {
+                        if (element.innerText.toLowerCase().includes(text) || text == '') {
+                            element.style.display = 'block';
+                        } else {
+                            element.style.display = 'none';
+                        }
+                    });
+                });
 
-    function OpenMedia() {
 
-           // window.open(
-                //"https://www.twitch.tv/peerless_under_the_stars", "_blank");
-        } 
+                // adjust listbox attributes
+                var listbox = $('#voiceid');
+                listbox.css('height', '250px');
+
+            });
+
+
+            function TestTTSVoice() {
+        
+            var voice1 = {
+                id: $('#voiceid').val()[0],
+                username: 'test',
+                message: $('#txtMessage').val(),
+                speed: $('#speed').val(),
+                pitch: $('#pitch').val(),
+            };
+
+            var b = $.ajax({
+                type: 'post',
+                url: '@Url.Action("TestTTSVoice", "Home")',
+                contentType: "application/json",
+                data: JSON.stringify(voice1),
+                success: function(data) { 
+
+                    audioTester = new Audio("data:audio/wav;base64," + data);
+                    audioTester.play();
+                }
+            });
+             
+        }
+
+        function SetTTSVoice() {
+            var voice = {
+                id: $('#voiceid').val()[0],
+                username: $('#username').val(),
+                speed: $('#speed').val(),
+                pitch: $('#pitch').val(),
+            };
+        
+            var a = $.ajax({
+                type: 'post',
+                url: '@Url.Action("SetTTSVoice", "Home")',
+                contentType: "application/json",
+                data: JSON.stringify(voice),
+                success: function() { }
+            });
+             
+        }
+    
 </script>
 
 <div class="text-center">
-    <a id="youtubePlayer" href="https://www.youtube.com/watch?v=U2l3Zx0B6Ws&list=PLGknaNHbFo4UnE0Lel9-J8P3DxnSUDxFq&index=78" onclick="OpenMedia()">hi</a>
+    <div>
+        :^)
+    </div>
+  
 </div>
+@ViewData["Title"]
+
+<div class="container" style="background-color: palegoldenrod">
+    Web Chat
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+    Test and save TTS settings
+    <div>
+        <div>
+            @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
+        </div>
+        Search: <input id="voiceSearchBox" type="text" />
+        Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="2" step=0.1 value="0.55">
+        Pitch (-20 - 20)<input type="number" id="pitch" name="pitch" min="-20" max="20" value="0">   
+    </div>
+    
+    <div>
+        <div>
+                <input type="text" id="txtMessage" maxlength="20" /><button onclick="TestTTSVoice()">Test</button>
+                Test your voice with a short message (only you will hear this):
+        </div>
+        <div>
+                Save voice to username (testvoice saves a default for any new users): <input type="text" id="username" />
+                <button onclick="SetTTSVoice()">Save</button>
+                TTS Volume (1-100): <input type="text" id="ttsVolume" value="100" />
+        </div>
+    </div>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
