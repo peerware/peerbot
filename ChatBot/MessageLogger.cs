@@ -38,8 +38,18 @@ namespace ChatBot
         /// <returns></returns>
         public static DateTime GetTimeOfLatestMessage()
         {
-            List<string> FileAsLines = File.ReadAllLines(filePath).ToList();
-            string LastLine = FileAsLines.Last();
+            List<string> FileAsLines;
+            string LastLine;
+
+            try
+            {
+                FileAsLines = File.ReadAllLines(filePath).ToList();
+                LastLine = FileAsLines.Last();
+            }
+            catch (Exception ex)
+            {
+                return DateTime.MinValue; // This error will only occur on a fresh deployment, no need to handle it properly for now
+            }
 
             // Read the date
             DateTime BrokenDateTime = DateTime.Now;

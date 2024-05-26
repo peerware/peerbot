@@ -20,13 +20,12 @@ namespace ChatBot
         Streams streamObject = null;
         TwitchLib.Api.Helix.Models.Streams.GetStreams.Stream channelStream = null;
         TwitchClient client = null;
-        HivescorePoller hivescorePoller;
-        HivescorePoller tdPoller;
         DateTime InitializationTime;
 
         // Don't allow instantiation from outside this class (forces factory-ish instantiaiton)
         private MessageExecutor() { } 
 
+        // todo make this initialize a bunch of stuff based on the provided channel name
         public static async Task<MessageExecutor> GetMessageExecutor(TwitchClient client)
         {
             // Boilerplate code
@@ -36,13 +35,6 @@ namespace ChatBot
             messageExecutor.streamObject = messageExecutor.api.Helix.Streams;
             messageExecutor.channelStream = (await messageExecutor.streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
             messageExecutor.client = client;
-
-            // Poll for regular hivescore and td hivescore
-            messageExecutor.hivescorePoller = new HivescorePoller(client, HivescorePoller.ePollingType.hivescore);
-            messageExecutor.hivescorePoller.BeginPolling();
-
-            messageExecutor.tdPoller = new HivescorePoller(client, HivescorePoller.ePollingType.td);
-            messageExecutor.tdPoller.BeginPolling();
 
             // Get the latest message in the logs (assume this is when the last stream happened, this might change in the future but its fine for now)
             messageExecutor.InitializationTime = MessageLogger.GetTimeOfLatestMessage();
@@ -91,9 +83,6 @@ namespace ChatBot
                 case "!av":
                     ExecuteAV();
                     break;
-                case "!acmo":
-                    ExecuteAcmoELO(message.Username);
-                    break;
                 case "!dpi":
                 case "!sens":
                     ExecuteDPI();
@@ -105,13 +94,16 @@ namespace ChatBot
                 case "!bot":
                     ExecuteBot();
                     break;
-                case "!elo":
-                case "!rank":
-                    ExecuteRank();
+                case "!team":
+                    ExecuteTeam();
                     break;
-                case "!today":
-                case "!daily":
-                    ExecuteDailyStats();
+                case "!specs":
+                case "!pc":
+                    ExecuteSpecs();
+                    break;
+                case "!fortnite":
+                case "!fortnight":
+                    ExecuteFortnite();
                     break;
                 case "!tomorrow":
                     ExecuteTomorrow();
@@ -120,25 +112,10 @@ namespace ChatBot
                     ExecuteViewModel();
                     break;
                 case "!tts":
-                    ExecuteSaveTTSSettings(message.Username, GetMessageArgument(message.Message.ToLower().Trim()));
+                    SaveTTSSettings(message.Username, GetMessageArgument(message.Message.ToLower().Trim()));
                     break;
                 case "!followage":
                     ExecuteFollowage(message);
-                    break;
-                case "!yesterday":
-                    ExecuteYesterday();
-                    break;
-                case "!week":
-                    ExecuteWeek();
-                    break;
-                case "!month":
-                    ExecuteMonth();
-                    break;
-                case "!year":
-                    ExecuteYear();
-                    break;
-                case "!stats":
-                    ExecuteStats();
                     break;
                 case "!quote":
                     ExecuteQuote(message.Username, message.Message);
@@ -177,8 +154,8 @@ namespace ChatBot
             }
             else if (arguments.StartsWith("add"))
             {
-                QuoteManager.AddQuote(GetMessageArgument(arguments));
-                Say("it worked @" + username);
+                int quoteNumber = QuoteManager.AddQuote(GetMessageArgument(arguments));
+                Say("number " + quoteNumber + " added @" + username);
             }
             else if (Int32.TryParse(arguments, out _))
             {
@@ -192,46 +169,12 @@ namespace ChatBot
             Say("!uptime !giveaway !downtime !av !quote !quote add <quote> !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
         }
 
-        private void ExecuteYesterday()
-        {
-            Say(HivescoreFetcher.GetOldHivescoreMessage(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore));
-        }
-
         // !giveaway
         private void ExecuteGiveaway(string username)
         {
             Say("@" + username + " use !claim");
         }
 
-        // !week
-        private void ExecuteWeek()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-7);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !month
-        private void ExecuteMonth()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-31);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !year
-        private void ExecuteYear()
-        {
-            DateTime lastMonth = DateTime.Today.AddDays(-365);
-            Say(HivescoreFetcher.GetOldHivescoreMessage(lastMonth, HivescorePoller.ePollingType.hivescore));
-        }
-
-        // !stats
-        private void ExecuteStats()
-        {
-            ExecuteYesterday();
-            ExecuteWeek();
-            ExecuteMonth();
-        }
-        
         // !claim
         private void ExecuteClaim(string username)
         {
@@ -247,8 +190,13 @@ namespace ChatBot
         // !todo, !idea, !suggestion
         private void ExecuteTodo(string username, string message)
         {
-            IdeaLogger.LogIdea(username, message);
-            Say(IdeaLogger.GetFormattedSuccessMessage(username));
+            if (message.Trim().ToLower() == "!todo" || message.Trim().ToLower() == "!idea" || message.Trim().ToLower() == "!ideas")
+                Say("There are " + IdeaLogger.GetNumberOfIdeas() + " ideas in the list right now");
+            else
+            {
+                IdeaLogger.LogIdea(username, message);
+                Say(IdeaLogger.GetFormattedSuccessMessage(username));
+            }
         }
 
         private async void ExecuteFollowage(ChatMessage message)
@@ -273,11 +221,16 @@ namespace ChatBot
             Say("this handmade bot runs on .net 6" );
         }
 
-        // !elo 
-        private void ExecuteRank()
+        // !team 
+        private void ExecuteTeam()
         {
-            string hivescoreChange = HivescoreFetcher.GetHivescoreChange(DateTime.Today.AddDays(-1), HivescorePoller.ePollingType.hivescore);
-            Say(HivescoreFetcher.FetchHivescore().Result + " hivescore (" + hivescoreChange + ") since yesterday");
+            Say("euphie nano ritual tombrady me nabla");
+        }
+
+        // !team 
+        private void ExecuteSpecs()
+        {
+            Say("5800x 3070 240hz G PRO ULTRALIGHT 60% keyboard red switches");
         }
 
         // !uptime
@@ -303,38 +256,32 @@ namespace ChatBot
             Say("ResidentSleeper for " + downtime.Hour.ToString() + " hours " + downtime.Minute.ToString() + " minutes and " + downtime.Second.ToString() + " seconds");
         }
 
+        // !fortnite !fortnight
+        private void ExecuteFortnite()
+        {
+            Say("no");
+        }
+
         // !av
         private void ExecuteAV()
         {
-            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2330479589");
-        }
-
-        // !acmo
-        private void ExecuteAcmoELO(string username)
-        {
-            Say("@" + username + " acmo's current elo is: " + HivescoreFetcher.FetchAcmoELO().Result);
+            Say("https://steamcommunity.com/sharedfiles/filedetails/?id=2331671641&searchtext=schnightsy");
         }
 
         // !xhair
         private void ExecuteCrosshair()
         {
-            Say("11 length 3 width yellow cross with 2 pixel black border");
+            Say("green plus without gap");
         }
 
         private void ExecuteDPI()
         {
-            Say("800 dpi 2.0 marine 3.96 alien");
+            Say("1600 dpi still figuring out in-game senses");
         }
 
         private void TimeUserOut(string Username)
         {
             Say("/timeout " + Username + " 1");
-        }
-
-        // !today !daily
-        private void ExecuteDailyStats()
-        {
-            Say(hivescorePoller.GetDailyStatsMessage());
         }
 
         // !vm
@@ -344,7 +291,7 @@ namespace ChatBot
         }
 
         // !tts
-        private void ExecuteSaveTTSSettings(string username, string arguments)
+        private void SaveTTSSettings(string username, string arguments)
         {
             // TTS arguments come in the form of <Type> <Value>
             string ttsCommand = GetMessageCommand(arguments);
@@ -361,7 +308,7 @@ namespace ChatBot
                 ttsCommand = "help";
 
             // Get existing settings - constructor will provide defaults otherwise
-            MessageSpeakerSettings settings = MessageSpeakerSettingsManager.GetSettingsFromStorage(username);
+            UserTTSSettings settings = UserTTSSettingsManager.GetSettingsFromStorage(username);
             settings.twitchUsername = username;
 
             // Overwrite settings if we get a valid command
@@ -369,10 +316,9 @@ namespace ChatBot
             {
                 case "help":
                     Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, " +
-                        "italy, uk, america, french, japanese, bog, " +
-                        "speed (" + MessageSpeakerSettings.minSpeed + "-" + MessageSpeakerSettings.maxSpeed +
-                        "), pitch (" + MessageSpeakerSettings.minPitch + "-" + MessageSpeakerSettings.maxPitch +")");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                        "italy, uk, america, french, japanese, danish, bog, korean, chinese, russian, " +
+                        "speed (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed +
+                        "), pitch (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch +")");
                     break;
                 case "settings":
                     Say("@" + username + " " + JsonConvert.SerializeObject(settings));
@@ -380,32 +326,32 @@ namespace ChatBot
                 case "enable":
                     settings.SetIsSpeechEnabled("enable");
                     Say("tts on");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "disable":
                     settings.SetIsSpeechEnabled("disable");
                     Say("tts off");
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "speed":
                     double speed = double.TryParse(ttsArguments, out _) ? double.Parse(ttsArguments) : -200;
 
                     if (speed == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).speakingRate.ToString() +
-                            " (" + MessageSpeakerSettings.minSpeed + "-" + MessageSpeakerSettings.maxSpeed + ")");
+                        Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.speakingRate.ToString() +
+                            " (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed + ")");
                         return;
                     }
 
-                    if (speed < MessageSpeakerSettings.minSpeed || speed > MessageSpeakerSettings.maxSpeed)
-                        Say("@" + username + " enter a number from " + MessageSpeakerSettings.minSpeed + "-"
-                            + MessageSpeakerSettings.maxSpeed);
+                    if (speed < UserTTSSettings.minSpeed || speed > UserTTSSettings.maxSpeed)
+                        Say("@" + username + " enter a number from " + UserTTSSettings.minSpeed + "-"
+                            + UserTTSSettings.maxSpeed);
                     else
                     {
-                        settings.SetSpeed(speed);
+                        settings.ttsSettings.SetSpeed(speed);
                         Say("speed set");
                     }
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "pitch":
                     // If the user didn't specify a pitch then display their current pitch
@@ -413,30 +359,33 @@ namespace ChatBot
 
                     if (pitch == -200)
                     {
-                        Say("@" + username + " " + MessageSpeakerSettingsManager.GetSettingsFromStorage(username).pitch.ToString() + 
-                            " (" + MessageSpeakerSettings.minPitch + "-" + MessageSpeakerSettings.maxPitch + ")");
+                        Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.pitch.ToString() + 
+                            " (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch + ")");
                         return;
                     }
 
-                    if (pitch < MessageSpeakerSettings.minPitch || pitch > MessageSpeakerSettings.maxPitch)
-                        Say("@" + username + " enter a number from " + MessageSpeakerSettings.minPitch + 
-                            "-" + MessageSpeakerSettings.maxPitch);
+                    if (pitch < UserTTSSettings.minPitch || pitch > UserTTSSettings.maxPitch)
+                        Say("@" + username + " enter a number from " + UserTTSSettings.minPitch + 
+                            "-" + UserTTSSettings.maxPitch);
                     else
                     {
-                        settings.SetPitch(pitch);
+                        settings.ttsSettings.SetPitch(pitch);
                         Say("pitch set");
                     }
 
-                    MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                    UserTTSSettingsManager.SaveSettingsToStorage(settings);
                     break;
                 case "australian":
                 case "australia":
                 case "aus":
+                case "korean":
+                case "chinese":
                 case "irish":
                 case "ireland":
                 case "german":
                 case "germany":
                 case "italian":
+                case "danish":
                 case "italy":
                 case "british":
                 case "uk":
@@ -444,27 +393,16 @@ namespace ChatBot
                 case "america":
                 case "french":
                 case "japanese":
+                case "russian": 
                 case "french canadian":
                 case "dialect":
                     {
                         SaveDialectSayResult(settings, ttsCommand, username);
                         break;
                     }
-                case "frenchwoman":
-                    {
-                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.frenchWoman);
-                        Say("dialect saved");
-                        break;
-                    }
-                case "frenchman":
-                    {
-                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.frenchMan);
-                        Say("dialect saved");
-                        break;
-                    }
                 case "bog":
                     {
-                        MessageSpeakerSettingsManager.SetPresetVoice(username, MessageSpeakerSettingsManager.voicePresets.bog);
+                        GoogleTTSSettings.SetPresetVoice(username, GoogleTTSSettings.voicePresets.bog);
                         Say("dialect saved");
                         break;
                     }
@@ -491,26 +429,31 @@ namespace ChatBot
             }
         }
 
-        private void SaveDialectSayResult(MessageSpeakerSettings settings, string dialect, string username)
+        // Used by google TTS
+        private void SaveDialectSayResult(UserTTSSettings settings, string dialect, string username)
         {
-            bool IsSaved = settings.SetLanguage(dialect);
+           settings.ttsSettings.languageCode = GoogleTTSSettings.GetLanguageCodeFromDialect(dialect);
+           settings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode(settings.ttsSettings.languageCode, 
+                settings.ttsSettings.GetGender());
 
-            if (IsSaved)
+            if (settings.ttsSettings.languageCode != "")
                 Say("dialect saved");
             else
-                Say("@" + username + " Choose between australian, irish, german, italian, british, american, french, japanese");
-            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+                Say("@" + username + " Choose between australian, german, italian, british, american, french, japanese");
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 
-        private void SaveGenderSayResult(MessageSpeakerSettings settings, string gender, string Username)
+        private void SaveGenderSayResult(UserTTSSettings settings, string gender, string Username)
         {
-            bool IsSaved = settings.SetGender(gender);
+            bool IsSaved = settings.ttsSettings.SetGender(gender); 
+            settings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode(settings.ttsSettings.languageCode,
+                 settings.ttsSettings.GetGender());
 
             if (IsSaved)
                 Say("gender saved");
             else
                 Say("@" + Username + " Choose between man, woman, neutral, and unspecified");
-            MessageSpeakerSettingsManager.SaveSettingsToStorage(settings);
+            UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 
         private void Say(string Message)

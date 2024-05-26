@@ -15,10 +15,10 @@ namespace ChatBot
 {
     public class MessageReceiver
     {
-        TwitchClient client;
+        public TwitchClient twitchClient;
         MessageExecutor messageExecutor;
-        MessageSpeaker.MessageSpeaker messageSpeaker;
 
+        // todo add channel name to this constructor
         public MessageReceiver()
         {
             ConnectionCredentials credentials = new ConnectionCredentials(Config.botUsername, Config.botPassword);
@@ -29,16 +29,15 @@ namespace ChatBot
             };
 
             WebSocketClient customClient = new WebSocketClient(clientOptions);
-            client = new TwitchClient(customClient);
-            client.Initialize(credentials, Config.channelUsername);
+            twitchClient = new TwitchClient(customClient);
+            twitchClient.Initialize(credentials, Config.channelUsername);
 
-            client.OnMessageReceived += Client_OnMessageReceived;
+            twitchClient.OnMessageReceived += Client_OnMessageReceived;
 
-            client.Connect();
+            twitchClient.Connect();
 
-            messageExecutor = MessageExecutor.GetMessageExecutor(client).Result;
-            messageSpeaker = new MessageSpeaker.MessageSpeaker();
-
+            messageExecutor = MessageExecutor.GetMessageExecutor(twitchClient).Result;
+          
             // todo MessageReceiver needs to be refactored so that its not the source of the TwitchClient
             // Can rename it or find a better way to integrate everything dependent on it
             // Monitor thunderdome lobbies. Info will go to the chat
@@ -71,16 +70,13 @@ namespace ChatBot
         /// <param name="e"></param>
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            MessageLogger.LogMessage(e.ChatMessage);
+
             if (e.ChatMessage.DisplayName == Config.botUsername)
                 return;
 
-            MessageLogger.LogMessage(e.ChatMessage);
-
-            if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, client))
+            if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, twitchClient))
                 return;
-
-            if (Config.IsTextToSpeechEnabled)
-                messageSpeaker.SpeakMessage(e.ChatMessage);
              
             if (e.ChatMessage.Message.StartsWith("!"))
                 messageExecutor.ExecuteMessage(e.ChatMessage);
