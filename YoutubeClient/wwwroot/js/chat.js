@@ -14,7 +14,9 @@ connection.on("ReceiveSongRequest", function (videoURL) {
     videoPlayer.attr('src', videoURL);
 
     if ($('#isPlayerEnabled').val() == 'on') {
-        videoPlayer[0].play();
+        setTimeout(function () {
+            videoPlayer.click();
+        }, 2000); // delay playing the video to ensure the video gets loaded
     }
 });
 

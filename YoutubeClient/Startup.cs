@@ -92,16 +92,17 @@ namespace YoutubeClient
         {
             string chatMessage = e.ChatMessage.Message.Trim();
 
-            // Try to make sure videos play from the beginning
-            if (!chatMessage.Contains("&"))
-                chatMessage = chatMessage + "&t=0";
-
             if (!chatMessage.StartsWith("!")) // Don't speak commands
                 GetMessageAudio(e.ChatMessage.Username, chatMessage, 1);
 
             // Handle song requests
-            if (e.ChatMessage.Message.ToLower().StartsWith("!sr"))
+            if (chatMessage.ToLower().StartsWith("!sr"))
             {
+
+                // Try to make sure videos play from the beginning
+                if (!chatMessage.Contains("&"))
+                    chatMessage = chatMessage + "&t=0";
+
                 if (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest)
                 {
                     lastSongRequest = DateTime.Now;
