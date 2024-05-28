@@ -14,7 +14,7 @@ namespace ChatBot
     public class MessageReceiver
     {
         public TwitchClient twitchClient;
-        MessageExecutor messageExecutor;
+        public MessageExecutor messageExecutor;
 
         // todo add channel name to this constructor
         public MessageReceiver()
