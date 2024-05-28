@@ -8,6 +8,16 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
+
+connection.on("ReceiveSongRequest", function (videoURL) {
+    var videoPlayer = $('#songRequestPlayer');
+    videoPlayer.attr('src', videoURL);
+
+    if ($('#isPlayerEnabled').val() == 'on') {
+        videoPlayer[0].play();
+    }
+});
+
 connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
