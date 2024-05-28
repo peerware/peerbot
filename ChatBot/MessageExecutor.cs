@@ -456,7 +456,7 @@ namespace ChatBot
             UserTTSSettingsManager.SaveSettingsToStorage(settings);
         }
 
-        private void Say(string Message)
+        public void Say(string Message)
         {
             client.SendMessage(Config.channelUsername, Message);
         }

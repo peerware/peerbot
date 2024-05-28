@@ -19,5 +19,10 @@ namespace YoutubeClient.Hubs
         {
             await Clients.All.SendAsync("ReceiveMessageAudio", memoryStream);
         }
+
+        public async Task SendSongRequest(string videoURL)
+        {
+            await Clients.All.SendAsync("ReceiveSongRequest", videoURL);
+        }
     }
 }
