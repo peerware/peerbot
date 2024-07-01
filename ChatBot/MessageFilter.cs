@@ -8,14 +8,11 @@ namespace ChatBot
 {
     public static class MessageFilter
     {
-        public static bool FilterSpam(string username, string message, TwitchClient client)
+        public static bool IsMessageSpam(string username, string message)
         {
 
 
-            bool isMessageBanned = IsMessageSpam(username, message) || IsMessageNegative(username, message);
-
-            if (isMessageBanned)
-                DeleteMessage(username, client);
+            bool isMessageBanned = isMessageSpam(username, message) || IsMessageNegative(username, message);
 
             // Don't allow URLs or commands to be spoken, but don't delete them either
             isMessageBanned = IsMessageWebsiteURL(message);
@@ -23,22 +20,22 @@ namespace ChatBot
             return isMessageBanned;
         }
 
-        private static bool IsMessageSpam(string username, string message)
+        private static bool isMessageSpam(string username, string message)
         {
-            List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy followers", "qualitу sеrvice", "tор streаmers",
-             "custom graphics", "sorry", "interrupting", "channel", "portfolio", "you", "follow", "view", "bot",
+            List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy", "qualitу", "service", "tор", "streamer",
+             "custom graphics", "sorry", "interrupting", "channel", "portfolio", "you", "follow", "view", "bot", "com", "org",
              "price", "quality", "convenient"};
 
-            int spamCutoff = 3;
-            int probableSpam = 0;
+            int spamCutoff = 2;
+            int spamWarning = 0;
 
             foreach (string s in suspiciousStrings)
             {
                 if (message.ToLower().Contains(s))
-                    probableSpam++;
+                    spamWarning++;
             }
 
-            if (probableSpam >= spamCutoff)
+            if (spamWarning >= spamCutoff)
                 return true;
             else
                 return false;
@@ -56,7 +53,7 @@ namespace ChatBot
 
         public static bool IsMessageWebsiteURL(string message)
         {
-            return message.StartsWith("!") || message.StartsWith("http") || message.StartsWith("www.") ? false : true;
+            return message.StartsWith("!") || message.Contains("http") || message.Contains("org") || message.Contains("com") || message.Contains("www.") ? false : true;
         }
     }
 }
