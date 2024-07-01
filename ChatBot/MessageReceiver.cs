@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TwitchLib.Api;
+using TwitchLib.Api.Helix;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
 using TwitchLib.Client.Events;
@@ -53,8 +55,13 @@ namespace ChatBot
             if (e.ChatMessage.DisplayName == Config.botUsername)
                 return;
 
-            if (MessageFilter.FilterSpam(e.ChatMessage.Username, e.ChatMessage.Message, twitchClient))
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Username, e.ChatMessage.Message))
+            {
+                
+                string response = @"/timeout " + e.ChatMessage.Username + " 1";
+                twitchClient.TimeoutUser(Config.channelUsername, e.ChatMessage.UserId, DateTime.Now.AddSeconds(1) - DateTime.Now);
                 return;
+            }
              
             if (e.ChatMessage.Message.StartsWith("!"))
                 messageExecutor.ExecuteMessage(e.ChatMessage);
