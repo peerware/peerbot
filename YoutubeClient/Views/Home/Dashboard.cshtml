@@ -16,7 +16,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js?v=4"></script>
+<script src="~/js/chat.js?v=5"></script>
 <script type="text/javascript">
 
     $().ready(function () {
@@ -28,14 +28,16 @@
 <!-- Body -->
 <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 800px;
                         border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)">
-
     <div>
-        <span style="vertical-align:top;">Enable player <input type="checkbox" id="isPlayerEnabled" checked /></span>
+        <label>
+            <input type="checkbox" id="isPlayerEnabled" checked />
+            <span class="checkable">Enable Player</span>
+        </label>
+    </div>
+    <div>
         <iframe width="600" height="420" id="songRequestPlayer" src="https://www.youtube.com/watch?v=9jK-NcRmVcw">
         </iframe>
     </div>
-
-    
     <div>
         <label>TTS Volume (1-100): <input type="text" id="ttsVolume" value="100" /></label>
     </div>

@@ -101,7 +101,7 @@ namespace YoutubeClient
 
                 // Try to make sure videos play from the beginning
                 if (!chatMessage.Contains("&"))
-                    chatMessage = chatMessage + "&t=0";
+                    chatMessage = chatMessage.TrimEnd() + "&t=0";
 
                 if (chatMessage.Length > 3 && (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest))
                 {
@@ -109,7 +109,7 @@ namespace YoutubeClient
                     chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
                 }
                 else
-                    messageReceiver.messageExecutor.Say("Please wait until at least 5 minutes have passed since the last request");
+                    messageReceiver.messageExecutor.Say("Please wait until at least 2 minutes have passed since the last request");
             }
 
             return;
