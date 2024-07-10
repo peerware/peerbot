@@ -53,7 +53,7 @@
                 pitch: $('#pitch').val(),
             };
 
-            var b = $.ajax({
+            $.ajax({
                 type: 'post',
                 url: '@Url.Action("TestTTSVoice", "Home")',
                 contentType: "application/json",
@@ -75,7 +75,7 @@
                 pitch: $('#pitch').val(),
             };
         
-            var a = $.ajax({
+            $.ajax({
                 type: 'post',
                 url: '@Url.Action("SetTTSVoice", "Home")',
                 contentType: "application/json",
@@ -99,21 +99,17 @@
         </div>
         <!-- Gender, speed, pitch -->
         <div class="vertical">
-            <fieldset class="flex three demo">
-               <label><select>
-                   <option value="m">Male</option>
-                   <option value="f">Female</option>
-               </select></label>
-               <label><input type="number" placeholder="Speed (0.8-2)" min="0.8" max="2"/></label>
-               <label><input type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
+            <fieldset class="flex two demo">
+               <label>Speed (0.8-2)<input id="speed" value="1" type="number" placeholder="Speed (0.8-2)" min="0.8" max="2" step="0.1"/></label>
+               <label>Pitch (-20-20)<input id="pitch" value="0" type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
             </fieldset>
         </div>
         <div class="flex five demo vertical">
             <div class="four-fifth">
-                <label><input type="text" placeholder="Enter sample text here"/></label>
+                <label><input id="txtMessage" type="text" placeholder="Enter sample text here"/></label>
             </div>
             <div class="one-fifth">
-            <button style="background: #edab05">Test Voice</button>
+                <button onclick="TestTTSVoice()" style="background: #edab05">Test Voice</button>
             </div>
         </div>
         <div class="vertical flex five demo">
@@ -121,20 +117,7 @@
                 <label><input type="text" placeholder="Username for voice save" /></label>
             </div>
             <div>
-                <button class="button" style="background: green;">Save Voice</button>
+                <button onclick="SetTTSVoice()" class="button" style="background: green;">Save Voice</button>
             </div>
         </div>
-        <div style="float: right; vertical-align: bottom; margin-top: 50px;">
-            <label>Incoming Stream TTS Volume
-                <input type="number" value="0" min="0" max="100" style="width: 75px;" placeholder="0-100" />
-            </label> 
-        </div>
-        <!-- test   -->
-    <!--
-            <fieldset class="flex two">
-              <label><input type="email" placeholder="Email"></label>
-              <label><input type="password" placeholder="Password"></label>
-            </fieldset>
-        -->
-
 </div>
