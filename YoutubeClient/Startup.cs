@@ -103,13 +103,13 @@ namespace YoutubeClient
                 if (!chatMessage.Contains("&"))
                     chatMessage = chatMessage + "&t=0";
 
-                if (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest)
+                if (chatMessage.Length > 3 && (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest))
                 {
                     lastSongRequest = DateTime.Now;
                     chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
                 }
                 else
-                    messageReceiver.messageExecutor.Say("Please wait until 2 minutes since the last request have passed");
+                    messageReceiver.messageExecutor.Say("Please wait until at least 5 minutes have passed since the last request");
             }
 
             return;
