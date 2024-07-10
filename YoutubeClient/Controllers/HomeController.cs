@@ -44,6 +44,11 @@ namespace YoutubeClient.Controllers
             return View();
         }
 
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult SetTTSVoice([FromBody] GoogleTTSVoice voice)
         {

@@ -9,9 +9,6 @@ var isSongPlaying = false;
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-//Disable the send button until connection is established.
-document.getElementById("sendButton").disabled = true;
-
 connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
@@ -60,27 +57,12 @@ function ProcessSongQueue() {
     if (isSongPlaying || SongQueue.length < 1)
         return;
 
-        var videoPlayer = $('#songRequestPlayer');
-        videoPlayer.attr('src', videoURL);
+    var videoPlayer = $('#songRequestPlayer');
+    videoPlayer.attr('src', videoURL);
 
-        if ($('#isPlayerEnabled').val() == 'on') {
-            setTimeout(function () {
-                videoPlayer.click();
-            }, 2000); // delay playing the video to ensure the video gets loaded
-    
+    if ($('#isPlayerEnabled').val() == 'on') {
+        setTimeout(function () {
+            videoPlayer.click();
+        }, 2000); // delay playing the video to ensure the video gets loaded
+    }
 }
-
-connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
-});
-
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
