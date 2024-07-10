@@ -1,7 +1,22 @@
 @{
     ViewData["Title"] = "Home Page";
+    ViewData["numTestsRemaining"] = 5;
 }
+<style>
+    .vertical {
+        margin-bottom: 10px;
+    }
+    button {
+        margin-top: -1px !important;
+        float: right !important;
+    }
+</style>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js?v=2"></script>
 <script type="text/javascript"> 
             
             $().ready(function () {
@@ -23,7 +38,7 @@
 
                 // adjust listbox attributes
                 var listbox = $('#voiceid');
-                listbox.css('height', '250px');
+                listbox.css('height', '175px');
 
             });
 
@@ -71,68 +86,55 @@
         }
     
 </script>
+<!-- 218 234 254-->
+<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 800px; 
+                        border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
+    
 
-<div class="text-center">
-    <div>
-        :^)
-    </div>
-  
-</div>
-@ViewData["Title"]
-
-<div class="container" style="background-color: palegoldenrod">
-    Web Chat
-    <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-    Test and save TTS settings
-    <div>
-        <div>
+        <div class="vertical">
             @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
         </div>
-        Search: <input id="voiceSearchBox" type="text" />
-        Speed (0.55 - 2)<input type="number" id="speed" name="speed" min="0.55" max="2" step=0.1 value="0.55">
-        Pitch (-20 - 20)<input type="number" id="pitch" name="pitch" min="-20" max="20" value="0">   
-    </div>
-    
-    <div>
-        <div>
-                <input type="text" id="txtMessage" maxlength="20" /><button onclick="TestTTSVoice()">Test</button>
-                Test your voice with a short message (only you will hear this):
+        <div class="vertical">
+            <label><input id="voiceSearchBox" type="text" placeholder="Search for a dialect" /></label>
         </div>
-        <div>
-                Save voice to username (testvoice saves a default for any new users): <input type="text" id="username" />
-                <button onclick="SetTTSVoice()">Save</button>
-                TTS Volume (1-100): <input type="text" id="ttsVolume" value="100" />
+        <!-- Gender, speed, pitch -->
+        <div class="vertical">
+            <fieldset class="flex three demo">
+               <label><select>
+                   <option value="m">Male</option>
+                   <option value="f">Female</option>
+               </select></label>
+               <label><input type="number" placeholder="Speed (0.8-2)" min="0.8" max="2"/></label>
+               <label><input type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
+            </fieldset>
         </div>
-    </div>
+        <div class="flex five demo vertical">
+            <div class="four-fifth">
+                <label><input type="text" placeholder="Enter sample text here"/></label>
+            </div>
+            <div class="one-fifth">
+            <button style="background: #edab05">Test Voice</button>
+            </div>
+        </div>
+        <div class="vertical flex five demo">
+            <div class="four-fifth">
+                <label><input type="text" placeholder="Username for voice save" /></label>
+            </div>
+            <div>
+                <button class="button" style="background: green;">Save Voice</button>
+            </div>
+        </div>
+        <div style="float: right; vertical-align: bottom">
+            <label>Incoming TTS Volume
+                <input type="number" min="0" max="100" placeholder="0-100" />
+            </label> 
+        </div>
+        <!-- test   -->
+    <!--
+            <fieldset class="flex two">
+              <label><input type="email" placeholder="Email"></label>
+              <label><input type="password" placeholder="Password"></label>
+            </fieldset>
+        -->
 
-    <div>
-        <span style="vertical-align:top;">Enable player <input type="checkbox" id="isPlayerEnabled" checked/></span>
-        <iframe width="420" height="315" id="songRequestPlayer" src="https://www.youtube.com/watch?v=9jK-NcRmVcw">
-        </iframe>
-    </div>
 </div>
-
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js?v=2"></script>
