@@ -44,6 +44,11 @@ namespace YoutubeClient.Controllers
             return View();
         }
 
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
         [HttpPost]
         public ActionResult SetTTSVoice([FromBody] GoogleTTSVoice voice)
         {
@@ -72,6 +77,13 @@ namespace YoutubeClient.Controllers
         [HttpPost]
         public ContentResult TestTTSVoice([FromBody] GoogleTTSVoice voice)
         {
+            //Update the static request counter and reject the request if we've exceeded the limit
+            Interlocked.Increment(ref Startup.TTSTests);
+            if (Startup.TTSTests > GoogleTTSSettings.MaximumTestRequests)
+            {
+                return Content(":(");
+            }
+
             GoogleTTSVoice googleVoice = null;
             try
             {
@@ -99,7 +111,7 @@ namespace YoutubeClient.Controllers
                 inputString = voice.message;
 
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-            .GetVoiceAudio("test", inputString, Startup.ttsClient, 1).ToArray());
+            .GetVoiceAudio("test", inputString, Startup.ttsClient).ToArray());
 
             if (audioMemoryStream is null)
                 return Content(":(");

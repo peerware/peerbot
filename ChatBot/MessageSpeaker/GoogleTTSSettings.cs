@@ -1,15 +1,18 @@
 ﻿using Google.Cloud.TextToSpeech.V1;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace ChatBot.MessageSpeaker
 {
     public static class GoogleTTSSettings
     {
         private static int requestCounter = 0;
-        private static int maximumRequests = 1250;
+        public static int MaximumTTSRequests = 2000;
+        public static int MaximumTestRequests = 50;
 
         public enum eDialects
         {
@@ -48,12 +51,13 @@ namespace ChatBot.MessageSpeaker
         /// <param name="message"></param>
         /// <param name="client"></param>
         /// <returns></returns>
-        public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client, int requestCount)
+        public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client)
         {
-            requestCounter += requestCount;
 
-            if (requestCounter > maximumRequests)
-                return null;
+            Interlocked.Increment(ref requestCounter);
+
+            if (requestCounter > MaximumTTSRequests)
+                return new MemoryStream();
 
             TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
             SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);

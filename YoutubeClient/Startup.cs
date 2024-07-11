@@ -32,6 +32,8 @@ namespace YoutubeClient
         public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
         DateTime lastSongRequest;
+        public static int TTSTests = 0;
+
 
         public Startup(IConfiguration configuration)
         {
@@ -93,7 +95,7 @@ namespace YoutubeClient
             string chatMessage = e.ChatMessage.Message.Trim();
 
             if (!chatMessage.StartsWith("!")) // Don't speak commands
-                GetMessageAudio(e.ChatMessage.Username, chatMessage, 1);
+                GetMessageAudio(e.ChatMessage.Username, chatMessage);
 
             // Handle song requests
             if (chatMessage.ToLower().StartsWith("!sr"))
@@ -101,15 +103,15 @@ namespace YoutubeClient
 
                 // Try to make sure videos play from the beginning
                 if (!chatMessage.Contains("&"))
-                    chatMessage = chatMessage + "&t=0";
+                    chatMessage = chatMessage.TrimEnd() + "&t=0";
 
-                if (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest)
+                if (chatMessage.Length > 3 && (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest))
                 {
                     lastSongRequest = DateTime.Now;
                     chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
                 }
                 else
-                    messageReceiver.messageExecutor.Say("Please wait until 2 minutes since the last request have passed");
+                    messageReceiver.messageExecutor.Say("Please wait until at least 2 minutes have passed since the last request");
             }
 
             return;
@@ -139,10 +141,10 @@ namespace YoutubeClient
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        private void GetMessageAudio(string username, string message, int requestCount)
+        private void GetMessageAudio(string username, string message)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio(username, message, ttsClient, requestCount).ToArray());
+                .GetVoiceAudio(username, message, ttsClient).ToArray());
 
             long audioLength = audioMemoryStream.Length;
 
