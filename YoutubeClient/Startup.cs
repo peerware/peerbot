@@ -32,6 +32,7 @@ namespace YoutubeClient
         public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
         DateTime lastSongRequest;
+        public static int RequestCounter = 0;
 
         public Startup(IConfiguration configuration)
         {
@@ -93,7 +94,7 @@ namespace YoutubeClient
             string chatMessage = e.ChatMessage.Message.Trim();
 
             if (!chatMessage.StartsWith("!")) // Don't speak commands
-                GetMessageAudio(e.ChatMessage.Username, chatMessage, 1);
+                GetMessageAudio(e.ChatMessage.Username, chatMessage);
 
             // Handle song requests
             if (chatMessage.ToLower().StartsWith("!sr"))
@@ -139,10 +140,10 @@ namespace YoutubeClient
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        private void GetMessageAudio(string username, string message, int requestCount)
+        private void GetMessageAudio(string username, string message)
         {
             MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio(username, message, ttsClient, requestCount).ToArray());
+                .GetVoiceAudio(username, message, ttsClient).ToArray());
 
             long audioLength = audioMemoryStream.Length;
 
