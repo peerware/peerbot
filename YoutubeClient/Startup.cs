@@ -32,7 +32,8 @@ namespace YoutubeClient
         public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
         DateTime lastSongRequest;
-        public static int RequestCounter = 0;
+        public static int TTSTests = 0;
+
 
         public Startup(IConfiguration configuration)
         {

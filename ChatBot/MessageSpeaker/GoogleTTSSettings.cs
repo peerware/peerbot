@@ -11,7 +11,8 @@ namespace ChatBot.MessageSpeaker
     public static class GoogleTTSSettings
     {
         private static int requestCounter = 0;
-        public static int MaximumRequests = 50;
+        public static int MaximumTTSRequests = 2000;
+        public static int MaximumTestRequests = 50;
 
         public enum eDialects
         {
@@ -55,7 +56,7 @@ namespace ChatBot.MessageSpeaker
 
             Interlocked.Increment(ref requestCounter);
 
-            if (requestCounter > MaximumRequests)
+            if (requestCounter > MaximumTTSRequests)
                 return new MemoryStream();
 
             TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
