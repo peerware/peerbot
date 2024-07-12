@@ -11,8 +11,8 @@ namespace ChatBot.MessageSpeaker
     public static class GoogleTTSSettings
     {
         private static int requestCounter = 0;
-        public static int MaximumTTSRequests = 2000;
-        public static int MaximumTestRequests = 50;
+        public static int MaximumTTSRequests = 4000;
+        public static int MaximumTestRequests = 200;
 
         public enum eDialects
         {
