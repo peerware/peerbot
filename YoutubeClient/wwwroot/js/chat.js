@@ -9,32 +9,40 @@ var songQueue = [];
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 connection.on("ReceiveMessageAudio", function (messageAudio) {
+    if (messageAudio.length < 1)
+        return; 
 
     messageQueue.push(messageAudio);
     ProcessMessageQueue();
 });
 
+// Plays all the messages in the queue
 function ProcessMessageQueue() {
     if (isMessagePlaying || messageQueue.length < 1)
         return;
 
-    // play all the messages in the queue while removing the played messages
-    var audioPlayer = new Audio("data:audio/wav;base64," + messageQueue[0]);
-    audioPlayer.volume = $('#ttsVolume').val() / 100;
+    try {
+        let currentMessage = messageQueue[0];
+        messageQueue.shift();
 
-    audioPlayer.addEventListener("ended", function () {
-        isMessagePlaying = false;
-        ProcessMessageQueue();
-    });
+        // play all the messages in the queue while removing the played messages
+        let audioPlayer = new Audio("data:audio/wav;base64," + currentMessage);
+        audioPlayer.volume = $('#ttsVolume').val() / 100;
 
-    messageQueue.shift();
-    isMessagePlaying = true;
+        audioPlayer.addEventListener("ended", function () {
+            isMessagePlaying = false;
+            ProcessMessageQueue();
+        });
 
-    try { // If the user didn't interact with the page before the audio plays an exception will be thrown - try catch to prevent crash
-        audioPlayer.play();
+        isMessagePlaying = true;
+        audioPlayer.play().catch(function (e) {
+            isMessagePlaying = false;
+        });
     }
-    catch (error) { }
-    
+    catch (error)
+    {
+        isMessagePlaying = false;
+    }
 }
 
 connection.on("ReceiveSongRequest", function (videoURL) {

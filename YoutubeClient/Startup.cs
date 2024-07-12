@@ -54,41 +54,49 @@ namespace YoutubeClient
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHubContext<ChatHub> chatHub)
         {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            try
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
 
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    //app.UseHsts();
+                }
+                //app.UseHttpsRedirection();
+                app.UseStaticFiles();
+
+                app.UseRouting();
+
+                app.UseAuthorization();
+
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapHub<ChatHub>("/chatHub");
+
+                    endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    //endpoints.MapGet("/", () => "10.0.0.100");
+                });
+
+                this.chatHub = chatHub;
+                PopulateVoices();
             }
-            else
+            catch (Exception e)
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
+                SystemLogger.Log($"Failed to setup middleware in Startup.cs/Configure\n{e.ToString()}");
             }
-            //app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<ChatHub>("/chatHub");
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapGet("/", () => "10.0.0.100");
-            });
-
-            this.chatHub = chatHub;
-            PopulateVoices();
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
@@ -119,21 +127,28 @@ namespace YoutubeClient
 
         private void PopulateVoices()
         {
-            // Setup google tts events and objects
-            messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
-            //this.chatHub = chatHub;
-
-            var response = ttsClient.ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
-
-            for (int i = 0; i < response.Voices.Count; i++)
+            try
             {
-                GoogleTTSVoices.Add(new GoogleTTSVoice
+                // Setup google tts events and objects
+                messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
+                //this.chatHub = chatHub;
+
+                var response = ttsClient.ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
+
+                for (int i = 0; i < response.Voices.Count; i++)
                 {
-                    id = i,
-                    languageName = response.Voices[i].Name,
-                    languageCode = response.Voices[i].LanguageCodes[0],
-                    gender = response.Voices[i].SsmlGender
-                });
+                    GoogleTTSVoices.Add(new GoogleTTSVoice
+                    {
+                        id = i,
+                        languageName = response.Voices[i].Name,
+                        languageCode = response.Voices[i].LanguageCodes[0],
+                        gender = response.Voices[i].SsmlGender
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log($"Failed to populate voices from Startup.cs\n{e.ToString()}");
             }
         }
 
@@ -148,11 +163,16 @@ namespace YoutubeClient
                 MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
                     .GetVoiceAudio(username, message, ttsClient).ToArray());
 
-                long audioLength = audioMemoryStream.Length;
+                // If the stream wasn't filled with data then discard the stream
+                if (audioMemoryStream.Length < 1)
+                    return;
 
                 chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
             } 
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            {
+                SystemLogger.Log($"Failed to get message audio from Startup.cs\n{ex.ToString()}");
+            }
             return;
         }
     }

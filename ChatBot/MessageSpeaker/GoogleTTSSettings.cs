@@ -67,7 +67,12 @@ namespace ChatBot.MessageSpeaker
                 SynthesizeSpeechResponse response = client.SynthesizeSpeech(request);
 
                 response.AudioContent.WriteTo(outputMemoryStream);
-            } catch (Exception e) { }
+            }
+            catch (Exception e)
+            {
+
+                SystemLogger.Log($"GoogleTTSSettings.cs/GetVoiceAudio failed.\n{e.ToString()}");
+            }
 
             return outputMemoryStream;
         }
@@ -285,27 +290,37 @@ namespace ChatBot.MessageSpeaker
         /// <returns></returns>
         private static SynthesizeSpeechRequest GetSpeechRequest(string message, TTSSettings ttsSettings)
         {
-            // Raise the speaking rate of long messages so they play faster
-            if (message.Length > 70 && ttsSettings.speakingRate < 1.2)
-            {
-                ttsSettings.speakingRate += 0.33;
-                ttsSettings.pitch += 1;
-            }
-
-            // Build the audio request
-            AudioConfig config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
-
-            var voiceParams = GetVoiceParams(ConvertGender(ttsSettings.gender),
-                ttsSettings.languageCode, ttsSettings.voiceName);
 
             SynthesizeSpeechRequest request = new SynthesizeSpeechRequest();
-            request.AudioConfig = config;
-            request.Voice = voiceParams;
 
-            // Add the text message to the audio request
-            SynthesisInput input = new SynthesisInput();
-            input.Text = message;
-            request.Input = input;
+            try
+            {
+                // Raise the speaking rate of long messages so they play faster
+                if (message.Length > 70 && ttsSettings.speakingRate < 1.2)
+                {
+                    ttsSettings.speakingRate += 0.33;
+                    ttsSettings.pitch += 1;
+                }
+
+                // Build the audio request
+                AudioConfig config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
+
+                var voiceParams = GetVoiceParams(ConvertGender(ttsSettings.gender),
+                    ttsSettings.languageCode, ttsSettings.voiceName);
+
+                request.AudioConfig = config;
+                request.Voice = voiceParams;
+
+                // Add the text message to the audio request
+                SynthesisInput input = new SynthesisInput();
+                input.Text = message;
+                request.Input = input;
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log($"GoogleTTSSettings.cs/GetSpeechRequest failed with message " +
+                    $"{message}\n{e.ToString()}");
+            }
 
             return request;
         }
@@ -317,22 +332,30 @@ namespace ChatBot.MessageSpeaker
         /// <param name="voicePreset"></param>
         public static void SetPresetVoice(string username, voicePresets voicePreset)
         {
-            UserTTSSettings userTTSSettings = new UserTTSSettings();
-            userTTSSettings.twitchUsername = username;
-            userTTSSettings.isSpeechEnabled = true;
-
-            switch (voicePreset)
+            try
             {
-                case voicePresets.bog:
-                    userTTSSettings.ttsSettings.speakingRate = 0.58;
-                    userTTSSettings.ttsSettings.pitch = -3;
-                    userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
-                    userTTSSettings.ttsSettings.languageCode = "fr-CA";
-                    userTTSSettings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode("fr-CA", SsmlVoiceGender.Male);
-                    break;
-            }
+                UserTTSSettings userTTSSettings = new UserTTSSettings();
+                userTTSSettings.twitchUsername = username;
+                userTTSSettings.isSpeechEnabled = true;
 
-            UserTTSSettingsManager.SaveSettingsToStorage(userTTSSettings);
+                switch (voicePreset)
+                {
+                    case voicePresets.bog:
+                        userTTSSettings.ttsSettings.speakingRate = 0.58;
+                        userTTSSettings.ttsSettings.pitch = -3;
+                        userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
+                        userTTSSettings.ttsSettings.languageCode = "fr-CA";
+                        userTTSSettings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode("fr-CA", SsmlVoiceGender.Male);
+                        break;
+                }
+
+                UserTTSSettingsManager.SaveSettingsToStorage(userTTSSettings);
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log($"GoogleTTSSettings/SetPresetVoice failed for user " +
+                    $"{username}\n{e.ToString()}");
+            }
         }
     }
 }
