@@ -52,71 +52,83 @@ namespace YoutubeClient.Controllers
         [HttpPost]
         public ActionResult SetTTSVoice([FromBody] GoogleTTSVoice voice)
         {
-            GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
-
-            UserTTSSettings settings = new UserTTSSettings();
-            settings.ttsSettings.SetSpeed(voice.speed);
-            settings.ttsSettings.SetPitch(voice.pitch);
-            settings.ttsSettings.SetGender(googleVoice.gender);
-            settings.ttsSettings.languageCode = googleVoice.languageCode;
-            settings.ttsSettings.voiceName = googleVoice.languageName;
-
-            // If the username is "testvoice" append a string of random numbers to it
-            if (voice.username.ToLower().Equals("testvoice"))
+            try
             {
-                Random random = new Random();
-                settings.twitchUsername = voice.username + random.Next(0, 4000);
-            }
-            else
-                settings.twitchUsername = voice.username;
+                GoogleTTSVoice googleVoice = Startup.GoogleTTSVoices[voice.id];
 
-            UserTTSSettingsManager.SaveSettingsToStorage(settings);
-            return Content(":)");
+                UserTTSSettings settings = new UserTTSSettings();
+                settings.ttsSettings.SetSpeed(voice.speed);
+                settings.ttsSettings.SetPitch(voice.pitch);
+                settings.ttsSettings.SetGender(googleVoice.gender);
+                settings.ttsSettings.languageCode = googleVoice.languageCode;
+                settings.ttsSettings.voiceName = googleVoice.languageName;
+
+                // If the username is "testvoice" append a string of random numbers to it
+                if (voice.username.ToLower().Equals("testvoice"))
+                {
+                    Random random = new Random();
+                    settings.twitchUsername = voice.username + random.Next(0, 4000);
+                }
+                else
+                    settings.twitchUsername = voice.username;
+
+                UserTTSSettingsManager.SaveSettingsToStorage(settings);
+                return Content(":)");
+            } 
+            catch (Exception e)
+            {
+                SystemLogger.Log($"Failed to set TTS voice.\n{e.ToString()}");
+            }
+
+            return Content(":(");
         }
 
         [HttpPost]
         public ContentResult TestTTSVoice([FromBody] GoogleTTSVoice voice)
         {
-            //Update the static request counter and reject the request if we've exceeded the limit
-            Interlocked.Increment(ref Startup.TTSTests);
-            if (Startup.TTSTests > GoogleTTSSettings.MaximumTestRequests)
-            {
-                return Content(":(");
-            }
-
-            GoogleTTSVoice googleVoice = null;
             try
             {
+                //Update the static request counter and reject the request if we've exceeded the limit
+                Interlocked.Increment(ref Startup.TTSTests);
+                if (Startup.TTSTests > GoogleTTSSettings.MaximumTestRequests)
+                {
+                    SystemLogger.Log($"Maximum TTS Tests has been reached.");
+                    return Content(":(");
+                }
+
+                GoogleTTSVoice googleVoice = null;
+
                 googleVoice = Startup.GoogleTTSVoices[voice.id];
+                
+
+                UserTTSSettings settings = new UserTTSSettings();
+                settings.twitchUsername = "test";
+                settings.ttsSettings.SetSpeed(voice.speed);
+                settings.ttsSettings.SetPitch(voice.pitch);
+                settings.ttsSettings.SetGender(googleVoice.gender);
+                settings.ttsSettings.languageCode = googleVoice.languageCode;
+                settings.ttsSettings.voiceName = googleVoice.languageName;
+                UserTTSSettingsManager.SaveSettingsToStorage(settings);
+
+                string inputString;
+                if (voice.message.Length > 25)
+                    inputString = voice.message.Substring(0, 25);
+                else
+                    inputString = voice.message;
+
+                MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+                .GetVoiceAudio("test", inputString, Startup.ttsClient).ToArray());
+
+                if (audioMemoryStream is null)
+                    return Content(":(");
+
+                return Content(System.Convert.ToBase64String(audioMemoryStream.ToArray()));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine("HomeController.TestTTSVoice failed to save a voice.");
-                return Content(":(");
+                SystemLogger.Log($"Failed to test TTS Voice.\n{e.ToString()}");
             }
-
-            UserTTSSettings settings = new UserTTSSettings();
-            settings.twitchUsername = "test";
-            settings.ttsSettings.SetSpeed(voice.speed);
-            settings.ttsSettings.SetPitch(voice.pitch);
-            settings.ttsSettings.SetGender(googleVoice.gender);
-            settings.ttsSettings.languageCode = googleVoice.languageCode;
-            settings.ttsSettings.voiceName = googleVoice.languageName;
-            UserTTSSettingsManager.SaveSettingsToStorage(settings);
-
-            string inputString;
-            if (voice.message.Length > 25)
-                inputString = voice.message.Substring(0, 25);
-            else
-                inputString = voice.message;
-
-            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-            .GetVoiceAudio("test", inputString, Startup.ttsClient).ToArray());
-
-            if (audioMemoryStream is null)
-                return Content(":(");
-
-            return Content(System.Convert.ToBase64String(audioMemoryStream.ToArray()));
+            return Content(":(");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
