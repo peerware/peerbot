@@ -33,7 +33,9 @@ namespace ChatBot
 
             messageExecutor.api = TwitchAPIFactory.GetAPI();
             messageExecutor.streamObject = messageExecutor.api.Helix.Streams;
-            messageExecutor.channelStream = (await messageExecutor.streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
+
+            var result = await messageExecutor.streamObject.GetStreamsAsync(userIds: new List<string> { Config.channelUsername });
+            messageExecutor.channelStream = result.Streams.FirstOrDefault();
             messageExecutor.client = client;
 
             // Get the latest message in the logs (assume this is when the last stream happened, this might change in the future but its fine for now)
@@ -47,7 +49,9 @@ namespace ChatBot
             // Try refreshing the channel stream every message received in case the bot was launched before going live
             if (channelStream == null)
             {
-                channelStream = (await streamObject.GetStreamsAsync(null, null, 1, null, null, "all", null, new List<string> { Config.channelUsername })).Streams.FirstOrDefault();
+                var streamObject = api.Helix.Streams;
+                var result = await streamObject.GetStreamsAsync(userIds: new List<string> { Config.channelUsername });
+                channelStream = result.Streams.FirstOrDefault();
             }
 
             // Make it so double exlamation mark commands entered accidentally work (!!tts speed 1)

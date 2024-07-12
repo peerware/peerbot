@@ -3,77 +3,69 @@
 var messageQueue = [];
 var isMessagePlaying = false;
 
+
+var songQueue = [];
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-//Disable the send button until connection is established.
-document.getElementById("sendButton").disabled = true;
-
-
-connection.on("ReceiveSongRequest", function (videoURL) {
-    var videoPlayer = $('#songRequestPlayer');
-    videoPlayer.attr('src', videoURL);
-
-    if ($('#isPlayerEnabled').val() == 'on') {
-        setTimeout(function () {
-            videoPlayer.click();
-        }, 2000); // delay playing the video to ensure the video gets loaded
-    }
-});
-
-connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
-});
-
 connection.on("ReceiveMessageAudio", function (messageAudio) {
+    if (messageAudio.length < 1)
+        return; 
 
     messageQueue.push(messageAudio);
     ProcessMessageQueue();
 });
 
+// Plays all the messages in the queue
 function ProcessMessageQueue() {
     if (isMessagePlaying || messageQueue.length < 1)
         return;
 
-    // play all the messages in the queue while removing the played messages
-    var audioPlayer = new Audio("data:audio/wav;base64," + messageQueue[0]);
-    audioPlayer.volume = $('#ttsVolume').val() / 100;
+    try {
+        let currentMessage = messageQueue[0];
+        messageQueue.shift();
 
-    audioPlayer.addEventListener("ended", function () {
-        isMessagePlaying = false;
-        ProcessMessageQueue();
-    });
+        // play all the messages in the queue while removing the played messages
+        let audioPlayer = new Audio("data:audio/wav;base64," + currentMessage);
+        audioPlayer.volume = $('#ttsVolume').val() / 100;
 
-    messageQueue.shift();
-    isMessagePlaying = true;
+        audioPlayer.addEventListener("ended", function () {
+            isMessagePlaying = false;
+            ProcessMessageQueue();
+        });
 
-    try { // If the user didn't interact with the page before the audio plays an exception will be thrown - try catch to prevent crash
-        audioPlayer.play();
+        isMessagePlaying = true;
+        audioPlayer.play().catch(function (e) {
+            isMessagePlaying = false;
+        });
     }
-    catch (error) { }
-    
+    catch (error)
+    {
+        isMessagePlaying = false;
+    }
 }
 
-connection.on("ReceiveMessageAudio", function (messageAudio) {
-
-    document.getElementById("audioPlayer");
+connection.on("ReceiveSongRequest", function (videoURL) {
+    songQueue.push(videoURL);
+    ProcessSongQueue();
 });
 
-connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
-});
+// Handles playing music
+function ProcessSongQueue() {
+    if (songQueue.length < 1)
+        return;
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
+    var videoPlayer = $('#songRequestPlayer');
+
+    if ($('#isPlayerEnabled').val() == 'on') {
+
+        videoPlayer.attr('src', songQueue[0]);
+        songQueue.shift();
+
+        setTimeout(function () {
+            videoPlayer.click();
+        }, 2000); // delay playing the video to ensure the video gets loaded
+    }
+}
+
+connection.start();

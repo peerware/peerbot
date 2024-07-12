@@ -13,42 +13,50 @@ namespace ChatBot.MessageSpeaker
     public static class UserTTSSettingsManager
     {
         static object locker = new object();
-        static string filePath = @"..\" + Config.fileSavePath + "speechsettings.txt";
+        static string filePath = @"../" + Config.fileSavePath + "speechsettings.txt";
 
         public static void SaveSettingsToStorage(UserTTSSettings messageSpeakerSettings)
         {
-            lock (locker)
+            try
             {
-                // First get the existing settings from storage to see if we are saving new vs overwriting
-                UserTTSSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
-
-                // If the setting already exists delete it then save the new settings
-                if (settings.twitchUsername.Length > 0)
+                lock (locker)
                 {
-                    List<string> allSettings = File.ReadAllLines(filePath).ToList();
-                    string existingTTSSettings = "";
+                    // First get the existing settings from storage to see if we are saving new vs overwriting
+                    UserTTSSettings settings = GetSettingsFromStorage(messageSpeakerSettings.twitchUsername);
 
-                    foreach (var fileSetting in allSettings)
+                    // If the setting already exists delete it then save the new settings
+                    if (settings.twitchUsername.Length > 0)
                     {
-                        if (fileSetting.Contains(settings.twitchUsername))
-                            existingTTSSettings = fileSetting;
+                        List<string> allSettings = File.ReadAllLines(filePath).ToList();
+                        string existingTTSSettings = "";
+
+                        foreach (var fileSetting in allSettings)
+                        {
+                            if (fileSetting.Contains(settings.twitchUsername))
+                                existingTTSSettings = fileSetting;
+                        }
+                        allSettings.Remove(existingTTSSettings);
+
+                        File.Delete(filePath);
+                        File.WriteAllLines(filePath, allSettings);
                     }
-                    allSettings.Remove(existingTTSSettings);
 
-                    File.Delete(filePath);
-                    File.WriteAllLines(filePath, allSettings);
+                    // Save the new settings
+                    try
+                    {
+                        File.AppendAllText(filePath, messageSpeakerSettings.twitchUsername + ":" + JsonConvert.SerializeObject(messageSpeakerSettings) + "\n");
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Write("Message logging failed.");
+                    }
                 }
-
-                // Save the new settings
-                try
-                {
-                    File.AppendAllText(filePath, messageSpeakerSettings.twitchUsername + ":" + JsonConvert.SerializeObject(messageSpeakerSettings) + "\n");
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Console.Write("Message logging failed.");
-                }
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log($"UserTTSSettingsManager/SaveSettingsToStorage failed to " +
+                    $"save settings for {messageSpeakerSettings.twitchUsername}\n{e.ToString()}");
             }
         }
 
@@ -56,18 +64,25 @@ namespace ChatBot.MessageSpeaker
         {
             UserTTSSettings userTTSSettings = new UserTTSSettings();
 
-            if (File.Exists(filePath))
+            try
             {
-                List<string> AllSettings = File.ReadAllLines(filePath).ToList();
-                foreach (var Setting in AllSettings)
+                if (File.Exists(filePath))
                 {
-                    if (Setting.Contains(username))
-                        userTTSSettings = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
+                    List<string> AllSettings = File.ReadAllLines(filePath).ToList();
+                    foreach (var Setting in AllSettings)
+                    {
+                        if (Setting.Contains(username))
+                            userTTSSettings = JsonConvert.DeserializeObject<UserTTSSettings>(Setting.Substring(Setting.IndexOf(":") + 1));
+                    }
                 }
-            }
 
-            if (string.IsNullOrWhiteSpace(userTTSSettings.twitchUsername))
-                userTTSSettings.ttsSettings = GetRandomVoice(userTTSSettings.twitchUsername);
+                if (string.IsNullOrWhiteSpace(userTTSSettings.twitchUsername))
+                    userTTSSettings.ttsSettings = GetRandomVoice(userTTSSettings.twitchUsername);
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log($"\n{e.ToString()}");
+            }
 
             return userTTSSettings;
         }
