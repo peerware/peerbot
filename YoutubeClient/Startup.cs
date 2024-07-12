@@ -143,13 +143,16 @@ namespace YoutubeClient
         /// <returns></returns>
         private void GetMessageAudio(string username, string message)
         {
-            MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
-                .GetVoiceAudio(username, message, ttsClient).ToArray());
+            try
+            {
+                MemoryStream audioMemoryStream = new MemoryStream(GoogleTTSSettings
+                    .GetVoiceAudio(username, message, ttsClient).ToArray());
 
-            long audioLength = audioMemoryStream.Length;
+                long audioLength = audioMemoryStream.Length;
 
-            chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
-
+                chatHub.Clients.All.SendAsync("ReceiveMessageAudio", System.Convert.ToBase64String(audioMemoryStream.ToArray()));
+            } 
+            catch (Exception ex) { }
             return;
         }
     }
