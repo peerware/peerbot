@@ -11,8 +11,8 @@ namespace ChatBot.MessageSpeaker
     public static class GoogleTTSSettings
     {
         private static int requestCounter = 0;
-        public static int MaximumTTSRequests = 2000;
-        public static int MaximumTestRequests = 50;
+        public static int MaximumTTSRequests = 4000;
+        public static int MaximumTestRequests = 200;
 
         public enum eDialects
         {
@@ -53,18 +53,21 @@ namespace ChatBot.MessageSpeaker
         /// <returns></returns>
         public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client)
         {
-
-            Interlocked.Increment(ref requestCounter);
-
-            if (requestCounter > MaximumTTSRequests)
-                return new MemoryStream();
-
-            TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
-            SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
-            SynthesizeSpeechResponse response = client.SynthesizeSpeech(request);
-
             MemoryStream outputMemoryStream = new MemoryStream();
-            response.AudioContent.WriteTo(outputMemoryStream);
+
+            try
+            {
+                Interlocked.Increment(ref requestCounter);
+
+                if (requestCounter > MaximumTTSRequests)
+                    return new MemoryStream();
+
+                TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
+                SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
+                SynthesizeSpeechResponse response = client.SynthesizeSpeech(request);
+
+                response.AudioContent.WriteTo(outputMemoryStream);
+            } catch (Exception e) { }
 
             return outputMemoryStream;
         }
