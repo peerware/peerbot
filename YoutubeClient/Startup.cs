@@ -31,7 +31,7 @@ namespace YoutubeClient
         private IHubContext<ChatHub> chatHub;
         public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
-        DateTime lastSongRequest;
+        DateTime? lastSongRequest = null;
         public static int TTSTests = 0;
 
 
@@ -100,6 +100,7 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
 
             if (!chatMessage.StartsWith("!")) // Don't speak commands
@@ -108,18 +109,25 @@ namespace YoutubeClient
             // Handle song requests
             if (chatMessage.ToLower().StartsWith("!sr"))
             {
-
                 // Try to make sure videos play from the beginning
                 if (!chatMessage.Contains("&"))
                     chatMessage = chatMessage.TrimEnd() + "&t=0";
 
-                if (chatMessage.Length > 3 && (lastSongRequest == null || DateTime.Now.AddMinutes(-2) >= lastSongRequest))
+                double? timeSinceLastRequest = (lastSongRequest is null) ?
+                    0 : (DateTime.Now - lastSongRequest)?.TotalSeconds;
+
+                if (chatMessage.Length > 8 && 
+                    (lastSongRequest is null || songRequestDelay <= timeSinceLastRequest))
                 {
                     lastSongRequest = DateTime.Now;
                     chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
                 }
                 else
-                    messageReceiver.messageExecutor.Say("Please wait until at least 2 minutes have passed since the last request");
+                {
+                    string roundedTimeRemaining = (songRequestDelay - timeSinceLastRequest)?.ToString("N0");
+                    string output = $"@{e.ChatMessage.Username} you may request a new song in {roundedTimeRemaining} seconds";
+                    messageReceiver.messageExecutor.Say(output);
+                }
             }
 
             return;
