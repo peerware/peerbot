@@ -8,6 +8,7 @@ namespace ChatBot.Authentication
 {
     public class CAccessRefreshTokens
     {
+        public DateTime ExpiryDate;
         public string accessToken;
         public string refreshToken;
         public int expiresIn;

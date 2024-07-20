@@ -1,4 +1,5 @@
 using ChatBot.Authentication;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,26 +60,34 @@ namespace ChatBot
 
             if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
             {
-                // Setup necessary boilerplate to time a user out
-                var API = TwitchAPIFactory.GetAPI();
-                string broadcastorID;
-                string moderatorID;
+                try
+                {
 
-                moderatorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.botUsername })
-                    .Result.Users.First().Id;
-                broadcastorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.channelUsername })
-                    .Result.Users.First().Id;
+                    // Setup necessary boilerplate to time a user out
+                    var API = TwitchAPIFactory.GetAPI();
+                    string broadcastorID;
+                    string moderatorID;
 
-                BanUserRequest banRequest = new BanUserRequest();
-                banRequest.UserId = e.ChatMessage.UserId;
-                banRequest.Duration = 5; // todo change this into a well thought out number (300?)
-                banRequest.Reason = "spam filter triggered";
+                    moderatorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.botUsername })
+                        .Result.Users.First().Id;
+                    broadcastorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.channelUsername })
+                        .Result.Users.First().Id;
 
-                // Execute the timeout
-                var result = await API.Helix.Moderation.BanUserAsync(broadcastorID, 
-                    moderatorID,
-                    banRequest,
-                    await OAuth.GetBanAccessToken());
+                    BanUserRequest banRequest = new BanUserRequest();
+                    banRequest.UserId = e.ChatMessage.UserId;
+                    banRequest.Duration = 5; // todo change this into a well thought out number (300?)
+                    banRequest.Reason = "spam filter triggered";
+
+                    // Execute the timeout
+                    var result = await API.Helix.Moderation.BanUserAsync(broadcastorID,
+                        moderatorID,
+                        banRequest,
+                        await OAuth.GetBanAccessToken());
+                }
+                catch (Exception ex)
+                {
+                    SystemLogger.Log($"Failed to timeout message in MessageReceiver.cs\n\n{ex}");
+                }
 
                 return;
             }

@@ -55,6 +55,7 @@ namespace YoutubeClient.Controllers
         {
             ChatBot.Authentication.OAuth.scopeCode.Scope = scope;
             ChatBot.Authentication.OAuth.scopeCode.Code = code;
+            ChatBot.Authentication.OAuth.GetBanAccessToken(); // Get the ban token after authenticating 
              
             return Redirect(Config.RedirectURI);
         }
