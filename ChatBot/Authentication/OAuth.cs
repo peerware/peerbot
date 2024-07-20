@@ -12,8 +12,8 @@ namespace ChatBot.Authentication
     {
         public static CAccessRefreshTokens tokens = new CAccessRefreshTokens();
         public static ScopeCode scopeCode = new ScopeCode();
-        public static string CodeURI = @"https://localhost:44381/Home/GetCode";
-        public static string TokenURI = @"https://localhost:44381/Home/GetToken";
+        public static string CodeURI = Config.RedirectURI + @"/Home/GetCode";
+        public static string TokenURI = Config.RedirectURI + @"/Home/GetToken";
 
         public static async Task<string> GetBanAccessToken()
         {
