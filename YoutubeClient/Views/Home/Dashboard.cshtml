@@ -20,9 +20,20 @@
 <script type="text/javascript">
 
     $().ready(function () {
+
     });
 
+    function authenticate() {
 
+        let authURL = "https://id.twitch.tv/oauth2/authorize";
+        authURL += "?client_id=" + "@ChatBot.Config.ClientID";
+        authURL += "&redirect_uri=" + "@ChatBot.Authentication.OAuth.CodeURI";
+        authURL += "&response_type=code";
+        authURL += "&scope=moderator%3Amanage%3Abanned_users";
+        // moderator:manage:banned_users
+
+        window.open(authURL, '_blank');
+    }
 
 </script>
 <!-- Body -->
@@ -43,5 +54,8 @@
     </div>
     <div>
         # of test requests made:&nbsp;@Startup.TTSTests
+    </div>
+    <div>
+        <a id="twitch" class="button" style="background: purple;" onclick="authenticate();">Twitch</a>
     </div>
 </div>

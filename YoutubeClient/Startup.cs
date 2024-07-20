@@ -100,6 +100,9 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
+                return; // Don't speak or execute spam messages
+
             int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
 

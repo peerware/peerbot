@@ -16,6 +16,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Google.Cloud.TextToSpeech.V1;
+using Google.Api;
 
 namespace YoutubeClient.Controllers
 {
@@ -47,6 +48,15 @@ namespace YoutubeClient.Controllers
         public IActionResult Dashboard()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCode(string code, string scope)
+        {
+            ChatBot.Authentication.OAuth.scopeCode.Scope = scope;
+            ChatBot.Authentication.OAuth.scopeCode.Code = code;
+             
+            return Content(":)");
         }
 
         [HttpPost]
