@@ -100,10 +100,14 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
+                return; // Don't speak or execute spam messages
+
             int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
 
-            if (!chatMessage.StartsWith("!")) // Don't speak commands
+            // Speak the message if its not a link or command
+            if (!chatMessage.StartsWith("!") && !MessageFilter.IsMessageWebsiteURL(chatMessage)) 
                 GetMessageAudio(e.ChatMessage.Username, chatMessage);
 
             // Handle song requests
