@@ -57,7 +57,7 @@ namespace ChatBot
             if (e.ChatMessage.DisplayName == Config.botUsername)
                 return;
 
-            if (MessageFilter.IsMessageSpam(e.ChatMessage.Username, e.ChatMessage.Message))
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
             {
                 // Setup necessary boilerplate to time a user out
                 var API = TwitchAPIFactory.GetAPI();

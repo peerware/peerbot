@@ -8,7 +8,7 @@ namespace ChatBot
 {
     public static class MessageFilter
     {
-        public static bool isMessageSpam(string message)
+        public static bool IsMessageSpam(string message)
         {
             List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy", "qualitу", "service", "tор", "streamer",
              "custom graphics", "sorry", "interrupting", "channel", "portfolio", "you", "follow", "view", "bot", "com", "org",
@@ -31,7 +31,8 @@ namespace ChatBot
 
         public static bool IsMessageWebsiteURL(string message)
         {
-            return message.StartsWith("!") || message.Contains("http") || message.Contains("org") || message.Contains("com") || message.Contains("www.") ? false : true;
+            return message.Contains("http") || message.Contains("org") || message.Contains("com") || message.Contains("www")
+                ? true : false;
         }
     }
 }

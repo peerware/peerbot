@@ -106,7 +106,8 @@ namespace YoutubeClient
             int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
 
-            if (!chatMessage.StartsWith("!")) // Don't speak commands
+            // Speak the message if its not a link or command
+            if (!chatMessage.StartsWith("!") && !MessageFilter.IsMessageWebsiteURL(chatMessage)) 
                 GetMessageAudio(e.ChatMessage.Username, chatMessage);
 
             // Handle song requests

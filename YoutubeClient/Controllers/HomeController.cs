@@ -56,7 +56,7 @@ namespace YoutubeClient.Controllers
             ChatBot.Authentication.OAuth.scopeCode.Scope = scope;
             ChatBot.Authentication.OAuth.scopeCode.Code = code;
              
-            return Content(":)");
+            return Redirect(Config.RedirectURI);
         }
 
         [HttpPost]
