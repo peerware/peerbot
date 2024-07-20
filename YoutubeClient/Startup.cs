@@ -100,17 +100,8 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
-                return; // Don't speak or execute spam messages
-
             int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
-
-            // Speak the message if its not a link or command
-            if (!chatMessage.StartsWith("!") && !MessageFilter.IsMessageWebsiteURL(chatMessage)) 
-                GetMessageAudio(e.ChatMessage.Username, chatMessage);
-
-            // Handle song requests
             if (chatMessage.ToLower().StartsWith("!sr"))
             {
                 // Try to make sure videos play from the beginning
@@ -133,6 +124,17 @@ namespace YoutubeClient
                     messageReceiver.messageExecutor.Say(output);
                 }
             }
+
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
+                return; // Don't speak or execute spam messages
+
+
+
+            // Speak the message if its not a link or command
+            if (!chatMessage.StartsWith("!") && !MessageFilter.IsMessageWebsiteURL(chatMessage))
+                GetMessageAudio(e.ChatMessage.Username, chatMessage);
+
+            // Handle song requests
 
             return;
         }
