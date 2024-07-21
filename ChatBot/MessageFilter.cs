@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
@@ -8,13 +9,18 @@ namespace ChatBot
 {
     public static class MessageFilter
     {
+        private static List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy",
+            "qualitу", "service", "tор", "streamer", "com", "custom graphics", "sorry", "interrupting", "channel",
+            "portfolio", "you", "follow", "view", "bot", "org", "price", "quality", "convenient", "cheap", "offer", 
+            "free", "code", "guarantee", "satisfaction", "best" };
+
         public static bool IsMessageSpam(string message)
         {
-            List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy", "qualitу", "service", "tор", "streamer",
-             "custom graphics", "sorry", "interrupting", "channel", "portfolio", "you", "follow", "view", "bot", "com", "org",
-             "price", "quality", "convenient"};
+            // Assume anything starting with an ! is a command, which isn't spam
+            if (message.Trim().StartsWith("!"))
+                return false;
 
-            int spamCutoff = 2;
+            int spamCutoff = 3;
             int spamWarning = 0;
 
             foreach (string s in suspiciousStrings)
@@ -23,10 +29,7 @@ namespace ChatBot
                     spamWarning++;
             }
 
-            if (spamWarning >= spamCutoff)
-                return true;
-            else
-                return false;
+            return (spamWarning >= spamCutoff) ?  true : false;
         }
 
         public static bool IsMessageWebsiteURL(string message)
