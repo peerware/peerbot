@@ -39,7 +39,7 @@
 
 </script>
 <!-- Body -->
-<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 800px;
+<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 420px;
                         border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)">
     <div>
         <label>
@@ -62,7 +62,7 @@
            onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.ban))');">Ban</a>
         <a id="twitch" class="button" style="background: green;"
            onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.manageChannel))');">Manage</a>
-        <a id="twitch" class="button" style="background: black;"
+        <a id="twitch" class="button" style="background: blue;"
            onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.clips))');">Clip</a>
     </div>
 </div>
