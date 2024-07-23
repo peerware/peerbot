@@ -481,5 +481,11 @@ namespace ChatBot
             };
             Say(quotes.ElementAt(new Random().Next(0, quotes.Length)));
         }
+
+        public string GetChannelID(string channelName)
+        {
+            return api.Helix.Users.GetUsersAsync(logins: new List<string> { channelName })
+                .Result.Users.First().Id;
+        }
     }
 }

@@ -68,10 +68,8 @@ namespace ChatBot
                     string broadcastorID;
                     string moderatorID;
 
-                    moderatorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.botUsername })
-                        .Result.Users.First().Id;
-                    broadcastorID = API.Helix.Users.GetUsersAsync(logins: new List<string> { Config.channelUsername })
-                        .Result.Users.First().Id;
+                    moderatorID = messageExecutor.GetChannelID(Config.botUsername);
+                    broadcastorID = messageExecutor.GetChannelID(Config.channelUsername);
 
                     BanUserRequest banRequest = new BanUserRequest();
                     banRequest.UserId = e.ChatMessage.UserId;
