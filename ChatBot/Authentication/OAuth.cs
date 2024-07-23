@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -10,31 +12,72 @@ namespace ChatBot.Authentication
 {
     public static class OAuth
     {
-        public static CAccessRefreshTokens tokens = new CAccessRefreshTokens();
-        public static ScopeCode scopeCode = new ScopeCode();
         public static string CodeURI = Config.RedirectURI + @"/Home/GetCode";
         public static string TokenURI = Config.RedirectURI + @"/Home/GetToken";
 
-        public static async Task<string> GetBanAccessToken()
+        public static Dictionary<eScope, CAccessRefreshTokens> scopeTokens = new Dictionary<eScope, CAccessRefreshTokens>();
+
+        public enum eScope
         {
-            if (string.IsNullOrWhiteSpace(tokens.accessToken))
-                await Populate();
-
-            if (tokens.ExpiryDate < DateTime.Now)
-                await Refresh();
-
-
-            return tokens.accessToken;
+            ban,
+            manageChannel,
+            clips
         }
 
-        private static async Task<bool> Populate()
+        public static string GetScope(eScope scope)
+        {
+            switch (scope)
+            {
+                case eScope.ban:
+                    return "moderator:manage:banned_users";
+                case eScope.manageChannel:
+                    return "channel:manage:broadcast";
+                case eScope.clips:
+                    return "clips:edit";
+            }
+
+            return "";
+        }
+
+        public static eScope GetScope(string scope)
+        {
+            switch (scope)
+            {
+                case "moderator:manage:banned_users":
+                    return eScope.ban;
+                case "channel:manage:broadcast":
+                    return eScope.manageChannel;
+                case "clips:edit":
+                    return eScope.clips;
+            }
+
+            return eScope.ban;
+        }
+
+        public static async Task<string> GetAccessToken(eScope scope)
+        {
+            // If the dictionary doesn't have the key then we can't authenticate as we don't have a code
+            if (!scopeTokens.ContainsKey(scope))
+                return "";
+
+            if (string.IsNullOrEmpty(scopeTokens[scope].accessToken))
+                await Populate(scope);
+
+            if (scopeTokens[scope].ExpiryDate < DateTime.Now)
+                await Refresh(scope);
+
+
+            return scopeTokens[scope].accessToken;
+        }
+
+        private static async Task<bool> Populate(eScope scope)
         {
             HttpClient client = new HttpClient();
             var values = new Dictionary<string, string>
               {
                   { "client_id", Config.ClientID },
                   { "client_secret", Config.Secret },
-                  { "code", scopeCode.Code },
+                  { "code", scopeTokens[scope].code },
                   { "grant_type", "authorization_code" },
                   { "redirect_uri", TokenURI }
               };
@@ -45,15 +88,15 @@ namespace ChatBot.Authentication
 
             // If the response contains a 401 then try refreshing
             if (responseString.Contains("401"))
-                await Refresh();
+                await Refresh(scope);
             else if (responseString.Contains("access_token"))
-                PopulateTokensFromJSON(responseString);
+                PopulateTokensFromJSON(responseString, scope);
            
 
             return true;
         }
 
-        private static async Task<bool> Refresh()
+        private static async Task<bool> Refresh(eScope scope)
         {
             HttpClient client = new HttpClient();
             var values = new Dictionary<string, string>
@@ -61,19 +104,19 @@ namespace ChatBot.Authentication
                   { "client_id", Config.ClientID },
                   { "client_secret", Config.Secret },
                   { "grant_type", "refresh_token" },
-                  { "refresh_token", HttpUtility.UrlEncode(tokens.refreshToken) }
+                  { "refresh_token", HttpUtility.UrlEncode(scopeTokens[scope].refreshToken) }
               };
 
             var content = new FormUrlEncodedContent(values);
             var response = await client.PostAsync("https://id.twitch.tv/oauth2/token", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            PopulateTokensFromJSON(responseString);
+            PopulateTokensFromJSON(responseString, scope);
 
             return true;
         }
 
-        private static void PopulateTokensFromJSON(string response)
+        private static void PopulateTokensFromJSON(string response, eScope scope)
         {
             try
             {
@@ -82,12 +125,13 @@ namespace ChatBot.Authentication
 
                 var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(response);
                 
-                tokens.accessToken = result["access_token"];
-                tokens.expiresIn = result["expires_in"];
-                tokens.refreshToken = result["refresh_token"];
-                tokens.scope = new List<string> { "ban" };
-                tokens.tokenType = result["token_type"];
-                tokens.ExpiryDate = DateTime.Now.AddSeconds(tokens.expiresIn); 
+                scopeTokens[scope].accessToken = result["access_token"];
+                scopeTokens[scope].expiresIn = result["expires_in"];
+                scopeTokens[scope].refreshToken = result["refresh_token"];
+               // scopeTokens[scope]scope = new List<string> { "ban" };
+                scopeTokens[scope].tokenType = result["token_type"];
+                scopeTokens[scope].ExpiryDate = DateTime.Now.AddSeconds(scopeTokens[scope].expiresIn); 
+           
             }
             catch (Exception e)
             {

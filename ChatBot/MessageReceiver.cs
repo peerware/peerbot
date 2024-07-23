@@ -82,7 +82,7 @@ namespace ChatBot
                     var result = await API.Helix.Moderation.BanUserAsync(broadcastorID,
                         moderatorID,
                         banRequest,
-                        await OAuth.GetBanAccessToken());
+                        await OAuth.GetAccessToken(OAuth.eScope.ban));
                 }
                 catch (Exception ex)
                 {

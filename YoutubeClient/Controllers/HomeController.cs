@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Google.Cloud.TextToSpeech.V1;
 using Google.Api;
-
+using ChatBot.Authentication;
 namespace YoutubeClient.Controllers
 {
     public class HomeController : Controller
@@ -53,11 +53,16 @@ namespace YoutubeClient.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCode(string code, string scope)
         {
-            ChatBot.Authentication.OAuth.scopeCode.Scope = scope;
-            ChatBot.Authentication.OAuth.scopeCode.Code = code;
-            ChatBot.Authentication.OAuth.GetBanAccessToken(); // Get the ban token after authenticating 
+            CAccessRefreshTokens token = new CAccessRefreshTokens();
+            token.scope = OAuth.GetScope(scope);
+            token.code = code;
+
+            OAuth.scopeTokens.Add(token.scope, token);
+
+            // Get the access token using the scope code we just got
+            ChatBot.Authentication.OAuth.GetAccessToken(token.scope); 
              
-            return Redirect(Config.RedirectURI);
+            return Redirect(Config.RedirectURI + "/home/dashboard");
         }
 
         [HttpPost]

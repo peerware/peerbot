@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static ChatBot.Authentication.OAuth;
 
 namespace ChatBot.Authentication
 {
@@ -10,9 +7,10 @@ namespace ChatBot.Authentication
     {
         public DateTime ExpiryDate;
         public string accessToken;
-        public string refreshToken;
+        public string refreshToken; // Used to refresh the access token
         public int expiresIn;
-        public List<string> scope;
         public string tokenType;
+        public eScope scope;
+        public string code; // Used to get the initial access token
     }
 }
