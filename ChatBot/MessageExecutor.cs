@@ -11,6 +11,7 @@ using ChatBot.MessageSpeaker;
 using TwitchLib.Client.Events;
 using Newtonsoft;
 using Newtonsoft.Json;
+using ChatBot.Authentication;
 
 namespace ChatBot
 {
@@ -63,6 +64,9 @@ namespace ChatBot
             {
                 case "!help":
                     ExecuteHelp();
+                    break;
+                case "!clip":
+                    ExecuteClip();
                     break;
                 case "!uptime":
                     ExecuteUptime();
@@ -171,6 +175,30 @@ namespace ChatBot
         private void ExecuteHelp()
         {
             Say("!uptime !giveaway !downtime !av !quote !quote add <quote> !sens !xhair !bot !elo !today !week !month (broken) !tts !followage !yesterday !stats");
+        }
+
+        // !clip
+        private async void ExecuteClip()
+        {
+            try
+            {
+                string broadcastorID = GetChannelID(Config.channelUsername);
+                string accessToken = await OAuth.GetAccessToken(OAuth.eScope.clips);
+                var result = api.Helix.Clips.CreateClipAsync(broadcastorID, accessToken);
+
+                await Task.Delay(15 * 1000).ContinueWith((a) => {
+                    string clipURL = result.Result.CreatedClips.First().EditUrl;
+
+                    if (string.IsNullOrWhiteSpace(clipURL))
+                        Say("Failed to create clip");
+                    else
+                        Say(clipURL);
+                });
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log("MessageExecutor failed to create a twitch clip");
+            }
         }
 
         // !giveaway
