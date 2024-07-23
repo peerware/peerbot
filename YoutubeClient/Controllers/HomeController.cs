@@ -53,14 +53,23 @@ namespace YoutubeClient.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCode(string code, string scope)
         {
-            CAccessRefreshTokens token = new CAccessRefreshTokens();
-            token.scope = OAuth.GetScope(scope);
-            token.code = code;
+            var tokenScope = OAuth.GetScope(scope);
 
-            OAuth.scopeTokens.Add(token.scope, token);
+            if (OAuth.scopeTokens.ContainsKey(OAuth.GetScope(scope)))
+            {
+                OAuth.scopeTokens[tokenScope].code = code;
+            }
+            else
+            {
+                CAccessRefreshTokens token = new CAccessRefreshTokens();
+                token.scope = OAuth.GetScope(scope);
+                token.code = code;
+
+                OAuth.scopeTokens.Add(token.scope, token);
+            }
 
             // Get the access token using the scope code we just got
-            ChatBot.Authentication.OAuth.GetAccessToken(token.scope); 
+            OAuth.GetAccessToken(tokenScope); 
              
             return Redirect(Config.RedirectURI + "/home/dashboard");
         }
