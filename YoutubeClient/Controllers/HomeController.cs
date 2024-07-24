@@ -55,9 +55,9 @@ namespace YoutubeClient.Controllers
         {
             var tokenScope = OAuth.GetScope(scope);
 
-            if (OAuth.scopeTokens.ContainsKey(OAuth.GetScope(scope)))
+            if (OAuth.accessTokens.ContainsKey(OAuth.GetScope(scope)))
             {
-                OAuth.scopeTokens[tokenScope].code = code;
+                OAuth.accessTokens[tokenScope].code = code;
             }
             else
             {
@@ -65,7 +65,7 @@ namespace YoutubeClient.Controllers
                 token.scope = OAuth.GetScope(scope);
                 token.code = code;
 
-                OAuth.scopeTokens.Add(token.scope, token);
+                OAuth.accessTokens.Add(token.scope, token);
             }
 
             // Get the access token using the scope code we just got
