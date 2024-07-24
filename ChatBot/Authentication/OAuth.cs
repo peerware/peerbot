@@ -15,7 +15,7 @@ namespace ChatBot.Authentication
         public static string CodeURI = Config.RedirectURI + @"/Home/GetCode";
         public static string TokenURI = Config.RedirectURI + @"/Home/GetToken";
 
-        public static Dictionary<eScope, CAccessRefreshTokens> scopeTokens = new Dictionary<eScope, CAccessRefreshTokens>();
+        public static Dictionary<eScope, CAccessRefreshTokens> accessTokens = new Dictionary<eScope, CAccessRefreshTokens>();
 
         public enum eScope
         {
@@ -57,17 +57,16 @@ namespace ChatBot.Authentication
         public static async Task<string> GetAccessToken(eScope scope)
         {
             // If the dictionary doesn't have the key then we can't authenticate as we don't have a code
-            if (!scopeTokens.ContainsKey(scope))
+            if (!accessTokens.ContainsKey(scope))
                 return "";
 
-            if (string.IsNullOrEmpty(scopeTokens[scope].accessToken))
+            if (string.IsNullOrEmpty(accessTokens[scope].accessToken))
                 await Populate(scope);
 
-            if (scopeTokens[scope].ExpiryDate < DateTime.Now)
+            if (accessTokens[scope].ExpiryDate < DateTime.Now)
                 await Refresh(scope);
 
-
-            return scopeTokens[scope].accessToken;
+            return accessTokens[scope].accessToken;
         }
 
         private static async Task<bool> Populate(eScope scope)
@@ -77,7 +76,7 @@ namespace ChatBot.Authentication
               {
                   { "client_id", Config.ClientID },
                   { "client_secret", Config.Secret },
-                  { "code", scopeTokens[scope].code },
+                  { "code", accessTokens[scope].code },
                   { "grant_type", "authorization_code" },
                   { "redirect_uri", TokenURI }
               };
@@ -104,7 +103,7 @@ namespace ChatBot.Authentication
                   { "client_id", Config.ClientID },
                   { "client_secret", Config.Secret },
                   { "grant_type", "refresh_token" },
-                  { "refresh_token", HttpUtility.UrlEncode(scopeTokens[scope].refreshToken) }
+                  { "refresh_token", HttpUtility.UrlEncode(accessTokens[scope].refreshToken) }
               };
 
             var content = new FormUrlEncodedContent(values);
@@ -125,12 +124,12 @@ namespace ChatBot.Authentication
 
                 var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(response);
                 
-                scopeTokens[scope].accessToken = result["access_token"];
-                scopeTokens[scope].expiresIn = result["expires_in"];
-                scopeTokens[scope].refreshToken = result["refresh_token"];
+                accessTokens[scope].accessToken = result["access_token"];
+                accessTokens[scope].expiresIn = result["expires_in"];
+                accessTokens[scope].refreshToken = result["refresh_token"];
                // scopeTokens[scope]scope = new List<string> { "ban" };
-                scopeTokens[scope].tokenType = result["token_type"];
-                scopeTokens[scope].ExpiryDate = DateTime.Now.AddSeconds(scopeTokens[scope].expiresIn); 
+                accessTokens[scope].tokenType = result["token_type"];
+                accessTokens[scope].ExpiryDate = DateTime.Now.AddSeconds(accessTokens[scope].expiresIn); 
            
             }
             catch (Exception e)
