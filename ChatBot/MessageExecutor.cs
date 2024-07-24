@@ -17,7 +17,6 @@ namespace ChatBot
 {
     public class MessageExecutor
     {
-        TwitchAPI api = null;
         Streams streamObject = null;
         TwitchLib.Api.Helix.Models.Streams.GetStreams.Stream channelStream = null;
         TwitchClient client = null;
@@ -31,9 +30,7 @@ namespace ChatBot
         {
             // Boilerplate code
             MessageExecutor messageExecutor = new MessageExecutor();
-
-            messageExecutor.api = TwitchAPIFactory.GetAPI();
-            messageExecutor.streamObject = messageExecutor.api.Helix.Streams;
+            messageExecutor.streamObject = TwitchAPIFactory.GetAPI().Helix.Streams;
 
             var result = await messageExecutor.streamObject.GetStreamsAsync(userIds: new List<string> { Config.channelUsername });
             messageExecutor.channelStream = result.Streams.FirstOrDefault();
@@ -50,7 +47,7 @@ namespace ChatBot
             // Try refreshing the channel stream every message received in case the bot was launched before going live
             if (channelStream == null)
             {
-                var streamObject = api.Helix.Streams;
+                var streamObject = TwitchAPIFactory.GetAPI().Helix.Streams;
                 var result = await streamObject.GetStreamsAsync(userIds: new List<string> { Config.channelUsername });
                 channelStream = result.Streams.FirstOrDefault();
             }
@@ -182,9 +179,11 @@ namespace ChatBot
         {
             try
             {
-                string broadcastorID = GetChannelID(Config.channelUsername);
+                string broadcastorID = MessageFilter.GetChannelID(Config.channelUsername);
                 string accessToken = await OAuth.GetAccessToken(OAuth.eScope.clips);
-                var result = api.Helix.Clips.CreateClipAsync(broadcastorID, accessToken);
+                var result = TwitchAPIFactory.GetAPI().Helix.Clips.CreateClipAsync(broadcastorID, accessToken);
+
+                Say("Trying to generate clip...");
 
                 await Task.Delay(15 * 1000).ContinueWith((a) => {
                     string clipURL = result.Result.CreatedClips.First().EditUrl;
@@ -198,6 +197,7 @@ namespace ChatBot
             catch (Exception e)
             {
                 SystemLogger.Log("MessageExecutor failed to create a twitch clip");
+                Say("Failed to generate clip :(");
             }
         }
 
@@ -233,7 +233,8 @@ namespace ChatBot
 
         private async void ExecuteFollowage(ChatMessage message)
         {
-            var GetUsersResponse = await api.Helix.Users.GetUsersFollowsAsync(fromId: message.UserId);
+            var GetUsersResponse = await TwitchAPIFactory.GetAPI().Helix
+                .Users.GetUsersFollowsAsync(fromId: message.UserId);
 
             try
             {
@@ -508,12 +509,6 @@ namespace ChatBot
                 "\"A person can change his future by merely changing his attitude.\" -Earl Nightingale"
             };
             Say(quotes.ElementAt(new Random().Next(0, quotes.Length)));
-        }
-
-        public string GetChannelID(string channelName)
-        {
-            return api.Helix.Users.GetUsersAsync(logins: new List<string> { channelName })
-                .Result.Users.First().Id;
         }
     }
 }

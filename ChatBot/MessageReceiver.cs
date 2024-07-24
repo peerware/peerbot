@@ -35,63 +35,9 @@ namespace ChatBot
             twitchClient = new TwitchClient(customClient);
             twitchClient.Initialize(credentials, Config.channelUsername);
 
-            twitchClient.OnMessageReceived += Client_OnMessageReceived;
-
             twitchClient.Connect();
 
             messageExecutor = MessageExecutor.GetMessageExecutor(twitchClient).Result;
-        }
-
-        /// <summary>
-        /// Logs the received message. 
-        /// Does nothing if triggered by itself. 
-        /// Filters Spam. 
-        /// Executes Chat Commands.
-        /// Optionally plays the received message with configuration options
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
-        {
-            MessageLogger.LogMessage(e.ChatMessage);
-
-            if (e.ChatMessage.DisplayName == Config.botUsername)
-                return;
-
-            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
-            {
-                try
-                {
-
-                    // Setup necessary boilerplate to time a user out
-                    var API = TwitchAPIFactory.GetAPI();
-                    string broadcastorID;
-                    string moderatorID;
-
-                    moderatorID = messageExecutor.GetChannelID(Config.botUsername);
-                    broadcastorID = messageExecutor.GetChannelID(Config.channelUsername);
-
-                    BanUserRequest banRequest = new BanUserRequest();
-                    banRequest.UserId = e.ChatMessage.UserId;
-                    banRequest.Duration = 5; // todo change this into a well thought out number (300?)
-                    banRequest.Reason = "spam filter triggered";
-
-                    // Execute the timeout
-                    var result = await API.Helix.Moderation.BanUserAsync(broadcastorID,
-                        moderatorID,
-                        banRequest,
-                        await OAuth.GetAccessToken(OAuth.eScope.ban));
-                }
-                catch (Exception ex)
-                {
-                    SystemLogger.Log($"Failed to timeout message in MessageReceiver.cs\n\n{ex}");
-                }
-
-                return;
-            }
-             
-            if (e.ChatMessage.Message.StartsWith("!"))
-                messageExecutor.ExecuteMessage(e.ChatMessage);
         }
     }
 }

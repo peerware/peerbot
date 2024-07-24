@@ -18,6 +18,7 @@ using Google.Cloud.TextToSpeech.V1;
 using YoutubeClient.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Net;
+using TwitchLib.Client.Models;
 
 namespace YoutubeClient
 {
@@ -27,11 +28,12 @@ namespace YoutubeClient
         /// integrate message receiver in a way thats accessible across the whole application
         /// </summary>
         public IConfiguration Configuration { get; }
-        private MessageReceiver messageReceiver = new MessageReceiver();
-        private IHubContext<ChatHub> chatHub;
+        private static MessageReceiver messageReceiver = new MessageReceiver();
+        private static IHubContext<ChatHub> chatHub;
         public static TextToSpeechClient ttsClient = GoogleTTSSettings.GetTTSClient();
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
-        DateTime? lastSongRequest = null;
+        private static DateTime? lastSongRequest = null;
+        public static int SongRequestDelay = 90;
         public static int TTSTests = 0;
 
 
@@ -56,6 +58,7 @@ namespace YoutubeClient
         {
             try
             {
+                messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
@@ -90,7 +93,7 @@ namespace YoutubeClient
                     //endpoints.MapGet("/", () => "10.0.0.100");
                 });
 
-                this.chatHub = chatHub;
+                Startup.chatHub = chatHub;
                 PopulateVoices();
             }
             catch (Exception e)
@@ -100,53 +103,63 @@ namespace YoutubeClient
         }
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            int songRequestDelay = 90;
             string chatMessage = e.ChatMessage.Message.Trim();
-            if (chatMessage.ToLower().StartsWith("!sr"))
+
+            // Log the incoming message
+            MessageLogger.LogMessage(e.ChatMessage);
+
+            // Don't do anything with bot messages
+            if (e.ChatMessage.DisplayName == Config.botUsername)
+                return;
+
+            // If the message is spam, timeout the user to delete their message and don't do anything else
+            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message, e.ChatMessage.IsFirstMessage))
             {
-                // Try to make sure videos play from the beginning
-                if (!chatMessage.Contains("&"))
-                    chatMessage = chatMessage.TrimEnd() + "&t=0";
-
-                double? timeSinceLastRequest = (lastSongRequest is null) ?
-                    0 : (DateTime.Now - lastSongRequest)?.TotalSeconds;
-
-                if (chatMessage.Length > 8 && 
-                    (lastSongRequest is null || songRequestDelay <= timeSinceLastRequest))
-                {
-                    lastSongRequest = DateTime.Now;
-                    chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
-                }
-                else
-                {
-                    string roundedTimeRemaining = (songRequestDelay - timeSinceLastRequest)?.ToString("N0");
-                    string output = $"@{e.ChatMessage.Username} you may request a new song in {roundedTimeRemaining} seconds";
-                    messageReceiver.messageExecutor.Say(output);
-                }
+                MessageFilter.TimeoutUser(e.ChatMessage.UserId);
+                return;
             }
 
-            if (MessageFilter.IsMessageSpam(e.ChatMessage.Message))
-                return; // Don't speak or execute spam messages
-
-
+            // Execute any commands
+            if (e.ChatMessage.Message.StartsWith("!"))
+                messageReceiver.messageExecutor.ExecuteMessage(e.ChatMessage);
+           
+            if (chatMessage.ToLower().StartsWith("!sr"))
+                TryPlaySong(chatMessage);
 
             // Speak the message if its not a link or command
-            if (!chatMessage.StartsWith("!") && !MessageFilter.IsMessageWebsiteURL(chatMessage))
-                GetMessageAudio(e.ChatMessage.Username, chatMessage);
-
-            // Handle song requests
+            if (!chatMessage.StartsWith("!") && !MessageFilter.IsURLInsideMessage(chatMessage))
+                SendMessageAudioToClients(e.ChatMessage.Username, chatMessage);
 
             return;
+        }
+
+        public static void TryPlaySong(string chatMessage)
+        {
+            // Try to make sure videos play from the beginning
+            if (!chatMessage.Contains("&"))
+                chatMessage = chatMessage.TrimEnd() + "&t=0";
+
+            double? timeSinceLastRequest = (lastSongRequest is null) ?
+                0 : (DateTime.Now - lastSongRequest)?.TotalSeconds;
+
+            if (chatMessage.Length > 8 &&
+                (lastSongRequest is null || SongRequestDelay <= timeSinceLastRequest))
+            {
+                lastSongRequest = DateTime.Now;
+                chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
+            }
+            else
+            {
+                string roundedTimeRemaining = (SongRequestDelay - timeSinceLastRequest)?.ToString("N0");
+                string output = $"you may request a new song in {roundedTimeRemaining} seconds";
+                messageReceiver.messageExecutor.Say(output);
+            }
         }
 
         private void PopulateVoices()
         {
             try
             {
-                // Setup google tts events and objects
-                messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
-                //this.chatHub = chatHub;
-
                 var response = ttsClient.ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
 
                 for (int i = 0; i < response.Voices.Count; i++)
@@ -170,7 +183,7 @@ namespace YoutubeClient
         /// Plays audio in the browser when recieving a message
         /// </summary>
         /// <returns></returns>
-        private void GetMessageAudio(string username, string message)
+        public void SendMessageAudioToClients(string username, string message)
         {
             try
             {
