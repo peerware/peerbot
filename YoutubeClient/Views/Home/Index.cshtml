@@ -1,19 +1,11 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<style>
-    .vertical {
-        margin-bottom: 10px;
-    }
-    button {
-        margin-top: -1px !important;
-        float: right !important;
-    }
-</style>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+<link rel="stylesheet" href="~/css/site.css">
 <script type="text/javascript"> 
             
             $().ready(function () {
@@ -84,7 +76,7 @@
     
 </script>
 <!-- 218 234 254-->
-<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 420px; 
+<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
                         border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
     
 
@@ -102,16 +94,16 @@
                <label>Pitch (-20-20)<input id="pitch" value="0" type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
             </fieldset>
         </div>
-        <div class="flex five demo vertical">
-            <div class="four-fifth">
+        <div class="flex four demo vertical">
+            <div class="three-fourth">
                 <label><input id="txtMessage" maxlength="25" type="text" placeholder="Enter sample text here"/></label>
             </div>
-            <div class="one-fifth">
+            <div class="one-fourth">
                 <button onclick="TestTTSVoice()" style="background: #a86602">Test</button>
             </div>
         </div>
-        <div class="vertical flex five demo">
-            <div class="four-fifth">
+        <div class="vertical flex four demo">
+            <div class="three-fourth">
                 <label><input type="text" id="username" placeholder="Username for voice save" /></label>
             </div>
             <div>

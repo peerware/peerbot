@@ -1,1 +1,14 @@
 ﻿
+.vertical {
+    margin-bottom: 10px;
+}
+
+button {
+    margin-top: 0px !important;
+    margin-right: -5px !important;
+    float: right !important;
+}
+
+* {
+    font-size: 18px;
+}
