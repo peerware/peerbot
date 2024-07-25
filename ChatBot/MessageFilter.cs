@@ -7,6 +7,7 @@ using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ChatBot
 {
@@ -26,28 +27,31 @@ namespace ChatBot
             if (message.Trim().StartsWith("!"))
                 return false;
 
-            int spamCutoff = 4;
-            int spamWarning = 0;
+            int spamCutoff = isFirstMessage ? 2 : 5;
+            int potentialSpamCount = 0;
 
             foreach (string s in suspiciousStrings)
             {
                 if (message.ToLower().Contains(s))
-                    spamWarning++;
+                    potentialSpamCount++;
             }
 
-            return (spamWarning >= spamCutoff) ?  true : false;
+            return (potentialSpamCount >= spamCutoff) ?  true : false;
         }
 
-        public static bool IsStringURL(string word)
+        public static bool IsStringURL(string input)
         {
-            if (word.Length < 4)
+            if (string.IsNullOrEmpty(input))
                 return false;
 
-            // assume messages in the form of aa.xyz or aa.zy are urls
-            if (word.Substring(word.Length - 4, 1) == "." || word.Substring(word.Length - 3, 1) == ".")
-                return true;
+            // Regular expression pattern to identify URLs
+            string pattern = @"[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?";
 
-            return false;
+            // Create a Regex object
+            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            // Check if the input contains a URL
+            return regex.IsMatch(input);
         }
 
         public static bool IsURLInsideMessage(string message)
