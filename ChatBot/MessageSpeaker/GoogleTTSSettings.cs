@@ -302,6 +302,13 @@ namespace ChatBot.MessageSpeaker
                     ttsSettings.pitch += 1;
                 }
 
+                // Ensure that modified values don't exceed the Google TTS API Limits
+                if (ttsSettings.speakingRate > 2)
+                    ttsSettings.speakingRate = 2;
+
+                if (ttsSettings.pitch > 20)
+                    ttsSettings.pitch = 20;
+
                 // Build the audio request
                 AudioConfig config = GetAudioConfig(ttsSettings.speakingRate, ttsSettings.pitch);
 
