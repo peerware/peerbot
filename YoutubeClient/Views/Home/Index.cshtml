@@ -1,131 +1,138 @@
-@{
-    ViewData["Title"] = "Home Page";
-}
-<style>
-    .vertical {
-        margin-bottom: 10px;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @{
+        ViewData["Title"] = "Home Page";
     }
+    <style>
+        .vertical {
+            margin-bottom: 10px;
+        }
 
-    button {
-        margin-top: 0px !important;
-        margin-right: -5px !important;
-        float: right !important;
-    }
+        button {
+            margin-top: 0px !important;
+            margin-right: -5px !important;
+            float: right !important;
+        }
 
-    * {
-        font-size: 18px;
-    }
+        * {
+            font-size: 18px;
+        }
 
-</style>
+    </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
-<link rel="stylesheet" href="~/css/site.css">
-<script type="text/javascript"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+    <link rel="stylesheet" href="~/css/site.css">
+    <script type="text/javascript"> 
             
-            $().ready(function () {
+                $().ready(function () {
 
-                // Enable text based filtering for voices
-                $("#voiceSearchBox").bind("keyup", function() {
-                    var text = $(this).val().toLowerCase();
+                    // Enable text based filtering for voices
+                    $("#voiceSearchBox").bind("keyup", function() {
+                        var text = $(this).val().toLowerCase();
 
-                    Array.from(document.getElementById('voiceid').children).forEach(function (element)
-                    {
-                        if (element.innerText.toLowerCase().includes(text) || text == '') {
-                            element.style.display = 'block';
-                        } else {
-                            element.style.display = 'none';
-                        }
+                        Array.from(document.getElementById('voiceid').children).forEach(function (element)
+                        {
+                            if (element.innerText.toLowerCase().includes(text) || text == '') {
+                                element.style.display = 'block';
+                            } else {
+                                element.style.display = 'none';
+                            }
+                        });
                     });
+
+
+                    // adjust listbox attributes
+                    var listbox = $('#voiceid');
+                    listbox.css('height', '175px');
+
                 });
 
 
-                // adjust listbox attributes
-                var listbox = $('#voiceid');
-                listbox.css('height', '175px');
-
-            });
-
-
-            function TestTTSVoice() {
+                function TestTTSVoice() {
         
-            var voice1 = {
-                id: $('#voiceid').val()[0],
-                username: 'test',
-                message: $('#txtMessage').val(),
-                speed: $('#speed').val(),
-                pitch: $('#pitch').val(),
-            };
+                var voice1 = {
+                    id: $('#voiceid').val()[0],
+                    username: 'test',
+                    message: $('#txtMessage').val(),
+                    speed: $('#speed').val(),
+                    pitch: $('#pitch').val(),
+                };
 
-            $.ajax({
-                type: 'post',
-                url: '@Url.Action("TestTTSVoice", "Home")',
-                contentType: "application/json",
-                data: JSON.stringify(voice1),
-                success: function(data) { 
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("TestTTSVoice", "Home")',
+                    contentType: "application/json",
+                    data: JSON.stringify(voice1),
+                    success: function(data) { 
 
-                    audioTester = new Audio("data:audio/wav;base64," + data);
-                    audioTester.play();
-                }
-            });
+                        audioTester = new Audio("data:audio/wav;base64," + data);
+                        audioTester.play();
+                    }
+                });
              
-        }
+            }
 
-        function SetTTSVoice() {
-            var voice = {
-                id: $('#voiceid').val()[0],
-                username: $('#username').val(),
-                speed: $('#speed').val(),
-                pitch: $('#pitch').val(),
-            };
+            function SetTTSVoice() {
+                var voice = {
+                    id: $('#voiceid').val()[0],
+                    username: $('#username').val(),
+                    speed: $('#speed').val(),
+                    pitch: $('#pitch').val(),
+                };
         
-            $.ajax({
-                type: 'post',
-                url: '@Url.Action("SetTTSVoice", "Home")',
-                contentType: "application/json",
-                data: JSON.stringify(voice),
-                success: function() { }
-            });
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("SetTTSVoice", "Home")',
+                    contentType: "application/json",
+                    data: JSON.stringify(voice),
+                    success: function() { }
+                });
              
-        }
+            }
     
-</script>
+    </script>
+
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js?v=0"></script>
+</head>
 <!-- 218 234 254-->
-<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
-                        border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
+<body>
+    <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
+                            border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
     
 
 
-        <div class="vertical">
-            @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
-        </div>
-        <div class="vertical">
-            <label><input id="voiceSearchBox" type="text" placeholder="Search for a dialect" /></label>
-        </div>
-        <!-- Gender, speed, pitch -->
-        <div class="vertical">
-            <fieldset class="flex two demo">
-               <label>Speed (0.8-2)<input id="speed" value="1" type="number" placeholder="Speed (0.8-2)" min="0.8" max="2" step="0.1"/></label>
-               <label>Pitch (-20-20)<input id="pitch" value="0" type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
-            </fieldset>
-        </div>
-        <div class="flex four demo vertical">
-            <div class="three-fourth">
-                <label><input id="txtMessage" maxlength="25" type="text" placeholder="Enter sample text here"/></label>
+            <div class="vertical">
+                @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
             </div>
-            <div class="one-fourth">
-                <button onclick="TestTTSVoice()" style="background: #a86602">Test</button>
+            <div class="vertical">
+                <label><input id="voiceSearchBox" type="text" placeholder="Search for a dialect" /></label>
+            </div>
+            <!-- Gender, speed, pitch -->
+            <div class="vertical">
+                <fieldset class="flex two demo">
+                   <label>Speed (0.8-2)<input id="speed" value="1" type="number" placeholder="Speed (0.8-2)" min="0.8" max="2" step="0.1"/></label>
+                   <label>Pitch (-20-20)<input id="pitch" value="0" type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
+                </fieldset>
+            </div>
+            <div class="flex four demo vertical">
+                <div class="three-fourth">
+                    <label><input id="txtMessage" maxlength="25" type="text" placeholder="Enter sample text here"/></label>
+                </div>
+                <div class="one-fourth">
+                    <button onclick="TestTTSVoice()" style="background: #a86602">Test</button>
+                </div>
+            </div>
+            <div class="vertical flex four demo">
+                <div class="three-fourth">
+                    <label><input type="text" id="username" placeholder="Username for voice save" /></label>
+                </div>
+                <div>
+                    <button onclick="SetTTSVoice()" class="button" style="background: green;">Save</button>
+                </div>
             </div>
         </div>
-        <div class="vertical flex four demo">
-            <div class="three-fourth">
-                <label><input type="text" id="username" placeholder="Username for voice save" /></label>
-            </div>
-            <div>
-                <button onclick="SetTTSVoice()" class="button" style="background: green;">Save</button>
-            </div>
-        </div>
-</div>
-
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js?v=0"></script>
+    </body>
+</html>

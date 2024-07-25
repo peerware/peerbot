@@ -1,68 +1,75 @@
-﻿@using ChatBot.Authentication;
-@{
-    ViewData["Title"] = "Dashboard";
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        @using ChatBot.Authentication;
+        @{
+            ViewData["Title"] = "Dashboard";
     
-}
-<style>
-    .vertical {
-        margin-bottom: 10px;
-    }
+        }
+        <style>
+            .vertical {
+                margin-bottom: 10px;
+            }
 
-    button {
-        margin-top: -1px !important;
-        float: right !important;
-    }
-</style>
+            button {
+                margin-top: -1px !important;
+                float: right !important;
+            }
+        </style>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js?v=6"></script>
-<script type="text/javascript">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+        <script src="~/js/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/chat.js?v=6"></script>
+        <script type="text/javascript">
 
-    $().ready(function () {
+            $().ready(function () {
 
-    });
+            });
 
-    function authenticate(scope) {
+            function authenticate(scope) {
 
-        let authURL = "https://id.twitch.tv/oauth2/authorize";
-        authURL += "?client_id=" + "@ChatBot.Config.ClientID";
-        authURL += "&redirect_uri=" + "@ChatBot.Authentication.OAuth.CodeURI";
-        authURL += "&response_type=code";
-        authURL += "&scope=" + scope;
-        // moderator:manage:banned_users
+                let authURL = "https://id.twitch.tv/oauth2/authorize";
+                authURL += "?client_id=" + "@ChatBot.Config.ClientID";
+                authURL += "&redirect_uri=" + "@ChatBot.Authentication.OAuth.CodeURI";
+                authURL += "&response_type=code";
+                authURL += "&scope=" + scope;
+                // moderator:manage:banned_users
 
-        window.open(authURL, '_blank');
-    }
+                window.open(authURL, '_blank');
+            }
 
-</script>
-<!-- Body -->
-<div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 720px;
-                        border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)">
-    <div>
-        <label>
-            <input type="checkbox" id="isPlayerEnabled" checked />
-            <span class="checkable">Enable Player</span>
-        </label>
-    </div>
-    <div>
-        <iframe width="600" height="420" id="songRequestPlayer" src="https://www.youtube.com/watch?v=9jK-NcRmVcw">
-        </iframe>
-    </div>
-    <div>
-        <label>TTS Volume (1-100): <input type="text" id="ttsVolume" value="100" /></label>
-    </div>
-    <div>
-        # of test requests made:&nbsp;@Startup.TTSTests
-    </div>
-    <div>
-        <a id="twitch" class="button" style="background: red;"
-           onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.ban))');">Ban</a>
-        <a id="twitch" class="button" style="background: green;"
-           onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.manageChannel))');">Manage</a>
-        <a id="twitch" class="button" style="background: blue;"
-           onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.clips))');">Clip</a>
-    </div>
-</div>
+        </script>
+    </head>
+    <body>
+        <!-- Body -->
+        <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 720px;
+                                border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)">
+            <div>
+                <label>
+                    <input type="checkbox" id="isPlayerEnabled" checked />
+                    <span class="checkable">Enable Player</span>
+                </label>
+            </div>
+            <div>
+                <iframe width="600" height="420" id="songRequestPlayer" src="https://www.youtube.com/watch?v=9jK-NcRmVcw">
+                </iframe>
+            </div>
+            <div>
+                <label>TTS Volume (1-100): <input type="text" id="ttsVolume" value="100" /></label>
+            </div>
+            <div>
+                # of test requests made:&nbsp;@Startup.TTSTests
+            </div>
+            <div>
+                <a id="twitch" class="button" style="background: red;"
+                   onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.ban))');">Ban</a>
+                <a id="twitch" class="button" style="background: green;"
+                   onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.manageChannel))');">Manage</a>
+                <a id="twitch" class="button" style="background: blue;"
+                   onclick="authenticate('@System.Web.HttpUtility.UrlEncode(OAuth.GetScope(OAuth.eScope.clips))');">Clip</a>
+            </div>
+        </div>
+    </body>
+</html>
