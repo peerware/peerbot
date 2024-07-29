@@ -13,11 +13,6 @@ namespace ChatBot.MessageSpeaker
         public bool isSpeechEnabled = true;
         public TTSSettings ttsSettings = new TTSSettings();
 
-        public const double minPitch = -5;
-        public const double maxPitch = 5;
-        public const double minSpeed = 0.45;
-        public const double maxSpeed = 2;
-
 
         public enum eTTSType
         {

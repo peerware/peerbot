@@ -14,6 +14,10 @@ namespace ChatBot.MessageSpeaker
         public static int MaximumTTSRequests = 4000;
         public static int MaximumTestRequests = 200;
 
+        public static double MinTTSSpeed = 0.5;
+        public static double MaxTTSSpeed = 2;
+        public static double MinTTSPitch = -20;
+        public static double MaxTTSPitch = 20;
         public enum eDialects
         {
             australian,

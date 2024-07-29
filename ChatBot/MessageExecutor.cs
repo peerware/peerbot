@@ -350,8 +350,8 @@ namespace ChatBot
                 case "help":
                     Say("!tts <setting> <value>. Settings: settings, on/off, man, woman, aus, german, " +
                         "italy, uk, america, french, japanese, danish, bog, korean, chinese, russian, " +
-                        "speed (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed +
-                        "), pitch (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch +")");
+                        "speed (" + GoogleTTSSettings.MinTTSSpeed + "-" + GoogleTTSSettings.MaxTTSSpeed +
+                        "), pitch (" + GoogleTTSSettings.MinTTSPitch + "-" + GoogleTTSSettings.MaxTTSPitch +")");
                     break;
                 case "settings":
                     Say("@" + username + " " + JsonConvert.SerializeObject(settings));
@@ -372,13 +372,13 @@ namespace ChatBot
                     if (speed == -200)
                     {
                         Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.speakingRate.ToString() +
-                            " (" + UserTTSSettings.minSpeed + "-" + UserTTSSettings.maxSpeed + ")");
+                            " (" + GoogleTTSSettings.MinTTSSpeed + "-" + GoogleTTSSettings.MaxTTSSpeed + ")");
                         return;
                     }
 
-                    if (speed < UserTTSSettings.minSpeed || speed > UserTTSSettings.maxSpeed)
-                        Say("@" + username + " enter a number from " + UserTTSSettings.minSpeed + "-"
-                            + UserTTSSettings.maxSpeed);
+                    if (speed < GoogleTTSSettings.MinTTSSpeed || speed > GoogleTTSSettings.MaxTTSSpeed)
+                        Say("@" + username + " enter a number from " + GoogleTTSSettings.MinTTSSpeed + "-"
+                            + GoogleTTSSettings.MaxTTSSpeed);
                     else
                     {
                         settings.ttsSettings.SetSpeed(speed);
@@ -393,13 +393,13 @@ namespace ChatBot
                     if (pitch == -200)
                     {
                         Say("@" + username + " " + UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings.pitch.ToString() + 
-                            " (" + UserTTSSettings.minPitch + "-" + UserTTSSettings.maxPitch + ")");
+                            " (" + GoogleTTSSettings.MinTTSPitch + "-" + GoogleTTSSettings.MaxTTSPitch + ")");
                         return;
                     }
 
-                    if (pitch < UserTTSSettings.minPitch || pitch > UserTTSSettings.maxPitch)
-                        Say("@" + username + " enter a number from " + UserTTSSettings.minPitch + 
-                            "-" + UserTTSSettings.maxPitch);
+                    if (pitch < GoogleTTSSettings.MinTTSPitch || pitch > GoogleTTSSettings.MaxTTSPitch)
+                        Say("@" + username + " enter a number from " + GoogleTTSSettings.MinTTSPitch + 
+                            "-" + GoogleTTSSettings.MaxTTSPitch);
                     else
                     {
                         settings.ttsSettings.SetPitch(pitch);

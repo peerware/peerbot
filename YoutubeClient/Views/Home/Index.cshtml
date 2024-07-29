@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @using ChatBot.MessageSpeaker;
     @{
         ViewData["Title"] = "Home Page";
+        ViewData["speedLabel"] = $"Speed ({GoogleTTSSettings.MinTTSSpeed} - {GoogleTTSSettings.MaxTTSSpeed})";
+        ViewData["pitchLabel"] = $"Pitch ({GoogleTTSSettings.MinTTSPitch} - {GoogleTTSSettings.MaxTTSPitch})";
     }
     <style>
         .vertical {
@@ -11,7 +14,6 @@
 
         button {
             margin-top: 0px !important;
-            margin-right: -5px !important;
             float: right !important;
         }
 
@@ -113,8 +115,12 @@
             <!-- Gender, speed, pitch -->
             <div class="vertical">
                 <fieldset class="flex two demo">
-                   <label>Speed (0.8-2)<input id="speed" value="1" type="number" placeholder="Speed (0.8-2)" min="0.8" max="2" step="0.1"/></label>
-                   <label>Pitch (-20-20)<input id="pitch" value="0" type="number" placeholder="Pitch (-20-20)" min="-20" max="20"/></label>
+                   <label>@ViewData["speedLabel"]
+                       <input id="speed" value="1" type="number" placeholder="@ViewData["speedLabel"]"
+                           min="@GoogleTTSSettings.MinTTSSpeed" max="@GoogleTTSSettings.MaxTTSSpeed" step="0.1"/></label>
+                   <label>@ViewData["pitchLabel"]
+                       <input id="pitch" value="0" type="number" placeholder="@ViewData["pitchLabel"]"
+                           min="@GoogleTTSSettings.MinTTSPitch" max="@GoogleTTSSettings.MaxTTSPitch"/></label>
                 </fieldset>
             </div>
             <div class="flex four demo vertical">
@@ -122,7 +128,7 @@
                     <label><input id="txtMessage" maxlength="25" type="text" placeholder="Enter sample text here"/></label>
                 </div>
                 <div class="one-fourth">
-                    <button onclick="TestTTSVoice()" style="background: #a86602">Test</button>
+                <button onclick="TestTTSVoice()" style="background: #0ccc89">Test</button>
                 </div>
             </div>
             <div class="vertical flex four demo">
