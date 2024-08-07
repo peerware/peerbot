@@ -114,8 +114,8 @@ namespace YoutubeClient.Controllers
             try
             {
                 //Update the static request counter and reject the request if we've exceeded the limit
-                Interlocked.Increment(ref Startup.TTSTests);
-                if (Startup.TTSTests > GoogleTTSSettings.MaximumTestRequests)
+                Interlocked.Increment(ref TTSLogger.TTSTests);
+                if (TTSLogger.TTSTests > GoogleTTSSettings.MaximumTestRequests)
                 {
                     SystemLogger.Log($"Maximum TTS Tests has been reached.");
                     return Content(":(");

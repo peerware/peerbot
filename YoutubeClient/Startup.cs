@@ -34,7 +34,6 @@ namespace YoutubeClient
         public static List<GoogleTTSVoice> GoogleTTSVoices = new List<GoogleTTSVoice>();
         private static DateTime? lastSongRequest = null;
         public static int SongRequestDelay = 90;
-        public static int TTSTests = 0;
 
 
         public Startup(IConfiguration configuration)

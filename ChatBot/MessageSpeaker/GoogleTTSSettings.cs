@@ -57,6 +57,8 @@ namespace ChatBot.MessageSpeaker
         /// <returns></returns>
         public static MemoryStream GetVoiceAudio(string username, string message, TextToSpeechClient client)
         {
+            TTSLogger.LogTTSStats(message.Length);
+
             MemoryStream outputMemoryStream = new MemoryStream();
 
             try
