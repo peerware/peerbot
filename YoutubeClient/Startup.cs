@@ -49,6 +49,8 @@ namespace YoutubeClient
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
+
+            // SignalR should be last
             services.AddSignalR();
         }
 
@@ -57,6 +59,7 @@ namespace YoutubeClient
         {
             try
             {
+                app.UseStaticFiles();
                 messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
