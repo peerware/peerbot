@@ -27,7 +27,7 @@ namespace ChatBot
             if (message.Trim().StartsWith("!"))
                 return false;
 
-            int spamCutoff = isFirstMessage ? 2 : 5;
+            int spamCutoff = isFirstMessage ? 1 : 5;
             int potentialSpamCount = 0;
 
             foreach (string s in suspiciousStrings)
