@@ -25,6 +25,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
     <link rel="stylesheet" href="~/css/site.css">
     <script type="text/javascript"> 
             
@@ -93,9 +95,7 @@
                 });
              
             }
-    
     </script>
-
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js?v=0"></script>
 </head>
@@ -104,8 +104,6 @@
     <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
                             border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
     
-
-
             <div class="vertical">
                 @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
             </div>
