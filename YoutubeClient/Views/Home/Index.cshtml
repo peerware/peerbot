@@ -1,110 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    @using ChatBot.MessageSpeaker;
-    @{
-        ViewData["Title"] = "Home Page";
-        ViewData["speedLabel"] = $"Speed ({GoogleTTSSettings.MinTTSSpeed} - {GoogleTTSSettings.MaxTTSSpeed})";
-        ViewData["pitchLabel"] = $"Pitch ({GoogleTTSSettings.MinTTSPitch} - {GoogleTTSSettings.MaxTTSPitch})";
-    }
-    <style>
-        .vertical {
-            margin-bottom: 10px;
+    <head>
+        @using ChatBot.MessageSpeaker;
+        @{
+            ViewData["Title"] = "Home Page";
+            ViewData["speedLabel"] = $"Speed ({GoogleTTSSettings.MinTTSSpeed} - {GoogleTTSSettings.MaxTTSSpeed})";
+            ViewData["pitchLabel"] = $"Pitch ({GoogleTTSSettings.MinTTSPitch} - {GoogleTTSSettings.MaxTTSPitch})";
         }
+        <style>
+            .vertical {
+                margin-bottom: 10px;
+            }
 
-        button {
-            margin-top: 0px !important;
-            float: right !important;
-        }
+            button {
+                margin-top: 0px !important;
+                float: right !important;
+            }
 
-        * {
-            font-size: 18px;
-        }
+            * {
+                font-size: 18px;
+            }
 
-    </style>
+        </style>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="stylesheet" href="~/css/site.css">
-    <script type="text/javascript"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+        <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+        <link rel="stylesheet" href="~/css/site.css">
+        <script type="text/javascript"> 
             
-                $().ready(function () {
+                    $().ready(function () {
 
-                    // Enable text based filtering for voices
-                    $("#voiceSearchBox").bind("keyup", function() {
-                        var text = $(this).val().toLowerCase();
+                        // Enable text based filtering for voices
+                        $("#voiceSearchBox").bind("keyup", function() {
+                            var text = $(this).val().toLowerCase();
 
-                        Array.from(document.getElementById('voiceid').children).forEach(function (element)
-                        {
-                            if (element.innerText.toLowerCase().includes(text) || text == '') {
-                                element.style.display = 'block';
-                            } else {
-                                element.style.display = 'none';
-                            }
+                            Array.from(document.getElementById('voiceid').children).forEach(function (element)
+                            {
+                                if (element.innerText.toLowerCase().includes(text) || text == '') {
+                                    element.style.display = 'block';
+                                } else {
+                                    element.style.display = 'none';
+                                }
+                            });
                         });
+
+                        // todo: figure out whats causing the population of a blank row in index 0
+                        document.getElementById('voiceid').children[0].style.display = 'none';
+
+                        // adjust listbox attributes
+                        var listbox = $('#voiceid');
+                        listbox.css('height', '170px');
+
                     });
 
-                    // todo: figure out whats causing the population of a blank row in index 0
-                    document.getElementById('voiceid').children[0].style.display = 'none';
 
-                    // adjust listbox attributes
-                    var listbox = $('#voiceid');
-                    listbox.css('height', '170px');
-
-                });
-
-
-                function TestTTSVoice() {
+                    function TestTTSVoice() {
         
-                var voice1 = {
-                    id: $('#voiceid').val(),
-                    username: 'test',
-                    message: $('#txtMessage').val(),
-                    speed: $('#speed').val(),
-                    pitch: $('#pitch').val(),
-                };
+                    var voice1 = {
+                        id: $('#voiceid').val(),
+                        username: 'test',
+                        message: $('#txtMessage').val(),
+                        speed: $('#speed').val(),
+                        pitch: $('#pitch').val(),
+                    };
 
-                $.ajax({
-                    type: 'post',
-                    url: '@Url.Action("TestTTSVoice", "Home")',
-                    contentType: "application/json",
-                    data: JSON.stringify(voice1),
-                    success: function(data) { 
+                    $.ajax({
+                        type: 'post',
+                        url: '@Url.Action("TestTTSVoice", "Home")',
+                        contentType: "application/json",
+                        data: JSON.stringify(voice1),
+                        success: function(data) { 
 
-                        audioTester = new Audio("data:audio/wav;base64," + data);
-                        audioTester.play();
-                    }
-                });
+                            audioTester = new Audio("data:audio/wav;base64," + data);
+                            audioTester.play();
+                        }
+                    });
              
-            }
+                }
 
-            function SetTTSVoice() {
-                var voice = {
-                    id: $('#voiceid').val(),
-                    username: $('#username').val(),
-                    speed: $('#speed').val(),
-                    pitch: $('#pitch').val(),
-                };
+                function SetTTSVoice() {
+                    var voice = {
+                        id: $('#voiceid').val(),
+                        username: $('#username').val(),
+                        speed: $('#speed').val(),
+                        pitch: $('#pitch').val(),
+                    };
         
-                $.ajax({
-                    type: 'post',
-                    url: '@Url.Action("SetTTSVoice", "Home")',
-                    contentType: "application/json",
-                    data: JSON.stringify(voice),
-                    success: function() { }
-                });
+                    $.ajax({
+                        type: 'post',
+                        url: '@Url.Action("SetTTSVoice", "Home")',
+                        contentType: "application/json",
+                        data: JSON.stringify(voice),
+                        success: function() { }
+                    });
              
-            }
-    </script>
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/chat.js?v=0"></script>
-</head>
-<!-- 218 234 254-->
-<body>
-    <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
-                            border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
+                }
+        </script>
+        <script src="~/js/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/chat.js?v=0"></script>
+    </head>
+    <body>
+        <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 
+                                border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
     
             <div class="vertical">
                 @Html.DropDownList("voiceid", ViewBag.googleTTSVoices, "", new Dictionary<string, object> { { "size", "5" } })
