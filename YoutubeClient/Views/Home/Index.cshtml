@@ -46,10 +46,12 @@
                         });
                     });
 
+                    // todo: figure out whats causing the population of a blank row in index 0
+                    document.getElementById('voiceid').children[0].style.display = 'none';
 
                     // adjust listbox attributes
                     var listbox = $('#voiceid');
-                    listbox.css('height', '175px');
+                    listbox.css('height', '170px');
 
                 });
 
@@ -57,7 +59,7 @@
                 function TestTTSVoice() {
         
                 var voice1 = {
-                    id: $('#voiceid').val()[0],
+                    id: $('#voiceid').val(),
                     username: 'test',
                     message: $('#txtMessage').val(),
                     speed: $('#speed').val(),
@@ -80,7 +82,7 @@
 
             function SetTTSVoice() {
                 var voice = {
-                    id: $('#voiceid').val()[0],
+                    id: $('#voiceid').val(),
                     username: $('#username').val(),
                     speed: $('#speed').val(),
                     pitch: $('#pitch').val(),
@@ -105,7 +107,7 @@
                             border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)"> 
     
             <div class="vertical">
-                @Html.ListBox("voiceid", ViewBag.googleTTSVoices, "")
+                @Html.DropDownList("voiceid", ViewBag.googleTTSVoices, "", new Dictionary<string, object> { { "size", "5" } })
             </div>
             <div class="vertical">
                 <label><input id="voiceSearchBox" type="text" placeholder="Search for a dialect" /></label>
@@ -126,7 +128,7 @@
                     <label><input id="txtMessage" maxlength="25" type="text" placeholder="Enter sample text here"/></label>
                 </div>
                 <div class="one-fourth">
-                <button onclick="TestTTSVoice()" style="background: #0ccc89">Test</button>
+                <button onclick="TestTTSVoice()">Test</button>
                 </div>
             </div>
             <div class="vertical flex four demo">
