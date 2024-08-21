@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Peerware AI</title>
+        @using ChatBot.Authentication;
+        @{
+            ViewData["Title"] = "Dashboard";
+    
+        }
+        <style>
+            .vertical {
+                margin-bottom: 10px;
+            }
+
+            button {
+                margin-top: -1px !important;
+                float: right !important;
+            }
+        </style>
+
+        <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+        <script src="~/js/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/chat.js?v=6"></script>
+        <script type="text/javascript">
+
+            $().ready(function () {
+
+            });
+
+            function SendMessage() {
+                let newMessage = '<div class="message">';
+                newMessage += document.getElementById("messageInput").value;
+                newMessage += '</div>';
+
+                document.getElementById("messages")
+                    .insertAdjacentHTML("afterend", newMessage);
+            }
+        </script>
+    </head>
+    <body>
+        <!-- Body -->
+        <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 500px;
+                                border-left: 2px solid; border-right: 2px solid; border-color: rgb(218, 234, 254)">
+            <div flex two  demo>
+                <label><input type="text" id="usernameInput" placeholder="Username" /></label>
+                <label><input type="text" id="messageInput" placeholder="Message" /></label>
+                <button onclick="SendMessage()">Send</button>
+            </div>
+            <br/>
+            <div id="messages">
+                <span></span>
+            </div>
+        </div>
+    </body>
+</html>
