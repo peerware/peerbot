@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YoutubeClient.Hubs;
-using ChatBot.MessageSpeaker;
 using System.IO;
 using Microsoft.AspNetCore.SignalR;
 using TwitchLib.Client.Events;
@@ -19,6 +18,8 @@ using YoutubeClient.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Net;
 using TwitchLib.Client.Models;
+using ChatBot.Messages;
+using ChatBot.Messages.MessageSpeaker;
 
 namespace YoutubeClient
 {

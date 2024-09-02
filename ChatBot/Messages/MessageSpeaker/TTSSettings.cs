@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ChatBot.MessageSpeaker
+namespace ChatBot.Messages.MessageSpeaker
 {
     public class TTSSettings
     {
@@ -71,7 +71,7 @@ namespace ChatBot.MessageSpeaker
             {
                 languageCode = "en-US",
                 voiceName = "en-US-Neural2-F",
-                gender = TTSSettings.eGender.female,
+                gender = eGender.female,
                 speakingRate = 0.75,
                 pitch = -4
             };

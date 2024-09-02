@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatBot.MessageSpeaker
+namespace ChatBot.Messages.MessageSpeaker
 {
     public class MonthlyTTSStat
     {

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using YoutubeClient.Models;
-using ChatBot.MessageSpeaker;
 using System.IO;
 using ChatBot;
 using TwitchLib.Client.Events;
@@ -18,6 +17,7 @@ using Newtonsoft.Json;
 using Google.Cloud.TextToSpeech.V1;
 using Google.Api;
 using ChatBot.Authentication;
+using ChatBot.Messages.MessageSpeaker;
 namespace YoutubeClient.Controllers
 {
     public class HomeController : Controller
