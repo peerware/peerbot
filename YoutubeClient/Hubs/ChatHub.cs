@@ -1,5 +1,5 @@
 ﻿using ChatBot;
-using ChatBot.MessageSpeaker;
+using ChatBot.Messages.MessageSpeaker;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.IO;
