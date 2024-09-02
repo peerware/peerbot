@@ -20,6 +20,7 @@ using System.Net;
 using TwitchLib.Client.Models;
 using ChatBot.Messages;
 using ChatBot.Messages.MessageSpeaker;
+using Microsoft.AspNetCore.Routing;
 
 namespace YoutubeClient
 {
@@ -136,8 +137,17 @@ namespace YoutubeClient
             return;
         }
 
-        public static void TryPlaySong(string chatMessage)
+        public static async void TryPlaySong(string chatMessage)
         {
+            // Only play urls that have "youtube" in them
+            if (!chatMessage.ToLower().Contains("youtube")
+                && !chatMessage.ToLower().Contains("youtu.be"))
+            {
+                messageReceiver.messageExecutor.Say("This bot only plays links" +
+                    " that contains 'youtube' - please try again");
+                return;
+            }
+
             // Try to make sure videos play from the beginning
             if (!chatMessage.Contains("&"))
                 chatMessage = chatMessage.TrimEnd() + "&t=0";
@@ -149,7 +159,15 @@ namespace YoutubeClient
                 (lastSongRequest is null || SongRequestDelay <= timeSinceLastRequest))
             {
                 lastSongRequest = DateTime.Now;
-                chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
+
+                string url = chatMessage.Replace("!sr", "").Trim();
+                VideoInfo videoInfo = new VideoInfo
+                {
+                    name = await YoutubeAPI.GetVideoName(url),
+                    length = await YoutubeAPI.GetVideoLength(url),
+                    url = url
+                };
+                chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
             }
             else
             {
