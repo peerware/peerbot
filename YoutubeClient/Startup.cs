@@ -148,23 +148,23 @@ namespace YoutubeClient
                 return;
             }
 
-            // Try to make sure videos play from the beginning
-            if (!chatMessage.Contains("&"))
-                chatMessage = chatMessage.TrimEnd() + "&t=0";
-
-            if (chatMessage.Length > 8 &&
-                (lastSongRequest is null))
+            if (chatMessage.Length > 8)
             {
                 lastSongRequest = DateTime.Now;
 
                 string url = chatMessage.Replace("!sr", "").Trim();
+
+                if (url.IndexOf(" ") > -1)
+                    url = url.Substring(0, url.IndexOf(" "));
+
                 VideoInfo videoInfo = new VideoInfo
                 {
-                    name = await YoutubeAPI.GetVideoName(url),
-                    duration = await YoutubeAPI.GetVideoLength(url),
-                    url = url
+                    name = YoutubeAPI.GetVideoName(url),
+                    duration = YoutubeAPI.GetVideoLength(url),
+                    url = url.TrimEnd() + "&t=0"
                 };
-                chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
+                await chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
+                messageReceiver.messageExecutor.Say(videoInfo.name + " " + " has been added to position 1 in the queue.");
             }
         }
 

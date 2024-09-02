@@ -8,24 +8,24 @@ namespace ChatBot
 {
     public static class YoutubeAPI
     {
-        public static async Task<string> GetVideoName(string URL)
+        public static string GetVideoName(string URL)
         {
             try
             {
                 var youtube = new YoutubeExplode.YoutubeClient();
-                var video = await youtube.Videos.GetAsync(URL);
+                var video = youtube.Videos.GetAsync(URL).Result;
 
                 return video.Title;
             }
             catch (Exception e) { }
             return null;
         }
-        public static async Task<int> GetVideoLength(string URL)
+        public static int GetVideoLength(string URL)
         {
             try
             {
                 var youtube = new YoutubeExplode.YoutubeClient();
-                var video = await youtube.Videos.GetAsync(URL);
+                var video = youtube.Videos.GetAsync(URL).Result;
 
                 int totalSeconds = (video.Duration?.Seconds ?? 0)
                     + ((video.Duration?.Minutes ?? 0) * 60)
