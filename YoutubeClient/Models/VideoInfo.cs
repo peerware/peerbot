@@ -5,7 +5,7 @@
         public VideoInfo() { } 
 
         public string name { get; set; } = null;
-        public int length { get; set; } = 0;
+        public int duration { get; set; } = 0;
 
         public string url { get; set; } = null;
     }

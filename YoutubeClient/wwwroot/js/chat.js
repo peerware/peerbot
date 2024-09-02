@@ -45,9 +45,11 @@ function ProcessMessageQueue() {
     }
 }
 
-connection.on("ReceiveSongRequest", function (videoURL) {
-    songQueue.push(videoURL);
-    ProcessSongQueue();
+connection.on("ReceiveSongRequest", function (videoInfo) {
+    songQueue.unshift(videoInfo);
+
+    if (songQueue.length === 1)
+        ProcessSongQueue();
 });
 
 // Handles playing music
@@ -58,13 +60,18 @@ function ProcessSongQueue() {
     var videoPlayer = $('#songRequestPlayer');
 
     if ($('#isPlayerEnabled').val() == 'on') {
+        var songInfo = songQueue.shift();
 
-        videoPlayer.attr('src', songQueue[0]);
-        songQueue.shift();
+        videoPlayer.attr('src', songInfo.url);
 
         setTimeout(function () {
             videoPlayer.click();
         }, 2000); // delay playing the video to ensure the video gets loaded
+
+
+        // When this song is finished playing play the next video
+        if (songQueue.length > 0)
+            setTimeout(ProcessSongQueue, songInfo.duration * 1000 + 2100);
     }
 }
 

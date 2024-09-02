@@ -152,11 +152,8 @@ namespace YoutubeClient
             if (!chatMessage.Contains("&"))
                 chatMessage = chatMessage.TrimEnd() + "&t=0";
 
-            double? timeSinceLastRequest = (lastSongRequest is null) ?
-                0 : (DateTime.Now - lastSongRequest)?.TotalSeconds;
-
             if (chatMessage.Length > 8 &&
-                (lastSongRequest is null || SongRequestDelay <= timeSinceLastRequest))
+                (lastSongRequest is null))
             {
                 lastSongRequest = DateTime.Now;
 
@@ -164,16 +161,10 @@ namespace YoutubeClient
                 VideoInfo videoInfo = new VideoInfo
                 {
                     name = await YoutubeAPI.GetVideoName(url),
-                    length = await YoutubeAPI.GetVideoLength(url),
+                    duration = await YoutubeAPI.GetVideoLength(url),
                     url = url
                 };
                 chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
-            }
-            else
-            {
-                string roundedTimeRemaining = (SongRequestDelay - timeSinceLastRequest)?.ToString("N0");
-                string output = $"you may request a new song in {roundedTimeRemaining} seconds";
-                messageReceiver.messageExecutor.Say(output);
             }
         }
 
