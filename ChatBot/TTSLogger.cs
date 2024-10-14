@@ -1,4 +1,4 @@
-﻿using ChatBot.MessageSpeaker;
+﻿using ChatBot.Messages.MessageSpeaker;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -7,11 +7,12 @@ using TwitchLib.Client;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix;
 using System.Threading.Tasks;
-using ChatBot.MessageSpeaker;
 using TwitchLib.Client.Events;
 using Newtonsoft;
 using Newtonsoft.Json;
 using ChatBot.Authentication;
+using ChatBot.Messages;
+using ChatBot.Messages.MessageSpeaker;
 
 namespace ChatBot
 {

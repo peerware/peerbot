@@ -9,13 +9,13 @@ using TwitchLib.Client.Models;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ChatBot
+namespace ChatBot.Messages
 {
     public static class MessageFilter
     {
         private static List<string> suspiciousStrings = new List<string> { "bigfollows", "bigfollows", "primes and", "buy",
             "qualitу", "service", "custom graphics", "sorry", "interrupting", "channel",
-            "portfolio", "follow", "view", "bot", "price", "quality", "convenient", "cheap", "offer", 
+            "portfolio", "follow", "view", "bot", "price", "quality", "convenient", "cheap", "offer",
             "free", "code", "guarantee", "satisfaction", "best" };
 
         public static bool IsMessageSpam(string message, bool isFirstMessage)
@@ -36,7 +36,7 @@ namespace ChatBot
                     potentialSpamCount++;
             }
 
-            return (potentialSpamCount >= spamCutoff) ?  true : false;
+            return potentialSpamCount >= spamCutoff ? true : false;
         }
 
         public static bool IsStringURL(string input)

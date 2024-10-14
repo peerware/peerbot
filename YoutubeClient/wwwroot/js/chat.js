@@ -5,6 +5,7 @@ var isMessagePlaying = false;
 
 
 var songQueue = [];
+let isSongPlaying = false;
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
@@ -45,27 +46,44 @@ function ProcessMessageQueue() {
     }
 }
 
-connection.on("ReceiveSongRequest", function (videoURL) {
-    songQueue.push(videoURL);
-    ProcessSongQueue();
+connection.on("ReceiveSongRequest", function (videoInfo) {
+    songQueue.unshift(videoInfo);
+    TryPlaySong();
 });
+
+function TryPlaySong() {
+    if (songQueue.length > 0 && !isSongPlaying)
+        ProcessSongQueue();
+    else if (songQueue.length > 0) {
+        setTimeout(TryPlaySong, 5000);
+    }
+}
 
 // Handles playing music
 function ProcessSongQueue() {
-    if (songQueue.length < 1)
+    if (songQueue.length < 1 || isSongPlaying)
         return;
 
     var videoPlayer = $('#songRequestPlayer');
 
     if ($('#isPlayerEnabled').val() == 'on') {
+        var songInfo = songQueue.shift();
 
-        videoPlayer.attr('src', songQueue[0]);
-        songQueue.shift();
+        isSongPlaying = true;
 
+        // Run this function again after the song plays to reset the isplaying flag
+        setTimeout(TryPlaySongReset, songInfo.duration * 1000);
+
+        videoPlayer.attr('src', songInfo.url);
         setTimeout(function () {
             videoPlayer.click();
         }, 2000); // delay playing the video to ensure the video gets loaded
     }
+}
+
+function TryPlaySongReset() {
+    isSongPlaying = false;
+    TryPlaySong();
 }
 
 connection.start();

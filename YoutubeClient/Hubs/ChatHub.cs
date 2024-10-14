@@ -1,10 +1,11 @@
 ﻿using ChatBot;
-using ChatBot.MessageSpeaker;
+using ChatBot.Messages.MessageSpeaker;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using TwitchLib.Client.Events;
+using YoutubeClient.Models;
 
 namespace YoutubeClient.Hubs
 {
@@ -15,9 +16,9 @@ namespace YoutubeClient.Hubs
             await Clients.All.SendAsync("ReceiveMessageAudio", memoryStream);
         }
 
-        public async Task SendSongRequest(string videoURL)
+        public async Task SendSongRequest(VideoInfo videoInfo)
         {
-            await Clients.All.SendAsync("ReceiveSongRequest", videoURL);
+            await Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
         }
     }
 }

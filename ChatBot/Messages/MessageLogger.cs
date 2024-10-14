@@ -5,13 +5,13 @@ using System.Text;
 using TwitchLib.Client.Models;
 using System.Linq;
 
-namespace ChatBot
+namespace ChatBot.Messages
 {
     public class MessageLogger
     {
         static object locker = new object();
         static string filePath = Config.fileSavePath + "logs.txt";
-        
+
         public static void LogMessage(ChatMessage message)
         {
             lock (locker)
@@ -22,7 +22,7 @@ namespace ChatBot
                     TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                     DateTime easternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
-                    File.AppendAllText(filePath,  "\n" + easternTime.ToString("F") + " " + message.Username + ": " + message.Message);
+                    File.AppendAllText(filePath, "\n" + easternTime.ToString("F") + " " + message.Username + ": " + message.Message);
                     return;
                 }
                 catch (Exception e)

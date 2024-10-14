@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <title>Peerware AI</title>
-        @using ChatBot.MessageSpeaker;
+        @using ChatBot.Messages.MessageSpeaker;
         @{
             ViewData["Title"] = "Home Page";
             ViewData["speedLabel"] = $"Speed ({GoogleTTSSettings.MinTTSSpeed} - {GoogleTTSSettings.MaxTTSSpeed})";
@@ -100,7 +100,7 @@
                 }
         </script>
         <script src="~/js/signalr/dist/browser/signalr.js"></script>
-        <script src="~/js/chat.js?v=0"></script>
+        <script src="~/js/chat.js?v=3"></script>
     </head>
     <body>
         <div class="webbody" style="margin-left: auto; height: 100vh; padding: 10px; margin-right: auto; max-width: 340px; 

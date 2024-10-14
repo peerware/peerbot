@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace ChatBot.MessageSpeaker
+namespace ChatBot.Messages.MessageSpeaker
 {
     // Holds all the tts settings for a user
     public class UserTTSSettings

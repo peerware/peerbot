@@ -14,7 +14,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
 
-namespace ChatBot
+namespace ChatBot.Messages
 {
     public class MessageReceiver
     {

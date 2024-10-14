@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace ChatBot.MessageSpeaker
+namespace ChatBot.Messages.MessageSpeaker
 {
     public static class GoogleTTSSettings
     {
@@ -69,7 +69,7 @@ namespace ChatBot.MessageSpeaker
                     return new MemoryStream();
 
                 TTSSettings ttsSettings = UserTTSSettingsManager.GetSettingsFromStorage(username).ttsSettings;
-                SynthesizeSpeechRequest request = GoogleTTSSettings.GetSpeechRequest(message, ttsSettings);
+                SynthesizeSpeechRequest request = GetSpeechRequest(message, ttsSettings);
                 SynthesizeSpeechResponse response = client.SynthesizeSpeech(request);
 
                 response.AudioContent.WriteTo(outputMemoryStream);
@@ -171,7 +171,7 @@ namespace ChatBot.MessageSpeaker
                         return "";
                 }
             }
-            else if (gender  == SsmlVoiceGender.Female)
+            else if (gender == SsmlVoiceGender.Female)
             {
                 switch (GetDialectFromLanguageCode(languageCode))
                 {
@@ -358,7 +358,7 @@ namespace ChatBot.MessageSpeaker
                         userTTSSettings.ttsSettings.pitch = -3;
                         userTTSSettings.ttsSettings.gender = TTSSettings.eGender.male;
                         userTTSSettings.ttsSettings.languageCode = "fr-CA";
-                        userTTSSettings.ttsSettings.voiceName = GoogleTTSSettings.GetVoiceNameFromLanguageCode("fr-CA", SsmlVoiceGender.Male);
+                        userTTSSettings.ttsSettings.voiceName = GetVoiceNameFromLanguageCode("fr-CA", SsmlVoiceGender.Male);
                         break;
                 }
 

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
-namespace ChatBot.MessageSpeaker
+namespace ChatBot.Messages.MessageSpeaker
 {
     /// <summary>
     /// Responsible for saving and fetching message speaker options
@@ -107,7 +107,7 @@ namespace ChatBot.MessageSpeaker
                 // Return a random test voice
                 string testVoiceString = testVoiceSettings[random.Next(0, testVoiceSettings.Count)];
 
-                
+
                 var defaultCustomVoice = JsonConvert.DeserializeObject<UserTTSSettings>(testVoiceString.Substring(testVoiceString.IndexOf(":") + 1)).ttsSettings;
 
                 // Give users with the same default voice a custom sound
@@ -124,7 +124,7 @@ namespace ChatBot.MessageSpeaker
 
                 return defaultCustomVoice;
             }
-            else 
+            else
                 return TTSSettings.GetDefaultVoice();
         }
     }
