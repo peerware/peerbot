@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YoutubeClient.Hubs;
-using ChatBot.MessageSpeaker;
 using System.IO;
 using Microsoft.AspNetCore.SignalR;
 using TwitchLib.Client.Events;
@@ -19,6 +18,9 @@ using YoutubeClient.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Net;
 using TwitchLib.Client.Models;
+using ChatBot.Messages;
+using ChatBot.Messages.MessageSpeaker;
+using Microsoft.AspNetCore.Routing;
 
 namespace YoutubeClient
 {
@@ -135,26 +137,34 @@ namespace YoutubeClient
             return;
         }
 
-        public static void TryPlaySong(string chatMessage)
+        public static async void TryPlaySong(string chatMessage)
         {
-            // Try to make sure videos play from the beginning
-            if (!chatMessage.Contains("&"))
-                chatMessage = chatMessage.TrimEnd() + "&t=0";
+            // Only play urls that have "youtube" in them
+            if (!chatMessage.ToLower().Contains("youtube")
+                && !chatMessage.ToLower().Contains("youtu.be"))
+            {
+                messageReceiver.messageExecutor.Say("This bot only plays links" +
+                    " that contains 'youtube' - please try again");
+                return;
+            }
 
-            double? timeSinceLastRequest = (lastSongRequest is null) ?
-                0 : (DateTime.Now - lastSongRequest)?.TotalSeconds;
-
-            if (chatMessage.Length > 8 &&
-                (lastSongRequest is null || SongRequestDelay <= timeSinceLastRequest))
+            if (chatMessage.Length > 8)
             {
                 lastSongRequest = DateTime.Now;
-                chatHub.Clients.All.SendAsync("ReceiveSongRequest", chatMessage.Replace("!sr", "").Trim());
-            }
-            else
-            {
-                string roundedTimeRemaining = (SongRequestDelay - timeSinceLastRequest)?.ToString("N0");
-                string output = $"you may request a new song in {roundedTimeRemaining} seconds";
-                messageReceiver.messageExecutor.Say(output);
+
+                string url = chatMessage.Replace("!sr", "").Trim();
+
+                if (url.IndexOf(" ") > -1)
+                    url = url.Substring(0, url.IndexOf(" "));
+
+                VideoInfo videoInfo = new VideoInfo
+                {
+                    name = YoutubeAPI.GetVideoName(url),
+                    duration = YoutubeAPI.GetVideoLength(url),
+                    url = url.TrimEnd() + "&t=0"
+                };
+                await chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
+                messageReceiver.messageExecutor.Say(videoInfo.name + " " + " has been added to position 1 in the queue.");
             }
         }
 
