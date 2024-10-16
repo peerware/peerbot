@@ -50,6 +50,11 @@ namespace YoutubeClient.Controllers
             return View();
         }
 
+        public IActionResult Testing()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetCode(string code, string scope)
         {
