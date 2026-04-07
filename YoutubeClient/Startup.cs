@@ -61,6 +61,9 @@ namespace YoutubeClient
         {
             try
             {
+                if (messageReceiver is null)
+                    messageReceiver = new MessageReceiver();
+
                 messageReceiver.twitchClient.OnMessageReceived += Client_OnMessageReceived;
 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -136,6 +139,10 @@ namespace YoutubeClient
             return;
         }
 
+        /// <summary>
+        /// Handles formatting youtube urls - important to have this work
+        /// </summary>
+        /// <param name="chatMessage"></param>
         public static async void TryPlaySong(string chatMessage)
         {
             // Only play urls that have "youtube" in them
@@ -151,16 +158,29 @@ namespace YoutubeClient
             {
                 lastSongRequest = DateTime.Now;
 
+                
                 string url = chatMessage.Replace("!sr", "").Trim();
 
                 if (url.IndexOf(" ") > -1)
                     url = url.Substring(0, url.IndexOf(" "));
 
+                // logic to sanitize the video code for a youtube url 
+
+                string videoCode = "";
+
+                if (url.Contains("&"))
+                    videoCode = url.Substring(url.IndexOf("=") + 1,url.IndexOf("&") - url.IndexOf("=") -1);
+                else
+                    videoCode = url.Substring(url.IndexOf("=") + 1);
+
+
                 VideoInfo videoInfo = new VideoInfo
                 {
                     name = YoutubeAPI.GetVideoName(url),
                     duration = YoutubeAPI.GetVideoLength(url),
-                    url = url.TrimEnd() + "&t=0"
+                    // URL must be formatting as follows
+                    // "https://www.youtube.com/embed/<url watch code>?origin=http://example.com">
+                    url = @"https://www.youtube.com/embed/" + videoCode + "?origin=http://example.com"
                 };
                 await chatHub.Clients.All.SendAsync("ReceiveSongRequest", videoInfo);
                 messageReceiver.messageExecutor.Say(videoInfo.name + " " + " has been added to position 1 in the queue.");
